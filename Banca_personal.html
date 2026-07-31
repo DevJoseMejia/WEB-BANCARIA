@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banca en Línea - Resumen</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#F8FAFC">
+    <meta name="description" content="Resumen de productos bancarios">
+
+    <link rel="stylesheet" href="style_banca.css">
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Remix Icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Login - Banco UVG">
+    <meta property="og:description" content="Login de la Banca en Línea UVG">
+</head>
+<body>
+    <!-- Encabezado con funciones primordiales -->
+    <header class="banca-header">
+        <div class="logo">
+            <h2>🏦 Banco Central</h2>
+        </div>
+        <div class="header-acciones">
+            <button class="btn-icono">🔔 Notificaciones</button>
+            <button class="btn-cerrar-sesion">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <div class="contenedor-principal">
+        <!-- Navegación lateral -->
+        <nav class="nav-lateral">
+            <ul>
+                <li class="activo"><a href="#">Resumen de productos</a></li>
+                <li><a href="#">Consultas</a></li>
+                <li><a href="#">Transferencias</a></li>
+                <li><a href="#">Pago de servicios</a></li>
+                <li><a href="#">Tarjetas de crédito</a></li>
+                <li><a href="#">Gestiones</a></li>
+            </ul>
+        </nav>
+
+        <!-- Contenido principal: Cuentas del usuario -->
+        <main class="main-banca">
+            <h1>Resumen de productos</h1>
+            
+            <section class="tarjeta-modulo">
+                <div class="modulo-header">
+                    <h2>Cuentas bancarias</h2>
+                    <button class="btn-texto">Abrir nueva cuenta</button>
+                </div>
+                
+                <div class="lista-cuentas">
+                    <!-- Cuenta Monetaria -->
+                    <div class="fila-cuenta">
+                        <div class="info-cuenta">
+                            <h3>Cuenta Monetaria</h3>
+                            <p>No. 4092-XXXX-XXXX</p>
+                        </div>
+                        <div class="saldo-cuenta">
+                            <span class="moneda">Q</span> 12,450.00
+                        </div>
+                        <div class="acciones-cuenta">
+                            <button class="btn-secundario">Ver detalles</button>
+                            <button class="btn-primario">Transferir</button>
+                        </div>
+                    </div>
+
+                    <!-- Cuenta de Ahorros -->
+                    <div class="fila-cuenta">
+                        <div class="info-cuenta">
+                            <h3>Cuenta de Ahorro Ideal</h3>
+                            <p>No. 8100-XXXX-XXXX</p>
+                        </div>
+                        <div class="saldo-cuenta">
+                            <span class="moneda">Q</span> 35,280.50
+                        </div>
+                        <div class="acciones-cuenta">
+                            <button class="btn-secundario">Ver detalles</button>
+                            <button class="btn-primario">Transferir</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Aside para información de divisas -->
+        <aside class="aside-informativo">
+            <div class="widget-divisas">
+                <h3>Tipo de cambio</h3>
+                <div class="selector-moneda">
+                    <span>USD a QTZ</span>
+                </div>
+                <div class="tasas">
+                    <div class="tasa-item">
+                        <span>Compra</span>
+                        <strong>Q 7.42</strong>
+                    </div>
+                    <div class="tasa-item">
+                        <span>Venta</span>
+                        <strong>Q 7.82</strong>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer simplificado -->
+    <footer class="banca-footer">
+        <p>&copy; 2026 Banco Central. Todos los derechos reservados.</p>
+        <div class="enlaces-footer">
+            <a href="#">Políticas de privacidad</a> | 
+            <a href="#">Términos y condiciones</a> | 
+            <a href="#">Centro de ayuda</a>
+        </div>
+    </footer>
+</body>
+</html>
