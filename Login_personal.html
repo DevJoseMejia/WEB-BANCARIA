@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#F8FAFC">
+    <meta name="description" content="Login del banco UVG">
+    <title>Login - Banco UVG</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Remix Icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    
+    <!-- Enlace al archivo CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Login - Banco UVG">
+    <meta property="og:description" content="Login de la Banca en Línea UVG">
+</head>
+<body>
+    
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Logo agrupado -->
+            <a href="index.html" class="logo">
+                <i class="ri-bank-fill"></i>
+                <span>Banco UVG</span>
+            </a>
+            
+            <!-- Navegación semántica -->
+            <nav class="header-nav">
+                <a href="Login_personal.html" class="active">Banca Personal</a>
+                <a href="Login_empresarial.html">Banca Empresarial</a>
+            </nav>
+            
+            <!-- Selector de país con icono -->
+            <div class="header-actions">
+                <div class="lang-select">
+                    <i class="ri-global-line"></i>
+                    <select name="Pais" id="pais-select">
+                        <option value="Guatemala" selected>Guatemala</option>
+                        <option value="El Salvador">El Salvador</option>
+                        <option value="Honduras">Honduras</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="login-container">
+        <!-- Tarjeta que contiene el formulario -->
+        <section class="login-card">
+            <div class="login-header">
+                <h2>Bienvenido a tu Banca</h2>
+                <p>Ingresa tus credenciales para continuar</p>
+            </div>
+            
+            <!-- Se removieron los atributos action y method para delegar el control asíncrono al JS -->
+            <form id="form-login" class="login-form" onsubmit="return false;">
+                
+                <!-- Grupo de Input: Usuario (Refactorizado a Tipo Email para Supabase) -->
+                <div class="input-group">
+                    <label for="usuario">Correo Electrónico</label>
+                    <div class="input-wrapper">
+                        <i class="ri-user-line"></i>
+                        <input type="email" id="usuario" name="usuario" placeholder="Ej. jperez@bancouvg.com" required>
+                    </div>
+                </div>
+                
+                <!-- Grupo de Input: Contraseña -->
+                <div class="input-group">
+                    <label for="contrasena">Contraseña</label>
+                    <div class="input-wrapper">
+                        <i class="ri-lock-line"></i>
+                        <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" id="btn-toggle-password" title="Mostrar contraseña">
+                            <i class="ri-eye-off-line"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Opciones extra del formulario -->
+                <div class="form-options">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="token" name="token">
+                        <label for="token">Usar Token</label>
+                    </div>
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                <!-- Botón de envío -->
+                <button type="submit" class="btn-primary" id="btn-submit">
+                    Ingresar <i class="ri-arrow-right-line"></i>
+                </button>
+            </form>
+            
+            <!-- Pie de la tarjeta -->
+            <div class="login-footer">
+                <p>¿No tienes una cuenta? <a href="Crear_usuario.html">Crear usuario</a></p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>&copy; 2026 Banco UVG. Todos los derechos reservados.</p>
+            <div class="footer-links">
+                <a href="mailto:info@bancouvg.com"><i class="ri-mail-line"></i> Contacto</a>
+                <a href="#"><i class="ri-shield-check-line"></i> Seguridad</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================================================================= -->
+    <!-- CAPA DE CONTROL BACKEND (INYECTADA DESPUÉS DEL DISEÑO VISUAL)          -->
+    <!-- ======================================================================= -->
+    <!-- 1. SDK de Supabase JS para la conexión directa con la base de datos cloud -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- 2. Archivo de lógica (Agregamos el ./ para asegurar que busque en la misma carpeta) -->
+    <script src="./login.js"></script>
+</body>
+</html>
