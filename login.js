@@ -96,7 +96,7 @@ if (formLogin) {
 
             // Mensaje de éxito final
             alert("¡Bienvenido al sistema! Inicio de sesión exitoso.");
-            window.location.href = "dashboard_cliente.html";
+            window.location.href = "Banca_personal.html";
 
         } catch (err) {
             console.error("💥 Error crítico en el pipeline de login:", err);
