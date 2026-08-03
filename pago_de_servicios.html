@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banca en Línea - Pago de Servicios</title>
+    <link rel="stylesheet" href="style_banca.css">
+
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#F8FAFC">
+    <meta name="description" content="Pago de servicios e impuestos">
+
+        <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Remix Icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Login - Banco UVG">
+    <meta property="og:description" content="Pago de servicios e impuestos de la Banca en Línea UVG">
+
+
+</head>
+<body>
+
+    <!-- Encabezado con funciones primordiales -->
+    <header class="banca-header">
+        <div class="logo">
+            <h2>🏦 Banco Central</h2>
+        </div>
+        <div class="header-acciones">
+            <button class="btn-icono">🔔 Notificaciones</button>
+            <button class="btn-cerrar-sesion">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <div class="contenedor-principal">
+        <!-- Navegación lateral -->
+        <nav class="nav-lateral">
+            <ul>
+                <li><a href="Banca_personal.html">Resumen de productos</a></li>
+                <li ><a href="#">Abrir una cuenta</a></li>
+                <li><a href="consultas.html">Consultas</a></li>
+                <li><a href="#">Transferencias</a></li>
+                <li class="activo"><a href="#">Pago de servicios</a></li>
+                <li><a href="#">Tarjetas de crédito</a></li>
+                <li><a href="#">Gestiones</a></li>
+            </ul>
+        </nav>
+
+        <!-- Contenido Principal: Pago de Servicios -->
+        <main class="main-banca">
+            <h1>Pago de Servicios e Impuestos</h1>
+
+            <!-- Selector de categorías de servicio -->
+            <div class="filtros-servicios">
+                <button class="btn-filtro-servicio activo">Todos</button>
+                <button class="btn-filtro-servicio">⚡ Luz y Agua</button>
+                <button class="btn-filtro-servicio">🌐 Internet y TV</button>
+                <button class="btn-filtro-servicio">🏛️ Impuestos y Arbitrios</button>
+            </div>
+
+            <div class="grid-servicios-layout">
+                <!-- Catálogo de Proveedores / Servicios -->
+                <section class="seccion-proveedores">
+                    <h2>Selecciona el servicio a pagar</h2>
+                    <div class="grid-proveedores">
+                        
+                        <!-- EEGSA / ENERGUATE -->
+                        <div class="card-proveedor activo-card">
+                            <div class="icono-proveedor">⚡</div>
+                            <div class="info-proveedor">
+                                <h3>Energía Eléctrica</h3>
+                                <p>EEGSA / ENERGUATE</p>
+                            </div>
+                        </div>
+
+                        <!-- EMPAGUA -->
+                        <div class="card-proveedor">
+                            <div class="icono-proveedor">💧</div>
+                            <div class="info-proveedor">
+                                <h3>Agua Potable</h3>
+                                <p>EMPAGUA / Municipal</p>
+                            </div>
+                        </div>
+
+                        <!-- Internet / Telefonía -->
+                        <div class="card-proveedor">
+                            <div class="icono-proveedor">🌐</div>
+                            <div class="info-proveedor">
+                                <h3>Internet y Cable</h3>
+                                <p>Claro / Tigo</p>
+                            </div>
+                        </div>
+
+                        <!-- IUSI -->
+                        <div class="card-proveedor">
+                            <div class="icono-proveedor">🏠</div>
+                            <div class="info-proveedor">
+                                <h3>IUSI</h3>
+                                <p>Impuesto de Inmuebles</p>
+                            </div>
+                        </div>
+
+                        <!-- Circulación de Vehículos (ISCV) -->
+                        <div class="card-proveedor">
+                            <div class="icono-proveedor">🚗</div>
+                            <div class="info-proveedor">
+                                <h3>Circulación (ISCV)</h3>
+                                <p>SAT Guatemala</p>
+                            </div>
+                        </div>
+
+                        <!-- Boleto de Ornato -->
+                        <div class="card-proveedor">
+                            <div class="icono-proveedor">🎟️</div>
+                            <div class="info-proveedor">
+                                <h3>Boleto de Ornato</h3>
+                                <p>Arbitrio Municipal</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Formulario Dinámico de Pago -->
+                <section class="form-pago-container">
+                    <div class="card-pago">
+                        <h2>Formulario de Pago</h2>
+                        <form action="#" method="POST" class="form-pago">
+                            
+                            <div class="campo-form">
+                                <label for="cuenta-origen">Cuenta a debitar:</label>
+                                <select id="cuenta-origen" required>
+                                    <option value="monetaria">Cuenta Monetaria - Q 12,450.00</option>
+                                    <option value="ahorros">Cuenta de Ahorros - Q 35,280.50</option>
+                                </select>
+                            </div>
+
+                            <div class="campo-form">
+                                <label for="identificador-servicio">Número de Contador / NIS / Contrato / NIT:</label>
+                                <input type="text" id="identificador-servicio" placeholder="Ej. 7849302" required>
+                            </div>
+
+                            <div class="campo-form">
+                                <label for="monto-pago">Monto a pagar (Q):</label>
+                                <input type="number" step="0.01" id="monto-pago" placeholder="0.00" required>
+                            </div>
+
+                            <div class="campo-form">
+                                <label for="concepto">Alias o Guardar como (Opcional):</label>
+                                <input type="text" id="concepto" placeholder="Ej. Luz de la casa">
+                            </div>
+
+                            <button type="submit" class="btn-primario btn-bloque">Pagar Servicio</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Panel Lateral Informativo -->
+        <aside class="aside-informativo">
+            <!-- Widget de divisas -->
+            <div class="widget-divisas">
+                <h3>Tipo de cambio</h3>
+                <div class="selector-moneda">
+                    <span>USD a QTZ</span>
+                </div>
+                <div class="tasas">
+                    <div class="tasa-item">
+                        <span>Compra</span>
+                        <strong>Q 7.42</strong>
+                    </div>
+                    <div class="tasa-item">
+                        <span>Venta</span>
+                        <strong>Q 7.82</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accesos Rápidos a Servicios Guardados -->
+            <div class="servicios-frecuentes-box">
+                <h3>Pagos Frecuentes</h3>
+                <ul class="lista-frecuentes">
+                    <li>
+                        <div class="frecuente-info">
+                            <strong>Luz Casa</strong>
+                            <span>NIS: 4839201</span>
+                        </div>
+                        <button class="btn-secundario btn-sm">Pagar</button>
+                    </li>
+                    <li>
+                        <div class="frecuente-info">
+                            <strong>Internet Claro</strong>
+                            <span>Contrato: 902183</span>
+                        </div>
+                        <button class="btn-secundario btn-sm">Pagar</button>
+                    </li>
+                    <li>
+                        <div class="frecuente-info">
+                            <strong>IUSI Casa Central</strong>
+                            <span>Matrícula: M-10293</span>
+                        </div>
+                        <button class="btn-secundario btn-sm">Pagar</button>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer Simplificado -->
+    <footer class="banca-footer">
+        <p>&copy; 2026 Banco Central. Todos los derechos reservados.</p>
+        <div class="enlaces-footer">
+            <a href="#">Políticas de privacidad</a> | 
+            <a href="#">Términos y condiciones</a> | 
+            <a href="#">Centro de ayuda</a>
+        </div>
+    </footer>
+</body>
+</html>

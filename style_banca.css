@@ -270,3 +270,332 @@ body {
 .enlaces-footer a:hover {
     color: var(--color-primario);
 }
+
+/* Estilos específicos adicionales para la vista de productos */
+        .filtros-productos {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--color-borde);
+            padding-bottom: 10px;
+        }
+
+        .btn-filtro {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            font-weight: 600;
+            color: var(--color-texto-ligero);
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .btn-filtro.activo, .btn-filtro:hover {
+            background-color: var(--color-primario);
+            color: white;
+        }
+
+        .grid-productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .card-producto {
+            background: var(--color-superficie);
+            border: 1px solid var(--color-borde);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card-producto:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--color-secundario);
+            color: var(--color-primario);
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+            color: var(--color-primario);
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            font-size: 0.85rem;
+            color: var(--color-texto-ligero);
+            margin-bottom: 15px;
+        }
+
+        .detalles-producto {
+            list-style: none;
+            margin: 15px 0;
+            font-size: 0.85rem;
+        }
+
+        .detalles-producto li {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed var(--color-borde);
+            padding-bottom: 4px;
+        }
+
+        .card-acciones {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .card-acciones .btn-primario, .card-acciones .btn-secundario {
+            width: 100%;
+            text-align: center;
+        }
+
+        .simulador-box {
+            background-color: var(--color-superficie);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--color-borde);
+            margin-top: 20px;
+        }
+
+        .simulador-box h3 {
+            font-size: 1rem;
+            color: var(--color-primario);
+            margin-bottom: 12px;
+        }
+
+        .campo-simulador {
+            margin-bottom: 12px;
+        }
+
+        .campo-simulador label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--color-texto-ligero);
+            margin-bottom: 4px;
+        }
+
+        .campo-simulador input, .campo-simulador select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--color-borde);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+
+/* =======================================================
+   ESTILOS ESPECÍFICOS: PAGO DE SERVICIOS E IMPUESTOS
+   ======================================================= */
+
+.filtros-servicios {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--color-borde);
+    padding-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-filtro-servicio {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 600;
+    color: var(--color-texto-ligero);
+    cursor: pointer;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.btn-filtro-servicio.activo, .btn-filtro-servicio:hover {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+.grid-servicios-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 20px;
+    align-items: start;
+}
+
+.seccion-proveedores h2 {
+    font-size: 1.1rem;
+    color: var(--color-primario);
+    margin-bottom: 15px;
+}
+
+.grid-proveedores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.card-proveedor {
+    background: var(--color-superficie);
+    border: 2px solid var(--color-borde);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.card-proveedor:hover {
+    border-color: var(--color-secundario);
+    transform: translateY(-2px);
+}
+
+.card-proveedor.activo-card {
+    border-color: var(--color-secundario);
+    background-color: rgba(0, 212, 178, 0.05);
+}
+
+.icono-proveedor {
+    font-size: 1.8rem;
+    background-color: var(--color-fondo);
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-proveedor h3 {
+    font-size: 0.95rem;
+    color: var(--color-primario);
+}
+
+.info-proveedor p {
+    font-size: 0.8rem;
+    color: var(--color-texto-ligero);
+}
+
+/* Formulario de Pago */
+.card-pago {
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.card-pago h2 {
+    font-size: 1.2rem;
+    color: var(--color-primario);
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--color-borde);
+    padding-bottom: 10px;
+}
+
+.form-pago .campo-form {
+    margin-bottom: 16px;
+}
+
+.form-pago label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-texto);
+    margin-bottom: 6px;
+}
+
+.form-pago input, .form-pago select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--color-texto);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-pago input:focus, .form-pago select:focus {
+    border-color: var(--color-secundario);
+}
+
+.btn-bloque {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+/* Pagos Frecuentes en el Aside */
+.servicios-frecuentes-box {
+    background-color: var(--color-superficie);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--color-borde);
+    margin-top: 20px;
+}
+
+.servicios-frecuentes-box h3 {
+    font-size: 1rem;
+    color: var(--color-primario);
+    margin-bottom: 15px;
+}
+
+.lista-frecuentes {
+    list-style: none;
+}
+
+.lista-frecuentes li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--color-borde);
+}
+
+.lista-frecuentes li:last-child {
+    border-bottom: none;
+}
+
+.frecuente-info strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-texto);
+}
+
+.frecuente-info span {
+    font-size: 0.75rem;
+    color: var(--color-texto-ligero);
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+}
+
+/* Responsive adjustment for Grid layout */
+@media (max-width: 1024px) {
+    .grid-servicios-layout {
+        grid-template-columns: 1fr;
+    }
+}
