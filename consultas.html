@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banca en Línea - Consultas y Productos</title>
     <link rel="stylesheet" href="style_banca.css">
-     <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#F8FAFC">
     <meta name="description" content="Consultas y solicitud de productos bancarios">
 
@@ -20,28 +20,27 @@
     <!-- Open Graph -->
     <meta property="og:title" content="Login - Banco UVG">
     <meta property="og:description" content="Consultas y solicitud de productos bancarios de la Banca en Línea UVG">
-
 </head>
 <body>
 
-    <!-- Encabezado con funciones primordiales (BAC/Bantrab visual compliance) -->
+    <!-- Encabezado con funciones primordiales -->
     <header class="banca-header">
         <div class="logo">
             <h2>🏦 Banco Central</h2>
         </div>
         <div class="header-acciones">
             <button class="btn-icono">🔔 Notificaciones</button>
-            <button class="btn-cerrar-sesion">Cerrar Sesión</button>
+            <button class="btn-cerrar-sesion" id="btnCerrarSesion">Cerrar Sesión</button>
         </div>
     </header>
 
     <div class="contenedor-principal">
-        <!-- Navegación lateral estilo Wikipedia / Sidebar -->
+        <!-- Navegación lateral -->
         <nav class="nav-lateral">
             <ul>
                 <li><a href="Banca_personal.html">Resumen de productos</a></li>
-                <li ><a href="#">Abrir una cuenta</a></li>
-                <li class="activo"><a href="#">Consultas</a></li>
+                <li><a href="#">Abrir una cuenta</a></li>
+                <li class="activo"><a href="consultas.html">Consultas</a></li>
                 <li><a href="#">Transferencias</a></li>
                 <li><a href="pago_de_servicios.html">Pago de servicios</a></li>
                 <li><a href="#">Tarjetas de crédito</a></li>
@@ -77,7 +76,7 @@
                         <li><span>Membresía:</span> <strong>Gratis año 1</strong></li>
                     </ul>
                     <div class="card-acciones">
-                        <button class="btn-primario">Solicitar en línea</button>
+                        <button class="btn-primario btn-solicitar" data-producto="Tarjeta Visa Platinum">Solicitar en línea</button>
                         <button class="btn-secundario">Ver beneficios</button>
                     </div>
                 </article>
@@ -95,7 +94,7 @@
                         <li><span>Plazo:</span> <strong>Hasta 48 meses</strong></li>
                     </ul>
                     <div class="card-acciones">
-                        <button class="btn-primario">Solicitar crédito</button>
+                        <button class="btn-primario btn-solicitar" data-producto="Préstamo Personal Flex">Solicitar crédito</button>
                         <button class="btn-secundario">Requisitos</button>
                     </div>
                 </article>
@@ -112,7 +111,7 @@
                         <li><span>Plazo máximo:</span> <strong>25 años</strong></li>
                     </ul>
                     <div class="card-acciones">
-                        <button class="btn-primario">Pre-calificar</button>
+                        <button class="btn-primario btn-solicitar" data-producto="Hipoteca Mi Vivienda">Pre-calificar</button>
                         <button class="btn-secundario">Más información</button>
                     </div>
                 </article>
@@ -154,7 +153,11 @@
                         <option value="36">36 Meses</option>
                     </select>
                 </div>
-                <button class="btn-primario" style="width: 100%;">Calcular cuota</button>
+                <!-- Agregamos el ID id="btnCalcularCuota" al botón -->
+                <button class="btn-primario" id="btnCalcularCuota" style="width: 100%;">Calcular cuota</button>
+                
+                <!-- Contenedor donde se dibuja el resultado dinámico -->
+                <div id="resultadoSimulador" style="margin-top: 15px;"></div>
             </div>
         </aside>
     </div>
@@ -168,5 +171,12 @@
             <a href="#">Centro de ayuda</a>
         </div>
     </footer>
+
+
+    <!-- CAPA DE CONTROL BACKEND -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./config.js"></script>
+    <script src="./consultas.js"></script>
 </body>
 </html>
