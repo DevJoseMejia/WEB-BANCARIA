@@ -41,7 +41,7 @@ if (formLogin) {
         const password = txtPassword.value;
 
         try {
-            // 1. Petición limpia a la tabla usuarios (Corregido a 'id_rol')
+            // 1. Petición limpia a la tabla usuarios
             const { data: resultados, error } = await supabaseClient
                 .from('usuarios')
                 .select('id_usuario, password_hash, estado_cuenta, id_rol') 
@@ -53,14 +53,12 @@ if (formLogin) {
                 return;
             }
 
-            // Si el arreglo viene vacío, significa que el correo no existe
             if (!resultados || resultados.length === 0) {
                 console.warn("⚠️ El correo no existe en la tabla usuarios.");
                 alert("Credenciales incorrectas o usuario no registrado.");
                 return;
             }
 
-            // Tomamos el primer resultado encontrado
             const usuario = resultados[0];
             console.log("✅ Usuario localizado con éxito:", usuario);
 
@@ -94,8 +92,12 @@ if (formLogin) {
                 }
             ]);
 
-            // Mensaje de éxito final
-            alert("¡Bienvenido al sistema! Inicio de sesión exitoso.");
+            // ==========================================
+            // GUARDAR SESIÓN (LÍNEA CLAVE AÑADIDA)
+            // ==========================================
+            sessionStorage.setItem('id_usuario', usuario.id_usuario);
+
+            // Mensaje de éxito y redirección
             window.location.href = "Banca_personal.html";
 
         } catch (err) {

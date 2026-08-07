@@ -3,123 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banca en Línea - Resumen</title>
+    <title>Banca en Línea - Resumen | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#F8FAFC">
-    <meta name="description" content="Resumen de productos bancarios">
+    <meta name="theme-color" content="#0B1D33">
+    <meta name="description" content="Resumen de productos bancarios - Banco UVG">
 
+    <!-- Hoja de estilos de la banca -->
     <link rel="stylesheet" href="style_banca.css">
 
-    <!-- Google Fonts: Poppins -->
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Remix Icon -->
+    <!-- Remix Icon CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Login - Banco UVG">
-    <meta property="og:description" content="Login de la Banca en Línea UVG">
+    <meta property="og:title" content="Banca en Línea - Banco UVG">
+    <meta property="og:description" content="Resumen de productos financieros">
 </head>
 <body>
-    <!-- Encabezado con funciones primordiales -->
-    <header class="banca-header">
-        <div class="logo">
-            <h2>🏦 Banco Central</h2>
-        </div>
-        <div class="header-acciones">
-            <button class="btn-icono">🔔 Notificaciones</button>
-            <button class="btn-cerrar-sesion">Cerrar Sesión</button>
-        </div>
-    </header>
 
-    <div class="contenedor-principal">
-        <!-- Navegación lateral -->
-        <nav class="nav-lateral">
-            <ul>
-                <li class="activo"><a href="#">Resumen de productos</a></li>
-                <li><a href="#">Abrir una cuenta</a></li>
-                <li><a href="consultas.html">Consultas</a></li>
-                <li><a href="#">Transferencias</a></li>
-                <li><a href="pago_de_servicios.html">Pago de servicios</a></li>
-                <li><a href="#">Tarjetas de crédito</a></li>
-                <li><a href="#">Gestiones</a></li>
-            </ul>   
-        </nav>
+    <div class="dashboard-layout">
+        
+        <!-- NAVEGACIÓN LATERAL (Alto completo, tono Azul Profundo) -->
+        <aside class="nav-lateral">
+            <!-- Brand / Logo Integrado -->
+            <div class="sidebar-brand">
+                <a href="Banca_personal.html" class="logo">
+                    <i class="ri-bank-fill"></i>
+                    <span>Banco UVG</span>
+                </a>
+            </div>
 
-        <!-- Contenido principal: Cuentas del usuario -->
-        <main class="main-banca">
-            <h1>Resumen de productos</h1>
-            
-            <section class="tarjeta-modulo">
-                <div class="modulo-header">
-                    <h2>Cuentas bancarias</h2>
-                </div>
-                
-                <div class="lista-cuentas">
-                    <!-- Cuenta Monetaria -->
-                    <div class="fila-cuenta">
-                        <div class="info-cuenta">
-                            <h3>Cuenta Monetaria</h3>
-                            <p>No. 4092-XXXX-XXXX</p>
-                        </div>
-                        <div class="saldo-cuenta">
-                            <span class="moneda">Q</span> 12,450.00
-                        </div>
-                        <div class="acciones-cuenta">
-                            <button class="btn-secundario">Ver detalles</button>
-                            <button class="btn-primario">Transferir</button>
-                        </div>
-                    </div>
+            <!-- Menú de Navegación -->
+            <nav class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="Banca_personal.html" class="active">
+                            <i class="ri-dashboard-line"></i>
+                            <span>Resumen de productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="consultas.html">
+                            <i class="ri-file-list-3-line"></i>
+                            <span>Consultas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="ri-arrow-left-right-line"></i>
+                            <span>Transferencias</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pago_de_servicios.html">
+                            <i class="ri-service-line"></i>
+                            <span>Pago de servicios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="ri-bank-card-line"></i>
+                            <span>Tarjetas de crédito</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="ri-add-circle-line"></i>
+                            <span>Abrir una cuenta</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="ri-settings-4-line"></i>
+                            <span>Gestiones</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
-                    <!-- Cuenta de Ahorros -->
-                    <div class="fila-cuenta">
-                        <div class="info-cuenta">
-                            <h3>Cuenta de Ahorro Ideal</h3>
-                            <p>No. 8100-XXXX-XXXX</p>
-                        </div>
-                        <div class="saldo-cuenta">
-                            <span class="moneda">Q</span> 35,280.50
-                        </div>
-                        <div class="acciones-cuenta">
-                            <button class="btn-secundario">Ver detalles</button>
-                            <button class="btn-primario">Transferir</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Aside para información de divisas -->
-        <aside class="aside-informativo">
-            <div class="widget-divisas">
-                <h3>Tipo de cambio</h3>
-                <div class="selector-moneda">
-                    <span>USD a QTZ</span>
-                </div>
-                <div class="tasas">
-                    <div class="tasa-item">
-                        <span>Compra</span>
-                        <strong>Q 7.42</strong>
-                    </div>
-                    <div class="tasa-item">
-                        <span>Venta</span>
-                        <strong>Q 7.82</strong>
-                    </div>
-                </div>
+            <!-- Botón de Cerrar Sesión al pie del Sidebar -->
+            <div class="sidebar-footer">
+                <button id="btnCerrarSesion" class="btn-cerrar-sesion">
+                    <i class="ri-logout-box-r-line"></i>
+                    <span>Cerrar Sesión</span>
+                </button>
             </div>
         </aside>
+
+        <!-- ÁREA PRINCIPAL DE CONTENIDO -->
+        <div class="main-wrapper">
+            
+            <!-- Encabezado Superior (Header) -->
+            <header class="banca-header">
+                <div class="header-acciones">
+                    <button class="btn-icono" title="Notificaciones">
+                        <i class="ri-notification-3-line"></i>
+                    </button>
+                    <div class="user-profile-badge">
+                        <i class="ri-user-3-line"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Contenido Principal: Cuentas y Cotización -->
+            <main class="content">
+                <div class="header-section">
+                    <h1>Resumen de productos</h1>
+                </div>
+
+                <div class="grid-container">
+                    
+                    <!-- Columna Izquierda: Cuentas y Tarjetas -->
+                    <div class="main-column">
+                        
+                        <div class="card-widget">
+                            <div class="widget-header">
+                                <i class="ri-wallet-3-line"></i>
+                                <h3>Cuentas bancarias</h3>
+                            </div>
+                            <div id="contenedorCuentas" class="widget-body">
+                                <p class="loading-text">Cargando cuentas bancarias...</p>
+                            </div>
+                        </div>
+
+                        <div class="card-widget">
+                            <div class="widget-header">
+                                <i class="ri-bank-card-2-line"></i>
+                                <h3>Tarjetas asociadas</h3>
+                            </div>
+                            <div id="contenedorTarjetas" class="widget-body">
+                                <p class="loading-text">Cargando tarjetas...</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Columna Derecha: Widget de Divisas / Información -->
+                    <aside class="aside-informativo">
+                        <div class="card-widget widget-divisas">
+                            <div class="widget-header">
+                                <i class="ri-exchange-dollar-line"></i>
+                                <h3>Tipo de cambio</h3>
+                            </div>
+                            <div class="selector-moneda">
+                                <span>USD a QTZ</span>
+                            </div>
+                            <div class="tasas">
+                                <div class="tasa-item">
+                                    <span>Compra</span>
+                                    <strong>Q 7.42</strong>
+                                </div>
+                                <div class="tasa-item">
+                                    <span>Venta</span>
+                                    <strong>Q 7.82</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                </div>
+            </main>
+
+            <!-- Pie de Página Simplificado -->
+            <footer class="banca-footer">
+                <p>&copy; 2026 Banco UVG. Todos los derechos reservados.</p>
+                <div class="enlaces-footer">
+                    <a href="#">Políticas de privacidad</a>
+                    <a href="#">Términos y condiciones</a>
+                    <a href="#">Centro de ayuda</a>
+                </div>
+            </footer>
+
+        </div>
     </div>
 
-    <!-- Footer simplificado -->
-    <footer class="banca-footer">
-        <p>&copy; 2026 Banco Central. Todos los derechos reservados.</p>
-        <div class="enlaces-footer">
-            <a href="#">Políticas de privacidad</a> | 
-            <a href="#">Términos y condiciones</a> | 
-            <a href="#">Centro de ayuda</a>
-        </div>
-    </footer>
+    <!-- Scripts del Backend -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.example.js"></script>
+    <script src="banca_personal.js"></script>
 </body>
 </html>
