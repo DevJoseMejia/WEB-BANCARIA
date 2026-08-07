@@ -3,180 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banca en Línea - Consultas y Productos</title>
-    <link rel="stylesheet" href="style_banca.css">
+    <title>Banca en Línea - Consultas | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#F8FAFC">
-    <meta name="description" content="Consultas y solicitud de productos bancarios">
+    <meta name="theme-color" content="#0B1D33">
+    <meta name="description" content="Consulta de movimientos e historial de transacciones - Banco UVG">
 
-    <!-- Google Fonts: Poppins -->
+    <!-- Hoja de estilos compartida de la banca -->
+    <link rel="stylesheet" href="style_banca.css">
+
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Remix Icon -->
+    <!-- Remix Icon CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Login - Banco UVG">
-    <meta property="og:description" content="Consultas y solicitud de productos bancarios de la Banca en Línea UVG">
+    <meta property="og:title" content="Consultas - Banco UVG">
+    <meta property="og:description" content="Consulta el historial de tus cuentas bancarias">
 </head>
 <body>
 
-    <!-- Encabezado con funciones primordiales -->
-    <header class="banca-header">
-        <div class="logo">
-            <h2>🏦 Banco Central</h2>
-        </div>
-        <div class="header-acciones">
-            <button class="btn-icono">🔔 Notificaciones</button>
-            <button class="btn-cerrar-sesion" id="btnCerrarSesion">Cerrar Sesión</button>
-        </div>
-    </header>
-
-    <div class="contenedor-principal">
-        <!-- Navegación lateral -->
-        <nav class="nav-lateral">
-            <ul>
-                <li><a href="Banca_personal.html">Resumen de productos</a></li>
-                <li><a href="#">Abrir una cuenta</a></li>
-                <li class="activo"><a href="consultas.html">Consultas</a></li>
-                <li><a href="#">Transferencias</a></li>
-                <li><a href="pago_de_servicios.html">Pago de servicios</a></li>
-                <li><a href="#">Tarjetas de crédito</a></li>
-                <li><a href="#">Gestiones</a></li>
-            </ul>   
-        </nav>
-
-        <!-- Contenido Principal: Opciones de Consulta de Productos -->
-        <main class="main-banca">
-            <h1>Consultar y solicitar productos</h1>
-            
-            <!-- Filtros por Categoría -->
-            <div class="filtros-productos">
-                <button class="btn-filtro activo">Todos</button>
-                <a href="#tarjetas"><button class="btn-filtro">Tarjetas</button></a>
-                <a href="#prestamos"><button class="btn-filtro">Préstamos</button></a>
-                <a href="#hipotecas"><button class="btn-filtro">Hipotecas</button></a>
+    <div class="dashboard-layout">
+        
+        <!-- NAVEGACIÓN LATERAL (Misma estructura unificada) -->
+        <aside class="nav-lateral">
+            <div class="sidebar-brand">
+                <a href="Banca_personal.html" class="logo">
+                    <i class="ri-bank-fill"></i>
+                    <span>Banco UVG</span>
+                </a>
             </div>
 
-            <!-- Grilla de Tarjetas de Producto -->
-            <section class="grid-productos">
-                
-                <!-- Producto 1: Tarjeta Cashback -->
-                <article class="card-producto" id="tarjetas">
-                    <span class="badge">Pre-aprobada</span>
-                    <div class="card-header">
-                        <h3>Tarjeta Visa Platinum</h3>
-                        <p>Devolución en efectivo por cada compra realizada en supermercados y gasolineras.</p>
-                    </div>
-                    <ul class="detalles-producto">
-                        <li><span>Límite estimado:</span> <strong>Q 15,000.00</strong></li>
-                        <li><span>Cashback:</span> <strong>Hasta 5%</strong></li>
-                        <li><span>Membresía:</span> <strong>Gratis año 1</strong></li>
-                    </ul>
-                    <div class="card-acciones">
-                        <button class="btn-primario btn-solicitar" data-producto="Tarjeta Visa Platinum">Solicitar en línea</button>
-                        <button class="btn-secundario">Ver beneficios</button>
-                    </div>
-                </article>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="Banca_personal.html">
+                            <i class="ri-dashboard-line"></i>
+                            <span>Resumen de productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="consultas.html" class="active">
+                            <i class="ri-file-list-3-line"></i>
+                            <span>Consultas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="ri-arrow-left-right-line"></i>
+                            <span>Transferencias</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pago_de_servicios.html">
+                            <i class="ri-service-line"></i>
+                            <span>Pago de servicios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="ri-bank-card-line"></i>
+                            <span>Tarjetas de crédito</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="ri-add-circle-line"></i>
+                            <span>Abrir una cuenta</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="ri-settings-4-line"></i>
+                            <span>Gestiones</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
-                <!-- Producto 2: Crédito Personal -->
-                <article class="card-producto" id="prestamos">
-                    <span class="badge">Tasa baja</span>
-                    <div class="card-header">
-                        <h3>Préstamo Personal Flex</h3>
-                        <p>Financiamiento rápido con desembolso directo a tu cuenta monetaria.</p>
-                    </div>
-                    <ul class="detalles-producto">
-                        <li><span>Monto máximo:</span> <strong>Q 50,000.00</strong></li>
-                        <li><span>Tasa de interés:</span> <strong>10.5% anual</strong></li>
-                        <li><span>Plazo:</span> <strong>Hasta 48 meses</strong></li>
-                    </ul>
-                    <div class="card-acciones">
-                        <button class="btn-primario btn-solicitar" data-producto="Préstamo Personal Flex">Solicitar crédito</button>
-                        <button class="btn-secundario">Requisitos</button>
-                    </div>
-                </article>
-
-                <!-- Producto 3: Crédito Hipotecario -->
-                <article class="card-producto" id="hipotecas">
-                    <div class="card-header">
-                        <h3>Hipoteca Mi Vivienda</h3>
-                        <p>El plan ideal para comprar o construir la casa de tus sueños con respaldo FHA.</p>
-                    </div>
-                    <ul class="detalles-producto">
-                        <li><span>Enganche desde:</span> <strong>5%</strong></li>
-                        <li><span>Tasa de interés:</span> <strong>7.5% anual</strong></li>
-                        <li><span>Plazo máximo:</span> <strong>25 años</strong></li>
-                    </ul>
-                    <div class="card-acciones">
-                        <button class="btn-primario btn-solicitar" data-producto="Hipoteca Mi Vivienda">Pre-calificar</button>
-                        <button class="btn-secundario">Más información</button>
-                    </div>
-                </article>
-
-            </section>
-        </main>
-
-        <!-- Panel Lateral Informativo / Simulador -->
-        <aside class="aside-informativo">
-            <div class="widget-divisas">
-                <h3>Tipo de cambio</h3>
-                <div class="selector-moneda">
-                    <span>USD a QTZ</span>
-                </div>
-                <div class="tasas">
-                    <div class="tasa-item">
-                        <span>Compra</span>
-                        <strong>Q 7.42</strong>
-                    </div>
-                    <div class="tasa-item">
-                        <span>Venta</span>
-                        <strong>Q 7.82</strong>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Simulador Rápido de Cuota en el Aside -->
-            <div class="simulador-box">
-                <h3>Simulador de Cuota</h3>
-                <div class="campo-simulador">
-                    <label for="monto">Monto a solicitar (Q):</label>
-                    <input type="number" id="monto" placeholder="Ej. 10000" value="10000">
-                </div>
-                <div class="campo-simulador">
-                    <label for="plazo">Plazo estimado:</label>
-                    <select id="plazo">
-                        <option value="12">12 Meses</option>
-                        <option value="24" selected>24 Meses</option>
-                        <option value="36">36 Meses</option>
-                    </select>
-                </div>
-                <!-- Agregamos el ID id="btnCalcularCuota" al botón -->
-                <button class="btn-primario" id="btnCalcularCuota" style="width: 100%;">Calcular cuota</button>
-                
-                <!-- Contenedor donde se dibuja el resultado dinámico -->
-                <div id="resultadoSimulador" style="margin-top: 15px;"></div>
+            <div class="sidebar-footer">
+                <button id="btnCerrarSesion" class="btn-cerrar-sesion">
+                    <i class="ri-logout-box-r-line"></i>
+                    <span>Cerrar Sesión</span>
+                </button>
             </div>
         </aside>
+
+        <!-- ÁREA PRINCIPAL -->
+        <div class="main-wrapper">
+            
+            <!-- Header Superior -->
+            <header class="banca-header">
+                <div class="header-search">
+                    <i class="ri-search-line"></i>
+                    <input type="text" placeholder="Buscar transacción o referencia...">
+                </div>
+                <div class="header-acciones">
+                    <button class="btn-icono" title="Notificaciones">
+                        <i class="ri-notification-3-line"></i>
+                    </button>
+                    <div class="user-profile-badge">
+                        <i class="ri-user-3-line"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Contenido de Consultas -->
+            <main class="content">
+                <div class="header-section">
+                    <h1>Consulta de Movimientos</h1>
+                    <p>Revisa el historial detallado de tus transacciones bancarias</p>
+                </div>
+
+                <!-- Panel Filtros de Búsqueda -->
+                <div class="card-widget filter-card">
+                    <form id="form-filtros" class="filter-form">
+                        <div class="filter-group">
+                            <label for="select-cuenta">Seleccionar Cuenta</label>
+                            <select id="select-cuenta" class="form-control">
+                                <option value="todas">Todas las cuentas</option>
+                                <option value="monetaria">Monetaria Quetzales - **** 4821</option>
+                                <option value="ahorro">Ahorro Preferencial - **** 9012</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="fecha-desde">Desde</label>
+                            <input type="date" id="fecha-desde" class="form-control">
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="fecha-hasta">Hasta</label>
+                            <input type="date" id="fecha-hasta" class="form-control">
+                        </div>
+
+                        <div class="filter-group btn-filter-container">
+                            <button type="submit" class="btn-primary-sm">
+                                <i class="ri-filter-3-line"></i> Filtrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Resumen de Totales del Periodo -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon income"><i class="ri-arrow-down-circle-line"></i></div>
+                        <div>
+                            <span>Total Ingresos</span>
+                            <h3>Q 12,450.00</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon expense"><i class="ri-arrow-up-circle-line"></i></div>
+                        <div>
+                            <span>Total Egresos</span>
+                            <h3>Q 4,120.50</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Historial de Transacciones -->
+                <div class="card-widget">
+                    <div class="widget-header space-between">
+                        <div class="header-title">
+                            <i class="ri-history-line"></i>
+                            3 Historial de Transacciones
+                        </div>
+                        <button class="btn-secondary-sm">
+                            <i class="ri-download-2-line"></i> Exportar PDF
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Descripción</th>
+                                    <th>Cuenta</th>
+                                    <th>Referencia</th>
+                                    <th>Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contenedorMovimientos">
+                                <!-- Filas de ejemplo / renderizadas dinámicamente -->
+                                <tr>
+                                    <td>06/08/2026</td>
+                                    <td>
+                                        <div class="tx-info">
+                                            <strong>Transferencia Recibida</strong>
+                                            <small>Pago de Servicios Tutoria</small>
+                                        </div>
+                                    </td>
+                                    <td>Monetaria (**** 4821)</td>
+                                    <td>REF-890123</td>
+                                    <td class="amount positive">+ Q 450.00</td>
+                                </tr>
+                                <tr>
+                                    <td>04/08/2026</td>
+                                    <td>
+                                        <div class="tx-info">
+                                            <strong>Pago EEGSA</strong>
+                                            <small>Servicio de Energía Eléctrica</small>
+                                        </div>
+                                    </td>
+                                    <td>Monetaria (**** 4821)</td>
+                                    <td>REF-772102</td>
+                                    <td class="amount negative">- Q 215.50</td>
+                                </tr>
+                                <tr>
+                                    <td>01/08/2026</td>
+                                    <td>
+                                        <div class="tx-info">
+                                            <strong>Supermercado La Torre</strong>
+                                            <small>Compra con Tarjeta Débito</small>
+                                        </div>
+                                    </td>
+                                    <td>Monetaria (**** 4821)</td>
+                                    <td>REF-654911</td>
+                                    <td class="amount negative">- Q 680.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- Footer -->
+            <footer class="banca-footer">
+                <p>&copy; 2026 Banco UVG. Todos los derechos reservados.</p>
+                <div class="enlaces-footer">
+                    <a href="#">Políticas de privacidad</a>
+                    <a href="#">Términos y condiciones</a>
+                    <a href="#">Centro de ayuda</a>
+                </div>
+            </footer>
+
+        </div>
     </div>
 
-    <!-- Footer Simplificado -->
-    <footer class="banca-footer">
-        <p>&copy; 2026 Banco Central. Todos los derechos reservados.</p>
-        <div class="enlaces-footer">
-            <a href="#">Políticas de privacidad</a> | 
-            <a href="#">Términos y condiciones</a> | 
-            <a href="#">Centro de ayuda</a>
-        </div>
-    </footer>
-
-
-    <!-- CAPA DE CONTROL BACKEND -->
-
+    <!-- Scripts de Supabase / Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="./config.js"></script>
-    <script src="./consultas.js"></script>
+    <script src="config.example.js"></script>
+    <script src="consultas.js"></script>
 </body>
 </html>

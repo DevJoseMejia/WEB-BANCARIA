@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#F8FAFC">
-    <meta name="description" content="Login del banco UVG">
+    <meta name="theme-color" content="#0B1D33">
+    <meta name="description" content="Banca en Línea - Banco UVG">
     <title>Login - Banco UVG</title>
     
-    <!-- Google Fonts: Poppins -->
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Remix Icon -->
+    <!-- Remix Icon CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
     
     <!-- Enlace al archivo CSS -->
@@ -21,25 +21,26 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="Login - Banco UVG">
-    <meta property="og:description" content="Login de la Banca en Línea UVG">
+    <meta property="og:description" content="Acceso seguro a la Banca en Línea UVG">
 </head>
 <body>
     
+    <!-- Encabezado Principal -->
     <header class="main-header">
         <div class="header-container">
-            <!-- Logo agrupado -->
+            <!-- Identificador de marca / Logo -->
             <a href="index.html" class="logo">
                 <i class="ri-bank-fill"></i>
                 <span>Banco UVG</span>
             </a>
             
-            <!-- Navegación semántica -->
+            <!-- Navegación de tipo de banca -->
             <nav class="header-nav">
                 <a href="Login_personal.html" class="active">Banca Personal</a>
                 <a href="Login_empresarial.html">Banca Empresarial</a>
             </nav>
             
-            <!-- Selector de país con icono -->
+            <!-- Selector de País -->
             <div class="header-actions">
                 <div class="lang-select">
                     <i class="ri-global-line"></i>
@@ -53,60 +54,107 @@
         </div>
     </header>
 
+    <!-- Contenedor Principal (Fondo Azul Profundo de Pantalla Completa) -->
     <main class="login-container">
-        <!-- Tarjeta que contiene el formulario -->
-        <section class="login-card">
-            <div class="login-header">
-                <h2>Bienvenido a tu Banca</h2>
-                <p>Ingresa tus credenciales para continuar</p>
-            </div>
+        <div class="login-wrapper">
             
-            <!-- Se removieron los atributos action y method para delegar el control asíncrono al JS -->
-            <form id="form-login" class="login-form" onsubmit="return false;">
-                
-                <!-- Grupo de Input: Usuario (Refactorizado a Tipo Email para Supabase) -->
-                <div class="input-group">
-                    <label for="usuario">Correo Electrónico</label>
-                    <div class="input-wrapper">
-                        <i class="ri-user-line"></i>
-                        <input type="text" id="usuario" name="usuario" placeholder="Ej. jperez@bancouvg.com" required>
-                    </div>
+            <!-- Sección Informativa (Integrada al fondo azul) -->
+            <aside class="login-info">
+                <div class="info-brand">
+                    <i class="ri-bank-line"></i>
+                    <span>BANCO UVG</span>
                 </div>
                 
-                <!-- Grupo de Input: Contraseña -->
-                <div class="input-group">
-                    <label for="contrasena">Contraseña</label>
-                    <div class="input-wrapper">
-                        <i class="ri-lock-line"></i>
-                        <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required>
-                        <button type="button" class="toggle-password" id="btn-toggle-password" title="Mostrar contraseña">
-                            <i class="ri-eye-off-line"></i>
-                        </button>
-                    </div>
+                <h1 class="info-title">Tu banco,<br>siempre contigo.</h1>
+                
+                <ul class="info-features">
+                    <li>
+                        <i class="ri-shield-check-line"></i>
+                        <div>
+                            <strong>Seguridad avanzada</strong>
+                            <p>Protegemos tu información con los más altos estándares.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="ri-flashlight-line"></i>
+                        <div>
+                            <strong>Acceso rápido y seguro</strong>
+                            <p>Inicia sesión y gestiona tus operaciones con facilidad.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="ri-user-smile-line"></i>
+                        <div>
+                            <strong>Experiencia diseñada para ti</strong>
+                            <p>Interfaz intuitiva, clara y eficiente.</p>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="info-footer">
+                    <a href="mailto:soporte@bancouvg.com">
+                        <i class="ri-customer-service-2-line"></i> ¿Necesitas ayuda? Contáctanos
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Tarjeta Única Flotante para el Formulario -->
+            <section class="login-card">
+                <div class="login-header">
+                    <h2>Bienvenido</h2>
+                    <p>Inicia sesión para continuar</p>
                 </div>
                 
-                <!-- Opciones extra del formulario -->
-                <div class="form-options">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="token" name="token">
-                        <label for="token">Usar Token</label>
+                <!-- Formulario controlado vía JS -->
+                <form id="form-login" class="login-form" onsubmit="return false;">
+                    
+                    <!-- Campo: Correo Electrónico / Usuario -->
+                    <div class="input-group">
+                        <label for="usuario">Usuario o correo electrónico</label>
+                        <div class="input-wrapper">
+                            <i class="ri-mail-line input-icon"></i>
+                            <input type="text" id="usuario" name="usuario" placeholder="Ej. usuario@dominio.com" required autocomplete="username">
+                        </div>
                     </div>
-                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
-                </div>
+                    
+                    <!-- Campo: Contraseña -->
+                    <div class="input-group">
+                        <label for="contrasena">Contraseña</label>
+                        <div class="input-wrapper">
+                            <i class="ri-lock-line input-icon"></i>
+                            <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required autocomplete="current-password">
+                            <button type="button" class="toggle-password" id="btn-toggle-password" title="Mostrar u ocultar contraseña">
+                                <i class="ri-eye-off-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Opciones Complementarias -->
+                    <div class="form-options">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="token" name="token">
+                            <label for="token">Usar Token</label>
+                        </div>
+                        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    
+                    <!-- Botón de Envío -->
+                    <button type="submit" class="btn-primary" id="btn-submit">
+                        <span>Iniciar sesión</span>
+                        <i class="ri-arrow-right-line"></i>
+                    </button>
+                </form>
                 
-                <!-- Botón de envío -->
-                <button type="submit" class="btn-primary" id="btn-submit">
-                    Ingresar <i class="ri-arrow-right-line"></i>
-                </button>
-            </form>
-            
-            <!-- Pie de la tarjeta -->
-            <div class="login-footer">
-                <p>¿No tienes una cuenta? <a href="Crear_usuario.html">Crear usuario</a></p>
-            </div>
-        </section>
+                <!-- Pie de Formulario -->
+                <div class="login-footer">
+                    <p>¿No tienes cuenta? <a href="solicitar_usuario.html">Solicitar cuenta</a></p>
+                </div>
+            </section>
+
+        </div>
     </main>
 
+    <!-- Pie de Página General -->
     <footer class="main-footer">
         <div class="footer-content">
             <p>&copy; 2026 Banco UVG. Todos los derechos reservados.</p>
@@ -117,13 +165,10 @@
         </div>
     </footer>
 
-    <!-- ======================================================================= -->
-    <!-- CAPA DE CONTROL BACKEND (INYECTADA DESPUÉS DEL DISEÑO VISUAL)          -->
-    <!-- ======================================================================= -->
-    <!-- 1. SDK de Supabase JS para la conexión directa con la base de datos cloud -->
+    <!-- SDK de Supabase JS (v2) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- 2. Archivo de lógica (Agregamos el ./ para asegurar que busque en la misma carpeta) -->
+    <!-- Lógica de control JS -->
     <script src="./login.js"></script>
 </body>
 </html>
