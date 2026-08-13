@@ -624,3 +624,363 @@ a {
 .amount.negative {
     color: #DC2626;
 }
+/* ==========================================================================
+   10. Componentes para Pago de Servicios e Impuestos
+   ========================================================================== */
+
+/* Filtros de Categorías (Pills) */
+.filtros-servicios {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+.btn-filtro-servicio {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+}
+
+.btn-filtro-servicio:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.btn-filtro-servicio.active {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border-color: var(--color-accent);
+    box-shadow: 0 4px 10px rgba(0, 104, 169, 0.2);
+}
+
+/* Grilla de Proveedores */
+.grid-proveedores {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 1rem;
+}
+
+.card-proveedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.25rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background-color: var(--color-white);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.card-proveedor:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
+.card-proveedor.activo-card {
+    border: 2px solid var(--color-accent);
+    background-color: rgba(0, 104, 169, 0.03);
+}
+
+.icono-proveedor {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--color-bg-light);
+    color: var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+    transition: all var(--transition-fast);
+}
+
+.card-proveedor.activo-card .icono-proveedor,
+.card-proveedor:hover .icono-proveedor {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+}
+
+.info-proveedor h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+}
+
+.info-proveedor p {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.2rem;
+}
+
+/* Formulario de Pago */
+.form-pago {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.btn-pago-submit {
+    margin-top: 0.5rem;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+}
+
+/* Pagos Frecuentes */
+.servicios-frecuentes-box {
+    margin-top: 1.5rem;
+}
+
+.lista-frecuentes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.lista-frecuentes li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background-color: var(--color-bg-light);
+    border-radius: var(--radius-btn);
+    border: 1px solid var(--color-border);
+}
+
+.frecuente-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.frecuente-info strong {
+    font-size: 0.85rem;
+    color: var(--color-primary-dark);
+}
+
+.frecuente-info span {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+
+/* ==========================================================================
+   11. Estilos para Pestañas de Transferencias (Tabs)
+   ========================================================================== */
+
+.tabs-header {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-bottom: -0.6rem;
+}
+
+.tab-btn:hover {
+    color: var(--color-accent);
+}
+
+.tab-btn.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* ==========================================================================
+   12. Estilos para el Módulo de Gestiones y Productos
+   ========================================================================== */
+
+/* Grid de Catálogo de Productos (Cuentas, Tarjetas, Préstamos) */
+.grid-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.card-producto {
+    position: relative;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all var(--transition-fast);
+}
+
+.card-producto:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card);
+    border-color: var(--color-accent);
+}
+
+.badge-producto {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(0, 104, 169, 0.1);
+    color: var(--color-accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+}
+
+.icono-producto {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background-color: var(--color-bg-light);
+    color: var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+.card-producto h3 {
+    font-size: 1.1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.desc-producto {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    margin-bottom: 1.25rem;
+}
+
+.caracteristicas-list {
+    list-style: none;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.caracteristicas-list li {
+    font-size: 0.82rem;
+    color: var(--color-primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.caracteristicas-list li i {
+    color: #10B981; /* Verde éxito para checks */
+    font-size: 1rem;
+}
+
+.btn-full {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+/* Grid y Lista de Gestiones de Cuenta */
+.grid-gestiones {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.widget-gestion-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
+}
+
+.gestion-icon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    border-radius: 50%;
+    background-color: var(--color-bg-light);
+    color: var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.gestion-icon.alerta-icon {
+    background-color: #FEE2E2;
+    color: #EF4444;
+}
+
+.gestion-info {
+    flex-grow: 1;
+}
+
+.gestion-info h3 {
+    font-size: 0.95rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 0.2rem;
+}
+
+.gestion-info p {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.btn-peligro {
+    background-color: #EF4444;
+    color: var(--color-white);
+    border-color: #EF4444;
+}
+
+.btn-peligro:hover {
+    background-color: #DC2626;
+    border-color: #DC2626;
+}
