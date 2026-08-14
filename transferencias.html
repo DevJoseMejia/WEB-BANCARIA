@@ -142,10 +142,9 @@
                                     <div class="filter-group">
                                         <label for="mb-cuenta-origen">Cuenta Origen</label>
                                         <select id="mb-cuenta-origen" class="form-control" required>
-                                            <option value="" disabled selected>Selecciona cuenta de origen</option>
-                                            <option value="monetaria">Cuenta Monetaria - Q 12,450.00</option>
-                                            <option value="ahorros">Cuenta de Ahorros - Q 35,280.50</option>
+                                            <option value="" disabled selected>Cargando tus cuentas...</option>
                                         </select>
+                                        <small id="mb-saldo-disponible" style="display:block; margin-top:4px; color:#64748b; font-size:0.8rem;"></small>
                                     </div>
 
                                     <div class="filter-group">
@@ -293,6 +292,11 @@
 
         </div>
     </div>
+
+    <!-- Scripts de Supabase / Backend -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.example.js"></script>
+    <script src="transferencias.js"></script>
 
     <!-- Script de control de pestañas simples -->
     <script>

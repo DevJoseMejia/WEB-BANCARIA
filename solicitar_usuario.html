@@ -103,7 +103,7 @@
                 </div>
                 
                 <!-- Formulario de Registro controlado por JS -->
-                <form id="form-signup" class="login-form" onsubmit="return false;">
+                <form id="form-signup" class="login-form">
                     
                     <!-- Campo: Usuario -->
                     <div class="input-group">
@@ -183,10 +183,14 @@
         </div>
     </footer>
 
-    <!-- SDK de Supabase JS (v2) -->
+    
+    <!-- 1. Cargar PRIMERO la librería de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- Lógica de control JS para el registro -->
-    <script src="./signup.js"></script>
+    <!-- 2. Cargar SEGUNDO credenciales -->
+    <script src="config.example.js"></script>
+    
+    <!-- 3. Cargar TERCERO tu lógica de backend/frontend -->
+    <script src="signup.js"></script>
 </body>
 </html>
