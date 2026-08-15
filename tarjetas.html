@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banca en Línea - Gestiones y Seguridad | Banco UVG</title>
+    <title>Banca en Línea - Tarjetas de Crédito | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#0B1D33">
-    <meta name="description" content="Gestión de seguridad y administración de cuenta - Banco UVG">
+    <meta name="description" content="Solicitud de tarjetas de crédito - Banco UVG">
 
     <link rel="stylesheet" href="style_banca.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,7 +54,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="tarjetas.html">
+                        <a href="tarjetas.html" class="active">
                             <i class="ri-bank-card-line"></i>
                             <span>Tarjetas de crédito</span>
                         </a>
@@ -72,7 +72,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="gestiones.html" class="active">
+                        <a href="gestiones.html">
                             <i class="ri-settings-4-line"></i>
                             <span>Gestiones</span>
                         </a>
@@ -109,70 +109,55 @@
 
             <main class="content">
                 <div class="header-section">
-                    <h1>Gestiones y Seguridad</h1>
-                    <p>Administra la seguridad, claves, solicitudes de servicio y datos de tus cuentas</p>
+                    <h1>Tarjetas de Crédito</h1>
+                    <p>Encuentra la tarjeta que mejor se adapta a tus necesidades y estilo de vida</p>
                 </div>
 
-                <div class="grid-gestiones">
+                <div class="grid-productos">
                     
-                    <!-- Opción 1: Cambio de PIN -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon">
-                            <i class="ri-lock-password-line"></i>
+                    <div class="card-producto">
+                        <div class="badge-producto">Cashback</div>
+                        <div class="icono-producto">
+                            <i class="ri-cash-line"></i>
                         </div>
-                        <div class="gestion-info">
-                            <h3>Reiniciar PIN de Tarjeta</h3>
-                            <p>Genera o cambia el PIN de tus tarjetas de débito o crédito para cajeros automáticos.</p>
-                        </div>
-                        <button class="btn-export">Gestionar PIN</button>
+                        <h3>UVG Cashback Connect</h3>
+                        <p class="desc-producto">Recupera dinero en efectivo por cada compra realizada en supermercados y gasolineras.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> 5% de reembolso en categorías seleccionadas</li>
+                            <li><i class="ri-check-line"></i> Membresía gratis el primer año</li>
+                            <li><i class="ri-check-line"></i> Tarjetas adicionales sin costo</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Tarjeta</button>
                     </div>
 
-                    <!-- Opción 2: Seguridad de la Cuenta / Contraseña -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon">
-                            <i class="ri-key-2-line"></i>
+                    <div class="card-producto">
+                        <div class="badge-producto">Viajes</div>
+                        <div class="icono-producto">
+                            <i class="ri-plane-line"></i>
                         </div>
-                        <div class="gestion-info">
-                            <h3>Cambiar Contraseña de Banca</h3>
-                            <p>Actualiza tu clave de acceso periódico para mayor seguridad en tu plataforma.</p>
-                        </div>
-                        <button class="btn-export">Cambiar Clave</button>
+                        <h3>UVG Travel Gold</h3>
+                        <p class="desc-producto">Acumula millas por tus consumos cotidianos y canjéalas por boletos aéreos y hoteles.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Bono de bienvenida de 5,000 millas</li>
+                            <li><i class="ri-check-line"></i> Seguro de viaje internacional incluido</li>
+                            <li><i class="ri-check-line"></i> Acceso a salas VIP seleccionadas</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Tarjeta</button>
                     </div>
 
-                    <!-- Opción 3: Bloqueo Preventivo -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon alerta-icon">
-                            <i class="ri-shield-cross-line"></i>
+                    <div class="card-producto">
+                        <div class="badge-producto">Exclusiva</div>
+                        <div class="icono-producto">
+                            <i class="ri-vip-crown-line"></i>
                         </div>
-                        <div class="gestion-info">
-                            <h3>Bloqueo de Tarjetas (Robo / Extravío)</h3>
-                            <p>Bloquea de inmediato tus tarjetas activas en caso de emergencia o sospecha de fraude.</p>
-                        </div>
-                        <button class="btn-export btn-peligro">Bloquear Tarjeta</button>
-                    </div>
-
-                    <!-- Opción 4: Actualización RTU / Datos -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon">
-                            <i class="ri-file-user-line"></i>
-                        </div>
-                        <div class="gestion-info">
-                            <h3>Actualización de Datos / RTU</h3>
-                            <p>Mantén al día tus datos personales, correo, dirección e información fiscal (SAT).</p>
-                        </div>
-                        <button class="btn-export">Actualizar Datos</button>
-                    </div>
-
-                    <!-- Opción 5: Solicitud de Chequera -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon">
-                            <i class="ri-booklet-line"></i>
-                        </div>
-                        <div class="gestion-info">
-                            <h3>Solicitar Chequera</h3>
-                            <p>Pide una nueva chequera de 25 ó 50 cheques con entrega en agencia o a domicilio.</p>
-                        </div>
-                        <button class="btn-export">Solicitar Chequera</button>
+                        <h3>UVG Black Mastercard</h3>
+                        <p class="desc-producto">Experiencias exclusivas, alto límite crediticio y atención personalizada de primer nivel.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Concierge personal 24/7</li>
+                            <li><i class="ri-check-line"></i> Acceso ilimitado a salas LoungeKey</li>
+                            <li><i class="ri-check-line"></i> Cobertura médica global hasta $150k</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Evaluación</button>
                     </div>
 
                 </div>
@@ -189,7 +174,6 @@
 
         </div>
     </div>
-
 
     <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

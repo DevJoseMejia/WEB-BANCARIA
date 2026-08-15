@@ -59,13 +59,19 @@
                         </a>
                     </li>
                     <li>
-                        <a href="3">
+                        <a href="tarjetas.html">
                             <i class="ri-bank-card-line"></i>
                             <span>Tarjetas de crédito</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="prestamos.html">
+                            <i class="ri-funds-line"></i>
+                            <span>Préstamos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="solicitar_cuenta.html">
                             <i class="ri-add-circle-line"></i>
                             <span>Abrir una cuenta</span>
                         </a>
@@ -91,16 +97,17 @@
         <div class="main-wrapper">
             
             <header class="banca-header">
-                <div class="header-search">
-                    <i class="ri-search-line"></i>
-                    <input type="text" placeholder="¿Qué deseas hacer hoy?">
+                <div class="header-welcome">
+                <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
                     <div class="user-profile-badge">
+                        <a href=gestiones.html class="user-profile-badge">
                         <i class="ri-user-3-line"></i>
+                    </a>
                     </div>
                 </div>
             </header>
@@ -311,5 +318,10 @@
             event.currentTarget.classList.add('active');
         }
     </script>
+
+    <!-- Scripts del Backend -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.example.js"></script>
+    <script src="banca_personal.js"></script>
 </body>
 </html>

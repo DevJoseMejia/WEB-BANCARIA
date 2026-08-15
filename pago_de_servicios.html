@@ -64,13 +64,19 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="tarjetas.html">
                             <i class="ri-bank-card-line"></i>
                             <span>Tarjetas de crédito</span>
                         </a>
                     </li>
+                     <li>
+                        <a href="prestamos.html">
+                            <i class="ri-funds-line"></i>
+                            <span>Préstamos</span>
+                        </a>
+                    </li>
                     <li>
-                        <a href="#">
+                        <a href="solicitar_cuenta.html">
                             <i class="ri-add-circle-line"></i>
                             <span>Abrir una cuenta</span>
                         </a>
@@ -97,16 +103,17 @@
             
             <!-- Encabezado Superior -->
             <header class="banca-header">
-                <div class="header-search">
-                    <i class="ri-search-line"></i>
-                    <input type="text" placeholder="¿Qué deseas hacer hoy?">
+                <div class="header-welcome">
+                <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
                     <div class="user-profile-badge">
+                        <a href=gestiones.html class="user-profile-badge">
                         <i class="ri-user-3-line"></i>
+                        </a>
                     </div>
                 </div>
             </header>
@@ -236,7 +243,7 @@
 
                                 <div class="filter-group">
                                     <label for="identificador-servicio">Número de Contador / NIS / Contrato / NIT</label>
-                                    <input type="text" id="identificador-servicio" class="form-control" placeholder="Ej. 7849302" required>
+                                    <input type="number" id="identificador-servicio" class="form-control" placeholder="Ej. 7849302" required>
                                 </div>
 
                                 <div class="filter-group">

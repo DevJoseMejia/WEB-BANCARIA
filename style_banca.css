@@ -187,29 +187,18 @@ a {
     z-index: 100;
 }
 
-.header-search {
+.header-welcome {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    background-color: var(--color-bg-light);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    border: 1px solid var(--color-border);
-    width: 280px;
+    font-size: 1.1rem;
+    color: var(--color-primary-dark);
+    font-weight: 400;
 }
 
-.header-search i {
-    color: var(--color-text-muted);
-}
-
-.header-search input {
-    background: transparent;
-    border: none;
-    outline: none;
-    font-family: inherit;
-    font-size: 0.85rem;
-    width: 100%;
-    color: var(--color-text-main);
+.header-welcome strong {
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    margin-left: 0.3rem;
 }
 
 .header-acciones {
@@ -833,7 +822,7 @@ a {
 }
 
 /* ==========================================================================
-   12. Estilos para el Módulo de Gestiones y Productos
+   12. Estilos para el Módulo de Gestiones y Productos (Actualizado)
    ========================================================================== */
 
 /* Grid de Catálogo de Productos (Cuentas, Tarjetas, Préstamos) */
@@ -905,6 +894,7 @@ a {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding-left: 0;
 }
 
 .caracteristicas-list li {
@@ -918,6 +908,35 @@ a {
 .caracteristicas-list li i {
     color: #10B981; /* Verde éxito para checks */
     font-size: 1rem;
+}
+
+/* ESTILOS DE BOTONES (Alineados al color #0B1D33 de la barra lateral) */
+.btn-filter-primary,
+.btn-export {
+    background-color: var(--color-primary-dark, #0B1D33);
+    color: #ffffff;
+    border: 1px solid var(--color-primary-dark, #0B1D33);
+    padding: 0.65rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-filter-primary:hover,
+.btn-export:hover {
+    background-color: #162E4D; /* Elevación de contraste en hover */
+    border-color: #162E4D;
+}
+
+.btn-filter-primary:active,
+.btn-export:active {
+    transform: scale(0.98);
 }
 
 .btn-full {
@@ -972,15 +991,16 @@ a {
 .gestion-info p {
     font-size: 0.8rem;
     color: var(--color-text-muted);
-}
+}   
 
+/* Excepción para la acción crítica de bloqueo */
 .btn-peligro {
-    background-color: #EF4444;
-    color: var(--color-white);
-    border-color: #EF4444;
+    background-color: #EF4444 !important;
+    color: #ffffff !important;
+    border-color: #EF4444 !important;
 }
 
 .btn-peligro:hover {
-    background-color: #DC2626;
-    border-color: #DC2626;
+    background-color: #DC2626 !important;
+    border-color: #DC2626 !important;
 }

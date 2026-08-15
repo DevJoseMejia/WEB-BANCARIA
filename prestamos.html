@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banca en Línea - Gestiones y Seguridad | Banco UVG</title>
+    <title>Banca en Línea - Préstamos e Hipotecas | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#0B1D33">
-    <meta name="description" content="Gestión de seguridad y administración de cuenta - Banco UVG">
+    <meta name="description" content="Solicitud de préstamos personales, de vehículo e hipotecas - Banco UVG">
 
     <link rel="stylesheet" href="style_banca.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -60,7 +60,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="prestamos.html">
+                        <a href="prestamos.html" class="active">
                             <i class="ri-funds-line"></i>
                             <span>Préstamos</span>
                         </a>
@@ -72,7 +72,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="gestiones.html" class="active">
+                        <a href="gestiones.html">
                             <i class="ri-settings-4-line"></i>
                             <span>Gestiones</span>
                         </a>
@@ -109,70 +109,52 @@
 
             <main class="content">
                 <div class="header-section">
-                    <h1>Gestiones y Seguridad</h1>
-                    <p>Administra la seguridad, claves, solicitudes de servicio y datos de tus cuentas</p>
+                    <h1>Préstamos e Hipotecas</h1>
+                    <p>Obtén el financiamiento ideal para consolidar metas, adquirir vehículo o comprar tu hogar</p>
                 </div>
 
-                <div class="grid-gestiones">
+                <div class="grid-productos">
                     
-                    <!-- Opción 1: Cambio de PIN -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon">
-                            <i class="ri-lock-password-line"></i>
+                    <div class="card-producto">
+                        <div class="icono-producto">
+                            <i class="ri-user-star-line"></i>
                         </div>
-                        <div class="gestion-info">
-                            <h3>Reiniciar PIN de Tarjeta</h3>
-                            <p>Genera o cambia el PIN de tus tarjetas de débito o crédito para cajeros automáticos.</p>
-                        </div>
-                        <button class="btn-export">Gestionar PIN</button>
+                        <h3>Préstamo Personal</h3>
+                        <p class="desc-producto">Financiamiento libre para consolidación de deudas, viajes o proyectos personales.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Sin necesidad de fiador (según perfil)</li>
+                            <li><i class="ri-check-line"></i> Plazos flexibles hasta 60 meses</li>
+                            <li><i class="ri-check-line"></i> Desembolso inmediato en tu cuenta</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Calcular Préstamo</button>
                     </div>
 
-                    <!-- Opción 2: Seguridad de la Cuenta / Contraseña -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon">
-                            <i class="ri-key-2-line"></i>
+                    <div class="card-producto">
+                        <div class="icono-producto">
+                            <i class="ri-car-line"></i>
                         </div>
-                        <div class="gestion-info">
-                            <h3>Cambiar Contraseña de Banca</h3>
-                            <p>Actualiza tu clave de acceso periódico para mayor seguridad en tu plataforma.</p>
-                        </div>
-                        <button class="btn-export">Cambiar Clave</button>
+                        <h3>Crédito Auto UVG</h3>
+                        <p class="desc-producto">Especial para vehículos nuevos o semi-nuevos con las mejores tasas del mercado.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Enganche desde el 10%</li>
+                            <li><i class="ri-check-line"></i> Hasta 84 meses de financiamiento</li>
+                            <li><i class="ri-check-line"></i> Seguro de vehículo incluido en la cuota</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Cotizar Vehículo</button>
                     </div>
 
-                    <!-- Opción 3: Bloqueo Preventivo -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon alerta-icon">
-                            <i class="ri-shield-cross-line"></i>
+                    <div class="card-producto">
+                        <div class="icono-producto">
+                            <i class="ri-home-heart-line"></i>
                         </div>
-                        <div class="gestion-info">
-                            <h3>Bloqueo de Tarjetas (Robo / Extravío)</h3>
-                            <p>Bloquea de inmediato tus tarjetas activas en caso de emergencia o sospecha de fraude.</p>
-                        </div>
-                        <button class="btn-export btn-peligro">Bloquear Tarjeta</button>
-                    </div>
-
-                    <!-- Opción 4: Actualización RTU / Datos -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon">
-                            <i class="ri-file-user-line"></i>
-                        </div>
-                        <div class="gestion-info">
-                            <h3>Actualización de Datos / RTU</h3>
-                            <p>Mantén al día tus datos personales, correo, dirección e información fiscal (SAT).</p>
-                        </div>
-                        <button class="btn-export">Actualizar Datos</button>
-                    </div>
-
-                    <!-- Opción 5: Solicitud de Chequera -->
-                    <div class="card-widget widget-gestion-item">
-                        <div class="gestion-icon">
-                            <i class="ri-booklet-line"></i>
-                        </div>
-                        <div class="gestion-info">
-                            <h3>Solicitar Chequera</h3>
-                            <p>Pide una nueva chequera de 25 ó 50 cheques con entrega en agencia o a domicilio.</p>
-                        </div>
-                        <button class="btn-export">Solicitar Chequera</button>
+                        <h3>Hipoteca Vivienda</h3>
+                        <p class="desc-producto">Haz realidad la compra, construcción o remodelación de tu hogar con tasa preferencial.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Financiamiento hasta de 25 años</li>
+                            <li><i class="ri-check-line"></i> Asesoría legal y avalúo guiado</li>
+                            <li><i class="ri-check-line"></i> Tasa de interés competitiva y estable</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Asesoría</button>
                     </div>
 
                 </div>
