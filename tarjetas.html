@@ -3,33 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banca en Línea - Resumen | Banco UVG</title>
+    <title>Banca en Línea - Tarjetas de Crédito | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#0B1D33">
-    <meta name="description" content="Resumen de productos bancarios - Banco UVG">
+    <meta name="description" content="Solicitud de tarjetas de crédito - Banco UVG">
 
-    <!-- Hoja de estilos de la banca -->
     <link rel="stylesheet" href="style_banca.css">
-
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Remix Icon CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Banca en Línea - Banco UVG">
-    <meta property="og:description" content="Resumen de productos financieros">
 </head>
 <body>
 
     <div class="dashboard-layout">
         
-        <!-- NAVEGACIÓN LATERAL (Alto completo, tono Azul Profundo) -->
+        <!-- NAVEGACIÓN LATERAL -->
         <aside class="nav-lateral">
-            <!-- Brand / Logo Integrado -->
             <div class="sidebar-brand">
                 <a href="Banca_personal.html" class="logo">
                     <i class="ri-bank-fill"></i>
@@ -37,11 +27,10 @@
                 </a>
             </div>
 
-            <!-- Menú de Navegación -->
             <nav class="sidebar-menu">
                 <ul>
                     <li>
-                        <a href="Banca_personal.html" class="active">
+                        <a href="Banca_personal.html">
                             <i class="ri-dashboard-line"></i>
                             <span>Resumen de productos</span>
                         </a>
@@ -65,7 +54,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="tarjetas.html">
+                        <a href="tarjetas.html" class="active">
                             <i class="ri-bank-card-line"></i>
                             <span>Tarjetas de crédito</span>
                         </a>
@@ -91,7 +80,6 @@
                 </ul>
             </nav>
 
-            <!-- Botón de Cerrar Sesión al pie del Sidebar -->
             <div class="sidebar-footer">
                 <button id="btnCerrarSesion" class="btn-cerrar-sesion">
                     <i class="ri-logout-box-r-line"></i>
@@ -100,10 +88,9 @@
             </div>
         </aside>
 
-        <!-- ÁREA PRINCIPAL DE CONTENIDO -->
+        <!-- ÁREA PRINCIPAL -->
         <div class="main-wrapper">
             
-            <!-- Encabezado Superior (Header) -->
             <header class="banca-header">
                 <div class="header-welcome">
                 <span>Hola, <strong id="userName">Usuario</strong></span>
@@ -112,75 +99,70 @@
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
-                    <div>
-                    <a href=gestiones.html class="user-profile-badge">
+                    <div class="user-profile-badge">
+                        <a href=gestiones.html class="user-profile-badge">
                         <i class="ri-user-3-line"></i>
                     </a>
                     </div>
                 </div>
             </header>
 
-            <!-- Contenido Principal: Cuentas y Cotización -->
             <main class="content">
                 <div class="header-section">
-                    <h1>Resumen de productos</h1>
-                    <p id="saludoUsuario">Cargando tus productos...</p>
+                    <h1>Tarjetas de Crédito</h1>
+                    <p>Encuentra la tarjeta que mejor se adapta a tus necesidades y estilo de vida</p>
                 </div>
 
-                <div class="grid-container">
+                <div class="grid-productos">
                     
-                    <!-- Columna Izquierda: Cuentas y Tarjetas -->
-                    <div class="main-column">
-                        
-                        <div class="card-widget">
-                            <div class="widget-header">
-                                <i class="ri-wallet-3-line"></i>
-                                <h3>Cuentas bancarias</h3>
-                            </div>
-                            <div id="contenedorCuentas" class="widget-body">
-                                <p class="loading-text">Cargando cuentas bancarias...</p>
-                            </div>
+                    <div class="card-producto">
+                        <div class="badge-producto">Cashback</div>
+                        <div class="icono-producto">
+                            <i class="ri-cash-line"></i>
                         </div>
-
-                        <div class="card-widget">
-                            <div class="widget-header">
-                                <i class="ri-bank-card-2-line"></i>
-                                <h3>Tarjetas asociadas</h3>
-                            </div>
-                            <div id="contenedorTarjetas" class="widget-body">
-                                <p class="loading-text">Cargando tarjetas...</p>
-                            </div>
-                        </div>
-
+                        <h3>UVG Cashback Connect</h3>
+                        <p class="desc-producto">Recupera dinero en efectivo por cada compra realizada en supermercados y gasolineras.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> 5% de reembolso en categorías seleccionadas</li>
+                            <li><i class="ri-check-line"></i> Membresía gratis el primer año</li>
+                            <li><i class="ri-check-line"></i> Tarjetas adicionales sin costo</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Tarjeta</button>
                     </div>
 
-                    <!-- Columna Derecha: Widget de Divisas / Información -->
-                    <aside class="aside-informativo">
-                        <div class="card-widget widget-divisas">
-                            <div class="widget-header">
-                                <i class="ri-exchange-dollar-line"></i>
-                                <h3>Tipo de cambio</h3>
-                            </div>
-                            <div class="selector-moneda">
-                                <span>USD a QTZ</span>
-                            </div>
-                            <div class="tasas">
-                                <div class="tasa-item">
-                                    <span>Compra</span>
-                                    <strong>Q 7.42</strong>
-                                </div>
-                                <div class="tasa-item">
-                                    <span>Venta</span>
-                                    <strong>Q 7.82</strong>
-                                </div>
-                            </div>
+                    <div class="card-producto">
+                        <div class="badge-producto">Viajes</div>
+                        <div class="icono-producto">
+                            <i class="ri-plane-line"></i>
                         </div>
-                    </aside>
+                        <h3>UVG Travel Gold</h3>
+                        <p class="desc-producto">Acumula millas por tus consumos cotidianos y canjéalas por boletos aéreos y hoteles.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Bono de bienvenida de 5,000 millas</li>
+                            <li><i class="ri-check-line"></i> Seguro de viaje internacional incluido</li>
+                            <li><i class="ri-check-line"></i> Acceso a salas VIP seleccionadas</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Tarjeta</button>
+                    </div>
+
+                    <div class="card-producto">
+                        <div class="badge-producto">Exclusiva</div>
+                        <div class="icono-producto">
+                            <i class="ri-vip-crown-line"></i>
+                        </div>
+                        <h3>UVG Black Mastercard</h3>
+                        <p class="desc-producto">Experiencias exclusivas, alto límite crediticio y atención personalizada de primer nivel.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Concierge personal 24/7</li>
+                            <li><i class="ri-check-line"></i> Acceso ilimitado a salas LoungeKey</li>
+                            <li><i class="ri-check-line"></i> Cobertura médica global hasta $150k</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Evaluación</button>
+                    </div>
 
                 </div>
             </main>
 
-            <!-- Pie de Página Simplificado -->
             <footer class="banca-footer">
                 <p>&copy; 2026 Banco UVG. Todos los derechos reservados.</p>
                 <div class="enlaces-footer">
@@ -197,5 +179,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
     <script src="banca_personal.js"></script>
+
 </body>
 </html>

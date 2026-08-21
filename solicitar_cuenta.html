@@ -3,33 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banca en Línea - Resumen | Banco UVG</title>
+    <title>Banca en Línea - Abrir una Cuenta | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#0B1D33">
-    <meta name="description" content="Resumen de productos bancarios - Banco UVG">
+    <meta name="description" content="Solicitud de cuentas monetarias y de ahorro - Banco UVG">
 
-    <!-- Hoja de estilos de la banca -->
     <link rel="stylesheet" href="style_banca.css">
-
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Remix Icon CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Banca en Línea - Banco UVG">
-    <meta property="og:description" content="Resumen de productos financieros">
 </head>
 <body>
 
     <div class="dashboard-layout">
         
-        <!-- NAVEGACIÓN LATERAL (Alto completo, tono Azul Profundo) -->
+        <!-- NAVEGACIÓN LATERAL -->
         <aside class="nav-lateral">
-            <!-- Brand / Logo Integrado -->
             <div class="sidebar-brand">
                 <a href="Banca_personal.html" class="logo">
                     <i class="ri-bank-fill"></i>
@@ -37,11 +27,10 @@
                 </a>
             </div>
 
-            <!-- Menú de Navegación -->
             <nav class="sidebar-menu">
                 <ul>
                     <li>
-                        <a href="Banca_personal.html" class="active">
+                        <a href="Banca_personal.html">
                             <i class="ri-dashboard-line"></i>
                             <span>Resumen de productos</span>
                         </a>
@@ -77,7 +66,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="solicitar_cuenta.html">
+                        <a href="solicitar_cuenta.html" class="active">
                             <i class="ri-add-circle-line"></i>
                             <span>Abrir una cuenta</span>
                         </a>
@@ -91,7 +80,6 @@
                 </ul>
             </nav>
 
-            <!-- Botón de Cerrar Sesión al pie del Sidebar -->
             <div class="sidebar-footer">
                 <button id="btnCerrarSesion" class="btn-cerrar-sesion">
                     <i class="ri-logout-box-r-line"></i>
@@ -100,10 +88,9 @@
             </div>
         </aside>
 
-        <!-- ÁREA PRINCIPAL DE CONTENIDO -->
+        <!-- ÁREA PRINCIPAL -->
         <div class="main-wrapper">
             
-            <!-- Encabezado Superior (Header) -->
             <header class="banca-header">
                 <div class="header-welcome">
                 <span>Hola, <strong id="userName">Usuario</strong></span>
@@ -112,75 +99,68 @@
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
-                    <div>
-                    <a href=gestiones.html class="user-profile-badge">
+                    <div class="user-profile-badge">
+                        <a href=gestiones.html class="user-profile-badge">
                         <i class="ri-user-3-line"></i>
                     </a>
                     </div>
                 </div>
             </header>
 
-            <!-- Contenido Principal: Cuentas y Cotización -->
             <main class="content">
                 <div class="header-section">
-                    <h1>Resumen de productos</h1>
-                    <p id="saludoUsuario">Cargando tus productos...</p>
+                    <h1>Cuentas Disponibles</h1>
+                    <p>Solicita la apertura de un nuevo producto monetario o de ahorro en pocos pasos</p>
                 </div>
 
-                <div class="grid-container">
+                <div class="grid-productos">
                     
-                    <!-- Columna Izquierda: Cuentas y Tarjetas -->
-                    <div class="main-column">
-                        
-                        <div class="card-widget">
-                            <div class="widget-header">
-                                <i class="ri-wallet-3-line"></i>
-                                <h3>Cuentas bancarias</h3>
-                            </div>
-                            <div id="contenedorCuentas" class="widget-body">
-                                <p class="loading-text">Cargando cuentas bancarias...</p>
-                            </div>
+                    <div class="card-producto">
+                        <div class="badge-producto">Más Popular</div>
+                        <div class="icono-producto">
+                            <i class="ri-safe-2-line"></i>
                         </div>
-
-                        <div class="card-widget">
-                            <div class="widget-header">
-                                <i class="ri-bank-card-2-line"></i>
-                                <h3>Tarjetas asociadas</h3>
-                            </div>
-                            <div id="contenedorTarjetas" class="widget-body">
-                                <p class="loading-text">Cargando tarjetas...</p>
-                            </div>
-                        </div>
-
+                        <h3>Cuenta Monetaria Premier</h3>
+                        <p class="desc-producto">Manejo flexible en Quetzales o Dólares con chequera y tarjeta de débito preferencial.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Cero comisión por manejo de cuenta</li>
+                            <li><i class="ri-check-line"></i> Acceso ilimitado a Banca en Línea</li>
+                            <li><i class="ri-check-line"></i> Primera chequera gratis</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Cuenta</button>
                     </div>
 
-                    <!-- Columna Derecha: Widget de Divisas / Información -->
-                    <aside class="aside-informativo">
-                        <div class="card-widget widget-divisas">
-                            <div class="widget-header">
-                                <i class="ri-exchange-dollar-line"></i>
-                                <h3>Tipo de cambio</h3>
-                            </div>
-                            <div class="selector-moneda">
-                                <span>USD a QTZ</span>
-                            </div>
-                            <div class="tasas">
-                                <div class="tasa-item">
-                                    <span>Compra</span>
-                                    <strong>Q 7.42</strong>
-                                </div>
-                                <div class="tasa-item">
-                                    <span>Venta</span>
-                                    <strong>Q 7.82</strong>
-                                </div>
-                            </div>
+                    <div class="card-producto">
+                        <div class="icono-producto">
+                            <i class="ri-piggy-bank-line"></i>
                         </div>
-                    </aside>
+                        <h3>Cuenta de Ahorro Alto Rendimiento</h3>
+                        <p class="desc-producto">Maximiza tus ahorros con tasas de interés competitivas y disponibilidad inmediata.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Tasa preferencial de hasta 4.5% anual</li>
+                            <li><i class="ri-check-line"></i> Intereses capitalizables mensualmente</li>
+                            <li><i class="ri-check-line"></i> Sin saldo mínimo de apertura</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Cuenta</button>
+                    </div>
+
+                    <div class="card-producto">
+                        <div class="icono-producto">
+                            <i class="ri-time-line"></i>
+                        </div>
+                        <h3>Depósito a Plazo Fijo</h3>
+                        <p class="desc-producto">Invierte con rendimiento garantizado desde 3 hasta 36 meses de plazo.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Rendimiento fijo asegurado</li>
+                            <li><i class="ri-check-line"></i> Pago de intereses mensual o al vencimiento</li>
+                            <li><i class="ri-check-line"></i> Garantía para créditos futuros</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Simular Inversión</button>
+                    </div>
 
                 </div>
             </main>
 
-            <!-- Pie de Página Simplificado -->
             <footer class="banca-footer">
                 <p>&copy; 2026 Banco UVG. Todos los derechos reservados.</p>
                 <div class="enlaces-footer">
@@ -197,5 +177,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
     <script src="banca_personal.js"></script>
+
 </body>
 </html>
