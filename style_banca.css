@@ -181,7 +181,7 @@ a {
     padding: 0.85rem 2rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     position: sticky;
     top: 0;
     z-index: 100;

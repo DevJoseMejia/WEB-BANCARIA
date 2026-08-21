@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
             sessionStorage.clear();
             localStorage.clear();
-            alert("Sesión finalizada con éxito.");
             window.location.href = "Login_personal.html";
         });
     }

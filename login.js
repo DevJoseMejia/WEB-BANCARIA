@@ -98,7 +98,6 @@ if (formLogin) {
             sessionStorage.setItem('id_usuario', usuario.id_usuario);
 
             // Mensaje de éxito y redirección
-            alert("¡Bienvenido al sistema! Inicio de sesión exitoso.");
             window.location.href = "Banca_personal.html";
 
         } catch (err) {
