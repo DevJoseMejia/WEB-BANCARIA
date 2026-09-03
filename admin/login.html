@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#171B24">
+    <meta name="description" content="Portal de Colaboradores - Banco UVG">
+    <title>Portal de Colaboradores - Banco UVG</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style_admin.css">
+</head>
+<body class="pagina-login">
+
+    <section class="login-card">
+        <div class="staff-brand">
+            <i class="ri-shield-user-line"></i>
+            <span>Banco UVG · Portal de Colaboradores</span>
+        </div>
+
+        <div class="login-header">
+            <h2>Acceso interno</h2>
+            <p>Uso exclusivo de personal del banco. No relacionado con la Banca en Línea de clientes.</p>
+        </div>
+
+        <form id="form-login-admin" class="login-form" onsubmit="return false;">
+            <div class="input-group">
+                <label for="codigo">Código de trabajador</label>
+                <div class="input-wrapper">
+                    <i class="ri-id-card-line input-icon"></i>
+                    <input type="text" id="codigo" name="codigo" placeholder="Ej. CAJ-0001" required autocomplete="username">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="contrasena">Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="ri-lock-line input-icon"></i>
+                    <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="toggle-password" id="btn-toggle-password" title="Mostrar u ocultar contraseña">
+                        <i class="ri-eye-off-line"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btn-submit">
+                <span>Iniciar sesión</span>
+                <i class="ri-arrow-right-line"></i>
+            </button>
+        </form>
+
+        <div class="login-footer-note">
+            <p>¿Nuevo en el banco? Tu código y contraseña te los entrega un Administrador.</p>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>

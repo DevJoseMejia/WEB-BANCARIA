@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#171B24">
+    <title>Panel de Colaboradores - Banco UVG</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style_admin.css">
+</head>
+<body class="pagina-panel">
+
+    <header class="panel-header">
+        <div class="panel-brand">
+            <i class="ri-shield-user-line"></i>
+            <span>Portal de Colaboradores</span>
+        </div>
+        <div class="panel-user">
+            <span id="txtCodigoEmpleado">Cargando...</span>
+            <span class="badge-rol" id="badgeRol">-</span>
+            <button id="btnCerrarSesion" class="btn-logout">
+                <i class="ri-logout-box-r-line"></i> Cerrar sesión
+            </button>
+        </div>
+    </header>
+
+    <main class="panel-content">
+
+        <!-- CREAR CLIENTE (Trabajador, Supervisor, Administrador) -->
+        <section class="panel-section" id="seccionCrearCliente">
+            <h2><i class="ri-user-add-line"></i> Registrar nuevo cliente</h2>
+            <p class="section-desc">Completa los datos del cliente que está siendo atendido. Se generará una contraseña temporal que deberás entregarle junto con su usuario.</p>
+
+            <form id="form-crear-cliente" onsubmit="return false;">
+                <div class="form-grid">
+                    <div>
+                        <label class="field-label" for="cli-nombres">Nombres</label>
+                        <input type="text" id="cli-nombres" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="field-label" for="cli-apellido1">Primer apellido</label>
+                        <input type="text" id="cli-apellido1" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="field-label" for="cli-apellido2">Segundo apellido</label>
+                        <input type="text" id="cli-apellido2" class="form-control">
+                    </div>
+                    <div>
+                        <label class="field-label" for="cli-dpi">DPI (13 dígitos)</label>
+                        <input type="text" id="cli-dpi" class="form-control" inputmode="numeric" placeholder="1234567890101" required>
+                    </div>
+                    <div>
+                        <label class="field-label" for="cli-fecha-nacimiento">Fecha de nacimiento</label>
+                        <input type="date" id="cli-fecha-nacimiento" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="field-label" for="cli-telefono">Teléfono (8 dígitos)</label>
+                        <div class="tel-group">
+                            <span class="tel-prefix">+502</span>
+                            <input type="text" id="cli-telefono" class="form-control" inputmode="numeric" placeholder="55501234" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="field-label" for="cli-usuario">Usuario (se genera solo)</label>
+                        <input type="text" id="cli-usuario" class="form-control" readonly placeholder="Completa nombres, apellidos y DPI...">
+                    </div>
+                    <div>
+                        <label class="field-label" for="cli-correo">Correo electrónico</label>
+                        <input type="email" id="cli-correo" class="form-control" required>
+                    </div>
+                    <div class="full">
+                        <label class="field-label" for="cli-direccion">Dirección</label>
+                        <input type="text" id="cli-direccion" class="form-control" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnCrearCliente" style="margin-top: 1.25rem; max-width: 260px;">
+                    <i class="ri-user-add-line"></i> <span>Registrar cliente</span>
+                </button>
+            </form>
+
+            <div id="resultadoCliente"></div>
+        </section>
+
+        <!-- CREAR CAJEROS (solo Administrador) -->
+        <section class="panel-section" id="seccionCrearStaff" hidden>
+            <h2><i class="ri-team-line"></i> Alta de cajeros</h2>
+            <p class="section-desc">Genera credenciales para nuevo personal de forma automática. Guarda o imprime la tabla resultante: las contraseñas no se vuelven a mostrar.</p>
+
+            <form id="form-crear-staff" class="inline-form" onsubmit="return false;">
+                <div class="field-block">
+                    <label class="field-label" for="cantidad-cajeros">¿Cuántos cajeros nuevos?</label>
+                    <input type="number" id="cantidad-cajeros" class="form-control" min="1" max="50" value="1" required>
+                </div>
+                <button type="submit" class="btn-secondary-outline" id="btnCrearStaff">
+                    <i class="ri-add-circle-line"></i> Generar credenciales
+                </button>
+            </form>
+
+            <div id="resultadoStaff"></div>
+        </section>
+
+        <!-- LISTADO / BÚSQUEDA DE CAJEROS (solo Administrador) -->
+        <section class="panel-section" id="seccionListaStaff" hidden>
+            <h2><i class="ri-search-line"></i> Cajeros registrados</h2>
+            <p class="section-desc">Muestra los últimos 20 cajeros dados de alta. Busca por código para encontrar cualquier otro.</p>
+
+            <form id="form-buscar-staff" class="inline-form" onsubmit="return false;">
+                <div class="field-block">
+                    <label class="field-label" for="buscar-codigo">Buscar por código</label>
+                    <input type="text" id="buscar-codigo" class="form-control" placeholder="Ej. CAJ-0007">
+                </div>
+                <button type="submit" class="btn-secondary-outline" id="btnBuscarStaff">
+                    <i class="ri-search-line"></i> Buscar
+                </button>
+                <button type="button" class="btn-secondary-outline" id="btnVerUltimosStaff">
+                    <i class="ri-refresh-line"></i> Ver últimos 20
+                </button>
+            </form>
+
+            <div id="resultadoListaStaff"></div>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="panel.js"></script>
+</body>
+</html>

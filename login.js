@@ -37,15 +37,17 @@ if (formLogin) {
         e.preventDefault(); 
         console.log("⏳ Iniciando handshake de autenticación...");
         
-        const email = txtEmail.value.trim();
+        const valorLogin = txtEmail.value.trim();
         const password = txtPassword.value;
 
         try {
-            // 1. Petición limpia a la tabla usuarios
+            // 1. Petición limpia a la tabla usuarios. El campo acepta tanto
+            // el username (el que entrega el cajero al abrir la cuenta) como
+            // el correo, tal como indica la etiqueta del formulario.
             const { data: resultados, error } = await supabaseClient
                 .from('usuarios')
-                .select('id_usuario, password_hash, estado_cuenta, id_rol') 
-                .eq('email', email);
+                .select('id_usuario, password_hash, estado_cuenta, id_rol')
+                .or(`email.eq.${valorLogin},username.eq.${valorLogin}`);
 
             if (error) {
                 console.error("💥 Error de base de datos:", error);
@@ -54,7 +56,7 @@ if (formLogin) {
             }
 
             if (!resultados || resultados.length === 0) {
-                console.warn("⚠️ El correo no existe en la tabla usuarios.");
+                console.warn("⚠️ El usuario o correo no existe en la tabla usuarios.");
                 alert("Credenciales incorrectas o usuario no registrado.");
                 return;
             }
