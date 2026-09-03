@@ -93,16 +93,16 @@
             
             <header class="banca-header">
                 <div class="header-welcome">
-                <span>Hola, <strong id="userName">Usuario</strong></span>
+                    <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
                     <div class="user-profile-badge">
-                        <a href=gestiones.html class="user-profile-badge">
-                        <i class="ri-user-3-line"></i>
-                    </a>
+                        <a href="gestiones.html" class="user-profile-badge">
+                            <i class="ri-user-3-line"></i>
+                        </a>
                     </div>
                 </div>
             </header>
@@ -127,7 +127,7 @@
                             <li><i class="ri-check-line"></i> Membresía gratis el primer año</li>
                             <li><i class="ri-check-line"></i> Tarjetas adicionales sin costo</li>
                         </ul>
-                        <button class="btn-filter-primary btn-full">Solicitar Tarjeta</button>
+                        <button class="btn-filter-primary btn-full btn-solicitar-tarjeta" data-tarjeta="UVG Cashback Connect">Solicitar Tarjeta</button>
                     </div>
 
                     <div class="card-producto">
@@ -142,7 +142,7 @@
                             <li><i class="ri-check-line"></i> Seguro de viaje internacional incluido</li>
                             <li><i class="ri-check-line"></i> Acceso a salas VIP seleccionadas</li>
                         </ul>
-                        <button class="btn-filter-primary btn-full">Solicitar Tarjeta</button>
+                        <button class="btn-filter-primary btn-full btn-solicitar-tarjeta" data-tarjeta="UVG Travel Gold">Solicitar Tarjeta</button>
                     </div>
 
                     <div class="card-producto">
@@ -157,10 +157,64 @@
                             <li><i class="ri-check-line"></i> Acceso ilimitado a salas LoungeKey</li>
                             <li><i class="ri-check-line"></i> Cobertura médica global hasta $150k</li>
                         </ul>
-                        <button class="btn-filter-primary btn-full">Solicitar Evaluación</button>
+                        <button class="btn-filter-primary btn-full btn-solicitar-tarjeta" data-tarjeta="UVG Black Mastercard">Solicitar Evaluación</button>
                     </div>
 
                 </div>
+
+                <!-- MODAL DE FORMULARIO DE SOLICITUD -->
+                <div id="modalSolicitud" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Solicitud de Tarjeta de Crédito</h2>
+                            <button type="button" class="btn-cerrar-modal" id="btnCerrarModal">&times;</button>
+                        </div>
+                        <form id="formSolicitudTarjeta" class="form-solicitud">
+                            <div class="form-group">
+                                <label for="tipoTarjeta">Tarjeta Seleccionada</label>
+                                <select id="tipoTarjeta" name="tipoTarjeta" required>
+                                    <option value="" disabled selected>Selecciona una tarjeta</option>
+                                    <option value="UVG Cashback Connect">UVG Cashback Connect</option>
+                                    <option value="UVG Travel Gold">UVG Travel Gold</option>
+                                    <option value="UVG Black Mastercard">UVG Black Mastercard</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ingresosMensuales">Ingresos Mensuales Estimados (GTQ)</label>
+                                <input type="number" id="ingresosMensuales" name="ingresosMensuales" placeholder="Ej. 7500" min="0" step="100" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lugarTrabajo">Lugar de Trabajo / Empresa</label>
+                                <input type="text" id="lugarTrabajo" name="lugarTrabajo" placeholder="Nombre de la empresa" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="puestoTrabajo">Cargo o Puesto</label>
+                                <input type="text" id="puestoTrabajo" name="puestoTrabajo" placeholder="Ej. Analista de Sistemas" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefonoContacto">Teléfono de Contacto</label>
+                                <input type="tel" id="telefonoContacto" name="telefonoContacto" placeholder="Ej. 55551234" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="direccionEntrega">Dirección de Entrega</label>
+                                <textarea id="direccionEntrega" name="direccionEntrega" rows="3" placeholder="Dirección completa para entrega de la tarjeta" required></textarea>
+                            </div>
+
+                            <div id="mensajeEstado" class="mensaje-estado"></div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn-secundario" id="btnCancelarModal">Cancelar</button>
+                                <button type="submit" class="btn-filter-primary" id="btnEnviarSolicitud">Enviar Solicitud</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
             </main>
 
             <footer class="banca-footer">
@@ -179,6 +233,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
     <script src="banca_personal.js"></script>
+    <script src="tarjetas.js"></script>
 
 </body>
 </html>

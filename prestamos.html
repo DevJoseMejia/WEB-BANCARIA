@@ -93,16 +93,16 @@
             
             <header class="banca-header">
                 <div class="header-welcome">
-                <span>Hola, <strong id="userName">Usuario</strong></span>
+                    <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
                     <div class="user-profile-badge">
-                        <a href=gestiones.html class="user-profile-badge">
-                        <i class="ri-user-3-line"></i>
-                    </a>
+                        <a href="gestiones.html" class="user-profile-badge">
+                            <i class="ri-user-3-line"></i>
+                        </a>
                     </div>
                 </div>
             </header>
@@ -130,6 +130,153 @@
         </div>
     </div>
 
+    <!-- MODAL DINÁMICO DE SOLICITUD DE PRODUCTOS -->
+    <div class="modal-overlay" id="modalSolicitudProducto" aria-hidden="true">
+        <div class="modal-container" role="dialog" aria-labelledby="modalTitulo">
+            
+            <!-- Encabezado del Modal -->
+            <header class="modal-header">
+                <div class="modal-title-group">
+                    <div class="modal-icon" id="modalIcono">
+                        <i class="ri-funds-line"></i>
+                    </div>
+                    <div>
+                        <h2 id="modalTitulo">Solicitud de Préstamo</h2>
+                        <p id="modalSubtitulo">Completa los datos para iniciar la evaluación</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" id="btnCerrarModal" title="Cerrar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </header>
+
+            <!-- Indicador de Pasos -->
+            <div class="modal-steps-indicator">
+                <div class="step-item active" data-step="1">
+                    <span class="step-number">1</span>
+                    <span class="step-label">Detalles</span>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step-item" data-step="2">
+                    <span class="step-number">2</span>
+                    <span class="step-label">Confirmación</span>
+                </div>
+            </div>
+
+            <!-- Formulario Principal -->
+            <form id="formSolicitudProducto" class="modal-body">
+                
+                <!-- Campo Oculto para Backend -->
+                <input type="hidden" id="productoIdHidden" name="producto_id" value="">
+                <input type="hidden" id="categoriaProductoHidden" name="categoria" value="prestamo">
+
+                <!-- PASO 1: Configuración del Producto -->
+                <div class="modal-step-content active" id="pasoModal1">
+                    
+                    <!-- Datos del Solicitante (Pre-llenados) -->
+                    <div class="form-row-two">
+                        <div class="form-group">
+                            <label for="inputNombreSolicitante">Nombre del Titular</label>
+                            <input type="text" id="inputNombreSolicitante" class="form-control" readonly placeholder="Cargando usuario...">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputCorreoSolicitante">Correo Electrónico</label>
+                            <input type="email" id="inputCorreoSolicitante" class="form-control" readonly placeholder="usuario@uvg.edu.gt">
+                        </div>
+                    </div>
+
+                    <!-- Contenedor Dinámico para Campos Específicos -->
+                    <div id="contenedorCamposDinamicos">
+                        
+                        <div class="form-group">
+                            <label for="inputMontoSolicitado">Monto Deseado (GTQ)</label>
+                            <div class="input-prefix-wrapper">
+                                <span class="input-prefix">Q</span>
+                                <input type="number" id="inputMontoSolicitado" name="monto" class="form-control with-prefix" placeholder="10,000.00" min="1000" step="500" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row-two">
+                            <div class="form-group">
+                                <label for="selectPlazoMeses">Plazo Estimado</label>
+                                <select id="selectPlazoMeses" name="plazo_meses" class="form-control" required>
+                                    <option value="12">12 Meses (1 año)</option>
+                                    <option value="24" selected>24 Meses (2 años)</option>
+                                    <option value="36">36 Meses (3 años)</option>
+                                    <option value="48">48 Meses (4 años)</option>
+                                    <option value="60">60 Meses (5 años)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputIngresosMensuales">Ingresos Mensuales (GTQ)</label>
+                                <div class="input-prefix-wrapper">
+                                    <span class="input-prefix">Q</span>
+                                    <input type="number" id="inputIngresosMensuales" name="ingresos" class="form-control with-prefix" placeholder="5,000.00" min="1000" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calculadora de Cuota Aproximada -->
+                        <div class="modal-info-box">
+                            <div class="info-box-item">
+                                <span>Cuota Mensual Estimada:</span>
+                                <strong id="textoCuotaEstimada">Q 0.00</strong>
+                            </div>
+                            <small class="info-box-note">*Sujeto a verificación de crédito y tasa final.</small>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PASO 2: Confirmación y Términos -->
+                <div class="modal-step-content" id="pasoModal2">
+                    <div class="summary-card">
+                        <h4>Resumen de la Solicitud</h4>
+                        <ul class="summary-list">
+                            <li><span>Producto:</span> <strong id="resumenNombreProducto">Préstamo Personal</strong></li>
+                            <li><span>Monto Solicitado:</span> <strong id="resumenMonto">Q 0.00</strong></li>
+                            <li><span>Plazo:</span> <strong id="resumenPlazo">24 Meses</strong></li>
+                            <li><span>Cuenta de Depósito:</span> <strong>Cuenta Monetaria Principal</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="checkTerminos" required>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Autorizo la consulta de mi historial crediticio y acepto los <a href="#" target="_blank">Términos y Condiciones</a>.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- PASO 3: Pantalla de Éxito -->
+                <div class="modal-step-content" id="pasoModal3">
+                    <div class="modal-success-state">
+                        <div class="success-icon">
+                            <i class="ri-checkbox-circle-fill"></i>
+                        </div>
+                        <h3>¡Solicitud Enviada con Éxito!</h3>
+                        <p>Tu solicitud ha sido ingresada al sistema. Un asesor revisará tu perfil y te notificaremos en un plazo máximo de 24 horas hábiles.</p>
+                        
+                        <div class="ticket-badge">
+                            <span>Número de Gestión:</span>
+                            <strong id="textoNumeroTicket">#UVG-2026-0000</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <footer class="modal-footer" id="modalFooterAcciones">
+                    <button type="button" class="btn-modal-secondary" id="btnModalAtras">Cancelar</button>
+                    <button type="submit" class="btn-modal-primary" id="btnModalSiguiente">
+                        <span>Continuar</span>
+                        <i class="ri-arrow-right-line"></i>
+                    </button>
+                </footer>
+
+            </form>
+        </div>
+    </div>
 
     <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
