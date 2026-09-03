@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banca en Línea - Transferencias | Banco UVG</title>
+    <title>Banca en Línea - Tarjetas de Crédito | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#0B1D33">
-    <meta name="description" content="Transferencias monetarias e internacionales - Banco UVG">
+    <meta name="description" content="Solicitud de tarjetas de crédito - Banco UVG">
 
-    <!-- Hoja de estilos compartida -->
     <link rel="stylesheet" href="style_banca.css">
-
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Remix Icon CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
 </head>
 <body>
@@ -47,7 +42,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="transferencias.html" class="active">
+                        <a href="transferencias.html">
                             <i class="ri-arrow-left-right-line"></i>
                             <span>Transferencias</span>
                         </a>
@@ -59,13 +54,19 @@
                         </a>
                     </li>
                     <li>
-                        <a href="3">
+                        <a href="tarjetas.html" class="active">
                             <i class="ri-bank-card-line"></i>
                             <span>Tarjetas de crédito</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="prestamos.html">
+                            <i class="ri-funds-line"></i>
+                            <span>Préstamos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="solicitar_cuenta.html">
                             <i class="ri-add-circle-line"></i>
                             <span>Abrir una cuenta</span>
                         </a>
@@ -91,192 +92,73 @@
         <div class="main-wrapper">
             
             <header class="banca-header">
-                <div class="header-search">
-                    <i class="ri-search-line"></i>
-                    <input type="text" placeholder="¿Qué deseas hacer hoy?">
+                <div class="header-welcome">
+                <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
                     <div class="user-profile-badge">
+                        <a href=gestiones.html class="user-profile-badge">
                         <i class="ri-user-3-line"></i>
+                    </a>
                     </div>
                 </div>
             </header>
 
             <main class="content">
                 <div class="header-section">
-                    <h1>Transferencias de Fondos</h1>
-                    <p>Envía dinero de forma rápida a cuentas propias, a otros bancos locales o al extranjero</p>
+                    <h1>Tarjetas de Crédito</h1>
+                    <p>Encuentra la tarjeta que mejor se adapta a tus necesidades y estilo de vida</p>
                 </div>
 
-                <!-- NAVBAR DE PESTAÑAS (TABS DE TRANSFERENCIA) -->
-                <div class="tabs-header">
-                    <button class="tab-btn active" onclick="switchTab('mismo-banco')">
-                        <i class="ri-bank-line"></i>
-                        <span>Mismo Banco</span>
-                    </button>
-                    <button class="tab-btn" onclick="switchTab('ach')">
-                        <i class="ri-exchange-line"></i>
-                        <span>Otros Bancos (ACH)</span>
-                    </button>
-                    <button class="tab-btn" onclick="switchTab('internacional')">
-                        <i class="ri-global-line"></i>
-                        <span>Internacionales (SWIFT)</span>
-                    </button>
-                </div>
-
-                <div class="grid-container">
+                <div class="grid-productos">
                     
-                    <div class="main-column">
-                        
-                        <!-- PESTAÑA 1: MISMO BANCO -->
-                        <div id="tab-mismo-banco" class="tab-panel active">
-                            <div class="card-widget">
-                                <div class="widget-header">
-                                    <i class="ri-checkbox-circle-line"></i>
-                                    <h3>Transferencia entre Cuentas UVG</h3>
-                                </div>
-                                <form id="form-mismo-banco" class="form-pago" onsubmit="return false;">
-                                    <div class="filter-group">
-                                        <label for="mb-cuenta-origen">Cuenta Origen</label>
-                                        <select id="mb-cuenta-origen" class="form-control" required>
-                                            <option value="" disabled selected>Cargando tus cuentas...</option>
-                                        </select>
-                                        <small id="mb-saldo-disponible" style="display:block; margin-top:4px; color:#64748b; font-size:0.8rem;"></small>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="mb-cuenta-destino">Cuenta Destino</label>
-                                        <input type="text" id="mb-cuenta-destino" class="form-control" placeholder="Número de cuenta del beneficiario" required>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="mb-monto">Monto (Q)</label>
-                                        <input type="number" step="0.01" id="mb-monto" class="form-control" placeholder="0.00" required>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="mb-concepto">Concepto / Motivo</label>
-                                        <input type="text" id="mb-concepto" class="form-control" placeholder="Ej. Pago de alquiler">
-                                    </div>
-
-                                    <button type="submit" class="btn-filter-primary btn-pago-submit">
-                                        <i class="ri-send-plane-fill"></i> Realizar Transferencia
-                                    </button>
-                                </form>
-                            </div>
+                    <div class="card-producto">
+                        <div class="badge-producto">Cashback</div>
+                        <div class="icono-producto">
+                            <i class="ri-cash-line"></i>
                         </div>
-
-                        <!-- PESTAÑA 2: OTROS BANCOS (ACH) -->
-                        <div id="tab-ach" class="tab-panel">
-                            <div class="card-widget">
-                                <div class="widget-header">
-                                    <i class="ri-exchange-box-line"></i>
-                                    <h3>Transferencia Interbancaria (ACH)</h3>
-                                </div>
-                                <form id="form-ach" class="form-pago" onsubmit="return false;">
-                                    <div class="filter-group">
-                                        <label for="ach-cuenta-origen">Cuenta Origen</label>
-                                        <select id="ach-cuenta-origen" class="form-control" required>
-                                            <option value="" disabled selected>Selecciona cuenta de origen</option>
-                                            <option value="monetaria">Cuenta Monetaria - Q 12,450.00</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="ach-banco-destino">Banco Destino</label>
-                                        <select id="ach-banco-destino" class="form-control" required>
-                                            <option value="" disabled selected>Selecciona el banco</option>
-                                            <option value="bi">Banco Industrial</option>
-                                            <option value="banrural">Banrural</option>
-                                            <option value="gtt">G&T Continental</option>
-                                            <option value="bac">BAC Credomatic</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="ach-titular">Nombre del Titular Destino</label>
-                                        <input type="text" id="ach-titular" class="form-control" placeholder="Nombre completo" required>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="ach-cuenta-num">Número de Cuenta Destino</label>
-                                        <input type="text" id="ach-cuenta-num" class="form-control" placeholder="Número de cuenta interbancaria" required>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="ach-monto">Monto (Q)</label>
-                                        <input type="number" step="0.01" id="ach-monto" class="form-control" placeholder="0.00" required>
-                                    </div>
-
-                                    <button type="submit" class="btn-filter-primary btn-pago-submit">
-                                        <i class="ri-send-plane-fill"></i> Enviar ACH
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- PESTAÑA 3: INTERNACIONALES (SWIFT) -->
-                        <div id="tab-internacional" class="tab-panel">
-                            <div class="card-widget">
-                                <div class="widget-header">
-                                    <i class="ri-global-line"></i>
-                                    <h3>Transferencia Internacional (SWIFT / BIC)</h3>
-                                </div>
-                                <form id="form-internacional" class="form-pago" onsubmit="return false;">
-                                    <div class="filter-group">
-                                        <label for="int-cuenta-origen">Cuenta Origen</label>
-                                        <select id="int-cuenta-origen" class="form-control" required>
-                                            <option value="" disabled selected>Selecciona cuenta de origen</option>
-                                            <option value="monetaria">Cuenta Monetaria - Q 12,450.00</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="int-codigo-swift">Código SWIFT / BIC</label>
-                                        <input type="text" id="int-codigo-swift" class="form-control" placeholder="Ej. BOFAUS3N" required>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="int-beneficiario">Nombre del Beneficiario</label>
-                                        <input type="text" id="int-beneficiario" class="form-control" placeholder="Nombre o Razón Social" required>
-                                    </div>
-
-                                    <div class="filter-group">
-                                        <label for="int-monto">Monto en USD ($)</label>
-                                        <input type="number" step="0.01" id="int-monto" class="form-control" placeholder="0.00" required>
-                                    </div>
-
-                                    <button type="submit" class="btn-filter-primary btn-pago-submit">
-                                        <i class="ri-send-plane-fill"></i> Procesar Giro Internacional
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-
+                        <h3>UVG Cashback Connect</h3>
+                        <p class="desc-producto">Recupera dinero en efectivo por cada compra realizada en supermercados y gasolineras.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> 5% de reembolso en categorías seleccionadas</li>
+                            <li><i class="ri-check-line"></i> Membresía gratis el primer año</li>
+                            <li><i class="ri-check-line"></i> Tarjetas adicionales sin costo</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Tarjeta</button>
                     </div>
 
-                    <!-- COLUMNA DERECHA: INFORMACIÓN ADICIONAL -->
-                    <aside class="aside-informativo">
-                        <div class="card-widget widget-divisas">
-                            <div class="widget-header">
-                                <i class="ri-shield-flash-line"></i>
-                                <h3>Límites y Horarios</h3>
-                            </div>
-                            <div class="tasas">
-                                <div class="tasa-item">
-                                    <span>Límite diario ACH:</span>
-                                    <strong>Q 50,000.00</strong>
-                                </div>
-                                <div class="tasa-item">
-                                    <span>Comisión SWIFT:</span>
-                                    <strong>$ 25.00 USD</strong>
-                                </div>
-                            </div>
+                    <div class="card-producto">
+                        <div class="badge-producto">Viajes</div>
+                        <div class="icono-producto">
+                            <i class="ri-plane-line"></i>
                         </div>
-                    </aside>
+                        <h3>UVG Travel Gold</h3>
+                        <p class="desc-producto">Acumula millas por tus consumos cotidianos y canjéalas por boletos aéreos y hoteles.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Bono de bienvenida de 5,000 millas</li>
+                            <li><i class="ri-check-line"></i> Seguro de viaje internacional incluido</li>
+                            <li><i class="ri-check-line"></i> Acceso a salas VIP seleccionadas</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Tarjeta</button>
+                    </div>
+
+                    <div class="card-producto">
+                        <div class="badge-producto">Exclusiva</div>
+                        <div class="icono-producto">
+                            <i class="ri-vip-crown-line"></i>
+                        </div>
+                        <h3>UVG Black Mastercard</h3>
+                        <p class="desc-producto">Experiencias exclusivas, alto límite crediticio y atención personalizada de primer nivel.</p>
+                        <ul class="caracteristicas-list">
+                            <li><i class="ri-check-line"></i> Concierge personal 24/7</li>
+                            <li><i class="ri-check-line"></i> Acceso ilimitado a salas LoungeKey</li>
+                            <li><i class="ri-check-line"></i> Cobertura médica global hasta $150k</li>
+                        </ul>
+                        <button class="btn-filter-primary btn-full">Solicitar Evaluación</button>
+                    </div>
 
                 </div>
             </main>
@@ -293,27 +175,10 @@
         </div>
     </div>
 
-    <!-- Scripts de Supabase / Backend -->
+    <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
+    <script src="banca_personal.js"></script>
 
-    <!-- Librería jsPDF para generar el comprobante de transferencia -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <script src="transferencias.js"></script>
-
-    <!-- Script de control de pestañas simples -->
-    <script>
-        function switchTab(tabId) {
-            // Ocultar todos los paneles
-            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
-            // Desactivar todos los botones
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            // Activar el seleccionado
-            document.getElementById('tab-' + tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-    </script>
 </body>
 </html>
