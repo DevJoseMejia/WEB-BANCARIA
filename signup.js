@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // OJO: config.js define el objeto CONFIG (CONFIG.URL_DE_SUPABASE / CONFIG.KEY_ANON_SUPABASE),
+        // config.example.js define el objeto CONFIG,
         // no variables sueltas SUPABASE_URL / SUPABASE_ANON_KEY. Antes esto lanzaba un
         // ReferenceError silencioso que abortaba toda la inicialización.
         if (typeof CONFIG === 'undefined' || !CONFIG.URL_DE_SUPABASE || !CONFIG.KEY_ANON_SUPABASE) {
@@ -105,9 +105,7 @@ function initSignupForm() {
 
         try {
             // Buscamos el id_rol real consultando la tabla 'roles' por nombre,
-            // en vez de depender de un UUID copiado a mano (eso fue justo lo que
-            // causaba el error de foreign key: el UUID hardcodeado no coincidía
-            // con ninguna fila real de 'roles').
+            // en vez de depender de un UUID copiado a mano 
             const { data: rolCliente, error: errRol } = await supabaseClient
                 .from('roles')
                 .select('id_rol')
