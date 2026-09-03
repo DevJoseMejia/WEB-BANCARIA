@@ -7,6 +7,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#0B1D33">
     <meta name="description" content="Transferencias monetarias e internacionales - Banco UVG">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <!-- Hoja de estilos compartida -->
     <link rel="stylesheet" href="style_banca.css">
@@ -287,6 +288,72 @@
 
                 </div>
             </main>
+
+            <!-- MODAL POP-OUT COMPROBANTE DE TRANSFERENCIA -->
+<div id="modalComprobante" class="modal-overlay">
+    <div class="modal-container comprobante-box">
+        
+        <!-- Área que se renderiza y exporta en el PDF -->
+        <div id="areaComprobantePDF" class="comprobante-imprimible">
+            <div class="comprobante-header">
+                <div class="logo-comprobante">
+                    <i class="ri-bank-fill"></i>
+                    <span>Banco UVG</span>
+                </div>
+                <div class="badge-exito">
+                    <i class="ri-checkbox-circle-fill"></i> Transferencia Exitosa
+                </div>
+            </div>
+
+            <div class="comprobante-monto-box">
+                <p>Monto Transferido</p>
+                <h2 id="compMonto">Q 0.00</h2>
+            </div>
+
+            <div class="comprobante-detalles">
+                <div class="detalle-fila">
+                    <span>N° de Referencia:</span>
+                    <strong id="compReferencia">REF-000000</strong>
+                </div>
+                <div class="detalle-fila">
+                    <span>Fecha y Hora:</span>
+                    <strong id="compFecha">--/--/---- --:--</strong>
+                </div>
+                <div class="detalle-fila">
+                    <span>Cuenta Origen:</span>
+                    <strong id="compOrigen">----</strong>
+                </div>
+                <div class="detalle-fila">
+                    <span>Cuenta Destino:</span>
+                    <strong id="compDestino">----</strong>
+                </div>
+                <div class="detalle-fila">
+                    <span>Beneficiario:</span>
+                    <strong id="compBeneficiario">----</strong>
+                </div>
+                <div class="detalle-fila">
+                    <span>Motivo / Concepto:</span>
+                    <strong id="compMotivo">----</strong>
+                </div>
+            </div>
+
+            <div class="comprobante-footer-nota">
+                <p>Comprobante oficial emitido por Banco UVG. Conserva este documento para cualquier aclaración.</p>
+            </div>
+        </div>
+
+        <!-- Botones de Acción (Fuera del área del PDF) -->
+        <div class="comprobante-acciones">
+            <button id="btnDescargarPDF" class="btn-primario">
+                <i class="ri-download-2-line"></i> Descargar Comprobante (PDF)
+            </button>
+            <button id="btnCerrarComprobante" class="btn-secundario">
+                Finalizar
+            </button>
+        </div>
+
+    </div>
+</div>
 
             <footer class="banca-footer">
                 <p>&copy; 2026 Banco UVG. Todos los derechos reservados.</p>

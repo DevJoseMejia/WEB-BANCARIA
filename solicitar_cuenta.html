@@ -93,16 +93,16 @@
             
             <header class="banca-header">
                 <div class="header-welcome">
-                <span>Hola, <strong id="userName">Usuario</strong></span>
+                    <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
                     <div class="user-profile-badge">
-                        <a href=gestiones.html class="user-profile-badge">
-                        <i class="ri-user-3-line"></i>
-                    </a>
+                        <a href="gestiones.html" class="user-profile-badge">
+                            <i class="ri-user-3-line"></i>
+                        </a>
                     </div>
                 </div>
             </header>
@@ -114,7 +114,7 @@
                 </div>
 
                 <div class="grid-productos" id="contenedorCuentasDisponibles">
-                    <p class="loading-text">Cargando cuentas disponibles...</p>
+                    <p class="loading-text"><i class="ri-loader-4-line ri-spin"></i> Cargando cuentas disponibles...</p>
                 </div>
             </main>
 
@@ -127,6 +127,59 @@
                 </div>
             </footer>
 
+        </div>
+    </div>
+
+    <!-- MODAL DE SOLICITUD DE CUENTA -->
+    <div id="modalSolicitudCuenta" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Apertura de Cuenta</h2>
+                <button type="button" id="btnCerrarModal" class="btn-cerrar-modal">&times;</button>
+            </div>
+            <form id="formSolicitudCuenta" class="form-solicitud">
+                
+                <div class="form-group">
+                    <label for="selectTipoCuenta">Tipo de Cuenta</label>
+                    <select id="selectTipoCuenta" required>
+                        <option value="" disabled selected>Selecciona un tipo de cuenta</option>
+                        <option value="Cuenta Monetaria UVG">Cuenta Monetaria UVG</option>
+                        <option value="Cuenta de Ahorro Alto Rendimiento">Cuenta de Ahorro Alto Rendimiento</option>
+                        <option value="Cuenta Estudiantil Digital">Cuenta Estudiantil Digital</option>
+                        <option value="Cuenta de Ahorro en Dólares">Cuenta de Ahorro en Dólares</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="monedaCuenta">Moneda</label>
+                    <select id="monedaCuenta" required>
+                        <option value="GTQ">Quetzales (GTQ)</option>
+                        <option value="USD">Dólares (USD)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="montoInicial">Monto Inicial de Apertura (opcional)</label>
+                    <input type="number" id="montoInicial" placeholder="Ej. 500" min="0" step="0.01">
+                </div>
+
+                <div class="form-group">
+                    <label for="propositoCuenta">Propósito Principal de la Cuenta</label>
+                    <select id="propositoCuenta" required>
+                        <option value="Ahorro">Ahorro personal</option>
+                        <option value="Pago de Planilla">Recepción de salario / fondos</option>
+                        <option value="Gastos Universitarios">Gastos universitarios / académicos</option>
+                        <option value="Inversiones">Inversión / Fondo de emergencia</option>
+                    </select>
+                </div>
+
+                <div id="mensajeEstado" class="mensaje-estado"></div>
+
+                <div class="form-actions">
+                    <button type="button" id="btnCancelarModal" class="btn-secundario">Cancelar</button>
+                    <button type="submit" class="btn-primario">Confirmar y Solicitar</button>
+                </div>
+            </form>
         </div>
     </div>
 
