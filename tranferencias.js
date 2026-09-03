@@ -50,7 +50,211 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (inputMonto) {
         inputMonto.addEventListener('input', validarMontoContraSaldo);
     }
+
+    // 6. Envío del formulario de transferencia mismo banco
+    const formMismoBanco = document.getElementById('form-mismo-banco');
+    if (formMismoBanco) {
+        formMismoBanco.addEventListener('submit', manejarSubmitTransferencia);
+    }
 });
+
+/**
+ * Maneja el envío del formulario de transferencia mismo banco:
+ * valida, busca al titular de la cuenta destino, pide confirmación,
+ * ejecuta la transferencia vía RPC y genera el PDF del comprobante.
+ */
+async function manejarSubmitTransferencia(e) {
+    e.preventDefault();
+
+    const selectOrigen = document.getElementById('mb-cuenta-origen');
+    const inputDestino = document.getElementById('mb-cuenta-destino');
+    const inputMonto = document.getElementById('mb-monto');
+    const inputConcepto = document.getElementById('mb-concepto');
+    const btnSubmit = e.target.querySelector('button[type="submit"]');
+
+    const opcionOrigen = selectOrigen.options[selectOrigen.selectedIndex];
+    const cuentaOrigen = selectOrigen.value;
+    const saldoOrigen = opcionOrigen ? parseFloat(opcionOrigen.dataset.saldo) : NaN;
+    const monedaOrigen = opcionOrigen ? opcionOrigen.dataset.moneda : null;
+    const tipoOrigen = opcionOrigen ? opcionOrigen.dataset.tipo : null;
+
+    const cuentaDestino = inputDestino.value.trim();
+    const monto = parseFloat(inputMonto.value);
+    const motivo = inputConcepto.value.trim() || 'Sin motivo especificado';
+
+    // Validaciones básicas del lado del cliente (la validación real y
+    // definitiva ocurre de nuevo dentro del RPC en la base de datos)
+    if (!cuentaOrigen) {
+        alert('Selecciona una cuenta de origen.');
+        return;
+    }
+    if (!cuentaDestino) {
+        alert('Ingresa el número de cuenta destino.');
+        return;
+    }
+    if (cuentaDestino === cuentaOrigen) {
+        alert('La cuenta destino no puede ser la misma que la cuenta origen.');
+        return;
+    }
+    if (isNaN(monto) || monto <= 0) {
+        alert('Ingresa un monto válido mayor a 0.');
+        return;
+    }
+    if (!isNaN(saldoOrigen) && monto > saldoOrigen) {
+        alert('El monto supera el saldo disponible de la cuenta origen.');
+        return;
+    }
+
+    btnSubmit.disabled = true;
+    const textoOriginalBtn = btnSubmit.innerHTML;
+    btnSubmit.innerHTML = 'Verificando cuenta destino...';
+
+    try {
+        // Buscamos el titular de la cuenta destino (nombre, moneda, estado)
+        // sin exponer su saldo ni otros datos del perfil.
+        const { data: titularData, error: errTitular } = await supabaseClient
+            .rpc('obtener_titular_cuenta', { p_numero_cuenta: cuentaDestino });
+
+        if (errTitular) {
+            console.error('💥 Error al buscar la cuenta destino:', errTitular);
+            alert('Ocurrió un error al validar la cuenta destino.');
+            return;
+        }
+
+        const titular = Array.isArray(titularData) ? titularData[0] : titularData;
+
+        if (!titular) {
+            alert('La cuenta destino no existe. Verifica el número de cuenta.');
+            return;
+        }
+
+        if (titular.estado !== 'Activa') {
+            alert('La cuenta destino no está activa y no puede recibir transferencias.');
+            return;
+        }
+
+        if (monedaOrigen && titular.moneda && monedaOrigen !== titular.moneda) {
+            alert(`No es posible transferir: la cuenta origen es en ${monedaOrigen} y la cuenta destino es en ${titular.moneda}.`);
+            return;
+        }
+
+        const simbolo = monedaOrigen === 'USD' ? '$' : 'Q';
+        const montoFormateado = monto.toLocaleString('es-GT', { minimumFractionDigits: 2 });
+
+        // Confirmación con el nombre real del destinatario
+        const confirmado = confirm(
+            `¿Confirmas la transferencia de ${simbolo} ${montoFormateado} a ${titular.nombre_completo} (cuenta ${cuentaDestino})?`
+        );
+
+        if (!confirmado) {
+            return;
+        }
+
+        btnSubmit.innerHTML = 'Procesando transferencia...';
+
+        // Ejecutamos la transferencia de forma atómica en la base de datos
+        const { data: resultado, error: errTransferencia } = await supabaseClient
+            .rpc('realizar_transferencia_mismo_banco', {
+                p_cuenta_origen: cuentaOrigen,
+                p_cuenta_destino: cuentaDestino,
+                p_monto: monto,
+                p_motivo: motivo
+            });
+
+        if (errTransferencia) {
+            console.error('💥 Error al ejecutar la transferencia:', errTransferencia);
+            alert(`No se pudo realizar la transferencia: ${errTransferencia.message}`);
+            return;
+        }
+
+        // Nombre del remitente: viene del perfil cargado en el paso 1
+        const nombreRemitente = clienteSesion
+            ? `${clienteSesion.nombres} ${clienteSesion.apellidos}`
+            : 'Titular de la cuenta';
+
+        generarComprobantePDF({
+            nombreRemitente,
+            cuentaOrigen,
+            tipoOrigen,
+            cuentaDestino,
+            nombreDestinatario: titular.nombre_completo,
+            monto,
+            simbolo,
+            motivo
+        });
+
+        alert('✅ Transferencia realizada con éxito. Se descargó tu comprobante en PDF.');
+
+        // Limpiamos el formulario y recargamos los saldos actualizados
+        document.getElementById('form-mismo-banco').reset();
+        const idUsuario = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
+        await cargarCuentasOrigen(idUsuario);
+
+    } catch (err) {
+        console.error('💥 Error crítico en el pipeline de transferencia:', err);
+        alert('Ocurrió un error inesperado al procesar la transferencia.');
+    } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = textoOriginalBtn;
+    }
+}
+
+/**
+ * Genera y descarga automáticamente el comprobante de la transferencia
+ * en PDF usando jsPDF (cargado desde CDN en el HTML).
+ */
+function generarComprobantePDF(datos) {
+    if (!window.jspdf) {
+        console.error('💥 jsPDF no está disponible. Verifica que el script de la CDN esté cargado.');
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const fecha = new Date().toLocaleString('es-GT', {
+        dateStyle: 'long',
+        timeStyle: 'short'
+    });
+
+    doc.setFontSize(16);
+    doc.text('Banco UVG - Comprobante de Transferencia', 15, 20);
+
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Fecha: ${fecha}`, 15, 28);
+
+    doc.setDrawColor(200);
+    doc.line(15, 32, 195, 32);
+
+    doc.setFontSize(12);
+    doc.setTextColor(0);
+
+    const filas = [
+        ['Ordenante (quien envía):', datos.nombreRemitente],
+        ['Cuenta debitada:', `${datos.tipoOrigen || ''} No. ${datos.cuentaOrigen}`],
+        ['Cuenta acreditada:', datos.cuentaDestino],
+        ['Beneficiario (quien recibe):', datos.nombreDestinatario],
+        ['Monto transferido:', `${datos.simbolo} ${datos.monto.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`],
+        ['Motivo:', datos.motivo]
+    ];
+
+    let y = 45;
+    filas.forEach(([etiqueta, valor]) => {
+        doc.setFont(undefined, 'bold');
+        doc.text(etiqueta, 15, y);
+        doc.setFont(undefined, 'normal');
+        doc.text(String(valor), 90, y);
+        y += 10;
+    });
+
+    doc.setFontSize(9);
+    doc.setTextColor(150);
+    doc.text('Este comprobante es una constancia generada automáticamente por Banco UVG.', 15, y + 10);
+
+    const nombreArchivo = `comprobante_transferencia_${Date.now()}.pdf`;
+    doc.save(nombreArchivo);
+}
 
 /**
  * Trae el perfil del usuario logueado junto con sus cuentas activas

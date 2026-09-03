@@ -113,51 +113,8 @@
                     <p>Solicita la apertura de un nuevo producto monetario o de ahorro en pocos pasos</p>
                 </div>
 
-                <div class="grid-productos">
-                    
-                    <div class="card-producto">
-                        <div class="badge-producto">Más Popular</div>
-                        <div class="icono-producto">
-                            <i class="ri-safe-2-line"></i>
-                        </div>
-                        <h3>Cuenta Monetaria Premier</h3>
-                        <p class="desc-producto">Manejo flexible en Quetzales o Dólares con chequera y tarjeta de débito preferencial.</p>
-                        <ul class="caracteristicas-list">
-                            <li><i class="ri-check-line"></i> Cero comisión por manejo de cuenta</li>
-                            <li><i class="ri-check-line"></i> Acceso ilimitado a Banca en Línea</li>
-                            <li><i class="ri-check-line"></i> Primera chequera gratis</li>
-                        </ul>
-                        <button class="btn-filter-primary btn-full">Solicitar Cuenta</button>
-                    </div>
-
-                    <div class="card-producto">
-                        <div class="icono-producto">
-                            <i class="ri-piggy-bank-line"></i>
-                        </div>
-                        <h3>Cuenta de Ahorro Alto Rendimiento</h3>
-                        <p class="desc-producto">Maximiza tus ahorros con tasas de interés competitivas y disponibilidad inmediata.</p>
-                        <ul class="caracteristicas-list">
-                            <li><i class="ri-check-line"></i> Tasa preferencial de hasta 4.5% anual</li>
-                            <li><i class="ri-check-line"></i> Intereses capitalizables mensualmente</li>
-                            <li><i class="ri-check-line"></i> Sin saldo mínimo de apertura</li>
-                        </ul>
-                        <button class="btn-filter-primary btn-full">Solicitar Cuenta</button>
-                    </div>
-
-                    <div class="card-producto">
-                        <div class="icono-producto">
-                            <i class="ri-time-line"></i>
-                        </div>
-                        <h3>Depósito a Plazo Fijo</h3>
-                        <p class="desc-producto">Invierte con rendimiento garantizado desde 3 hasta 36 meses de plazo.</p>
-                        <ul class="caracteristicas-list">
-                            <li><i class="ri-check-line"></i> Rendimiento fijo asegurado</li>
-                            <li><i class="ri-check-line"></i> Pago de intereses mensual o al vencimiento</li>
-                            <li><i class="ri-check-line"></i> Garantía para créditos futuros</li>
-                        </ul>
-                        <button class="btn-filter-primary btn-full">Simular Inversión</button>
-                    </div>
-
+                <div class="grid-productos" id="contenedorCuentasDisponibles">
+                    <p class="loading-text">Cargando cuentas disponibles...</p>
                 </div>
             </main>
 
@@ -176,7 +133,8 @@
     <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
-    <script src="banca_personal.js"></script>
+    <script src="sesion_comun.js"></script>
+    <script src="solicitar_cuenta.js"></script>
 
 </body>
 </html>

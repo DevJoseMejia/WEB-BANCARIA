@@ -113,50 +113,8 @@
                     <p>Obtén el financiamiento ideal para consolidar metas, adquirir vehículo o comprar tu hogar</p>
                 </div>
 
-                <div class="grid-productos">
-                    
-                    <div class="card-producto">
-                        <div class="icono-producto">
-                            <i class="ri-user-star-line"></i>
-                        </div>
-                        <h3>Préstamo Personal</h3>
-                        <p class="desc-producto">Financiamiento libre para consolidación de deudas, viajes o proyectos personales.</p>
-                        <ul class="caracteristicas-list">
-                            <li><i class="ri-check-line"></i> Sin necesidad de fiador (según perfil)</li>
-                            <li><i class="ri-check-line"></i> Plazos flexibles hasta 60 meses</li>
-                            <li><i class="ri-check-line"></i> Desembolso inmediato en tu cuenta</li>
-                        </ul>
-                        <button class="btn-filter-primary btn-full">Calcular Préstamo</button>
-                    </div>
-
-                    <div class="card-producto">
-                        <div class="icono-producto">
-                            <i class="ri-car-line"></i>
-                        </div>
-                        <h3>Crédito Auto UVG</h3>
-                        <p class="desc-producto">Especial para vehículos nuevos o semi-nuevos con las mejores tasas del mercado.</p>
-                        <ul class="caracteristicas-list">
-                            <li><i class="ri-check-line"></i> Enganche desde el 10%</li>
-                            <li><i class="ri-check-line"></i> Hasta 84 meses de financiamiento</li>
-                            <li><i class="ri-check-line"></i> Seguro de vehículo incluido en la cuota</li>
-                        </ul>
-                        <button class="btn-filter-primary btn-full">Cotizar Vehículo</button>
-                    </div>
-
-                    <div class="card-producto">
-                        <div class="icono-producto">
-                            <i class="ri-home-heart-line"></i>
-                        </div>
-                        <h3>Hipoteca Vivienda</h3>
-                        <p class="desc-producto">Haz realidad la compra, construcción o remodelación de tu hogar con tasa preferencial.</p>
-                        <ul class="caracteristicas-list">
-                            <li><i class="ri-check-line"></i> Financiamiento hasta de 25 años</li>
-                            <li><i class="ri-check-line"></i> Asesoría legal y avalúo guiado</li>
-                            <li><i class="ri-check-line"></i> Tasa de interés competitiva y estable</li>
-                        </ul>
-                        <button class="btn-filter-primary btn-full">Solicitar Asesoría</button>
-                    </div>
-
+                <div class="grid-productos" id="contenedorPrestamosDisponibles">
+                    <p class="loading-text">Cargando préstamos disponibles...</p>
                 </div>
             </main>
 
@@ -176,7 +134,8 @@
     <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
-    <script src="banca_personal.js"></script>
+    <script src="sesion_comun.js"></script>
+    <script src="prestamos.js"></script>
 
 </body>
 </html>
