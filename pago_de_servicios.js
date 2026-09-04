@@ -3,6 +3,8 @@
 let supabaseClientServicios = null;
 let todosLosServicios = [];      // cache de todos los servicios cargados del catálogo
 let servicioSeleccionado = null; // servicio actualmente elegido por el usuario
+let idUsuarioServicios = null;
+let nombrePagador = '';          // nombres + apellidos del usuario en sesión
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (typeof CONFIG !== 'undefined' && CONFIG.URL_DE_SUPABASE && CONFIG.KEY_ANON_SUPABASE && window.supabase) {
@@ -14,8 +16,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    await cargarServicios();
-    await cargarCuentasOrigenServicio();
+    idUsuarioServicios = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
+
+    await Promise.all([
+        cargarServicios(),
+        cargarCuentasOrigenServicio(),
+        cargarDatosPagador()
+    ]);
 
     // Filtros de categoría (Todos / Luz y Agua / Internet y TV / Impuestos y Arbitrios)
     document.querySelectorAll('.btn-filtro-servicio').forEach(boton => {
@@ -26,6 +33,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    const inputIdentificador = document.getElementById('identificador-servicio');
+    if (inputIdentificador) {
+        inputIdentificador.addEventListener('input', validarIdentificador);
+    }
+
     const formPago = document.getElementById('form-pago-servicio');
     if (formPago) {
         formPago.addEventListener('submit', manejarSubmitPago);
@@ -33,7 +45,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 /**
- * Trae el catálogo completo de servicios activos desde Supabase.
+ * Trae el catálogo completo de servicios activos desde Supabase, ahora
+ * incluyendo el formato/regex real de cada correlativo (columnas nuevas
+ * en catalogo_servicios: formato_identificador, patron_regex, ejemplo_identificador).
  */
 async function cargarServicios() {
     try {
@@ -54,6 +68,33 @@ async function cargarServicios() {
         if (contenedor) {
             contenedor.innerHTML = "<p style='color:#ef4444;'>No se pudo cargar el catálogo de servicios.</p>";
         }
+    }
+}
+
+/**
+ * Trae nombre+apellidos del usuario en sesión (perfiles_clientes), para
+ * mostrarlos en el formulario y guardarlos junto con cada pago.
+ */
+async function cargarDatosPagador() {
+    const infoPagador = document.getElementById('infoPagador');
+    if (!idUsuarioServicios) return;
+
+    try {
+        const { data: perfil, error } = await supabaseClientServicios
+            .from('perfiles_clientes')
+            .select('nombres, apellidos')
+            .eq('id_usuario', idUsuarioServicios)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        if (perfil) {
+            nombrePagador = `${perfil.nombres} ${perfil.apellidos}`;
+            if (infoPagador) infoPagador.textContent = `Vas a pagar como: ${nombrePagador}`;
+        }
+
+    } catch (err) {
+        console.error('💥 Error al cargar los datos del pagador:', err);
     }
 }
 
@@ -102,8 +143,9 @@ function renderizarServicios(categoria) {
 
 /**
  * Marca el servicio elegido y adapta el formulario a ese servicio:
- * cambia el label/placeholder del identificador, muestra qué se está
- * pagando, y habilita los campos (estaban deshabilitados hasta elegir).
+ * cambia el label/placeholder del identificador, aplica el patrón de
+ * validación real de ese correlativo, muestra qué se está pagando, y
+ * habilita los campos (estaban deshabilitados hasta elegir).
  */
 function seleccionarServicio(servicio, cardElement) {
     servicioSeleccionado = servicio;
@@ -118,12 +160,19 @@ function seleccionarServicio(servicio, cardElement) {
 
     const labelIdentificador = document.getElementById('labelIdentificadorServicio');
     const inputIdentificador = document.getElementById('identificador-servicio');
+    const ayudaIdentificador = document.getElementById('ayudaIdentificador');
     const etiqueta = servicio.etiqueta_identificador || 'Número de identificador';
 
     if (labelIdentificador) labelIdentificador.textContent = etiqueta;
     if (inputIdentificador) {
-        inputIdentificador.placeholder = `Ej. ${etiqueta}`;
+        inputIdentificador.placeholder = servicio.ejemplo_identificador ? `Ej. ${servicio.ejemplo_identificador}` : `Ej. ${etiqueta}`;
         inputIdentificador.value = '';
+        inputIdentificador.setCustomValidity('');
+    }
+    if (ayudaIdentificador) {
+        ayudaIdentificador.textContent = servicio.formato_identificador
+            ? `Formato: ${servicio.formato_identificador}`
+            : '';
     }
 
     // Habilitamos el resto del formulario ahora que hay un servicio elegido
@@ -138,6 +187,30 @@ function seleccionarServicio(servicio, cardElement) {
 }
 
 /**
+ * Valida en vivo el identificador ingresado contra el patrón real del
+ * servicio elegido (catalogo_servicios.patron_regex), con un mensaje
+ * de error entendible en vez del genérico del navegador.
+ */
+function validarIdentificador() {
+    const inputIdentificador = document.getElementById('identificador-servicio');
+    if (!inputIdentificador || !servicioSeleccionado) return;
+
+    const patron = servicioSeleccionado.patron_regex;
+    if (!patron) {
+        inputIdentificador.setCustomValidity('');
+        return;
+    }
+
+    const regex = new RegExp(`^(?:${patron})$`);
+    if (inputIdentificador.value && !regex.test(inputIdentificador.value.trim())) {
+        const formato = servicioSeleccionado.formato_identificador || 'el formato requerido por el servicio';
+        inputIdentificador.setCustomValidity(`El identificador no tiene el formato esperado. ${formato}.`);
+    } else {
+        inputIdentificador.setCustomValidity('');
+    }
+}
+
+/**
  * Carga las cuentas activas del usuario logueado en el select de
  * "Cuenta a debitar", igual que hicimos en transferencias.js.
  */
@@ -145,8 +218,7 @@ async function cargarCuentasOrigenServicio() {
     const selectOrigen = document.getElementById('cuenta-origen');
     if (!selectOrigen) return;
 
-    const idUsuario = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
-    if (!idUsuario) return; // sesion_comun.js ya se encarga de redirigir a Login
+    if (!idUsuarioServicios) return; // sesion_comun.js ya se encarga de redirigir a Login
 
     try {
         const { data: cliente, error } = await supabaseClientServicios
@@ -160,7 +232,7 @@ async function cargarCuentasOrigenServicio() {
                     estado
                 )
             `)
-            .eq('id_usuario', idUsuario)
+            .eq('id_usuario', idUsuarioServicios)
             .maybeSingle();
 
         if (error) throw error;
@@ -191,14 +263,16 @@ async function cargarCuentasOrigenServicio() {
 }
 
 /**
- * Validación del envío. NOTA: por ahora esto NO debita saldo ni registra
- * la transacción en la base de datos -- solo valida y confirma. El
- * procesamiento real del pago (débito + registro, de forma atómica)
- * queda pendiente como siguiente paso, igual que hicimos con
- * transferencias.js vía un RPC.
+ * Envío del formulario: valida todo, incluyendo el correlativo contra el
+ * patrón real del servicio, y llama a la RPC realizar_pago_servicio, que
+ * debita el saldo y registra el pago de forma atómica (mismo patrón que
+ * las transferencias).
  */
-function manejarSubmitPago(e) {
+async function manejarSubmitPago(e) {
     e.preventDefault();
+
+    const mensajeEstado = document.getElementById('mensajeEstadoPago');
+    const btnSubmit = e.target.querySelector('button[type="submit"]');
 
     if (!servicioSeleccionado) {
         alert('Selecciona un servicio antes de continuar.');
@@ -208,6 +282,7 @@ function manejarSubmitPago(e) {
     const selectOrigen = document.getElementById('cuenta-origen');
     const inputIdentificador = document.getElementById('identificador-servicio');
     const inputMonto = document.getElementById('monto-pago');
+    const inputAlias = document.getElementById('concepto');
 
     const opcionOrigen = selectOrigen.options[selectOrigen.selectedIndex];
     const saldoOrigen = opcionOrigen ? parseFloat(opcionOrigen.dataset.saldo) : NaN;
@@ -221,6 +296,13 @@ function manejarSubmitPago(e) {
         alert('Ingresa el identificador del servicio.');
         return;
     }
+
+    validarIdentificador();
+    if (!inputIdentificador.checkValidity()) {
+        inputIdentificador.reportValidity();
+        return;
+    }
+
     if (isNaN(monto) || monto <= 0) {
         alert('Ingresa un monto válido mayor a 0.');
         return;
@@ -230,10 +312,62 @@ function manejarSubmitPago(e) {
         return;
     }
 
-    const simbolo = opcionOrigen.dataset.moneda === 'USD' ? '$' : 'Q';
-    alert(
-        `Validación correcta: pagarías ${simbolo} ${monto.toLocaleString('es-GT', { minimumFractionDigits: 2 })} ` +
-        `a ${servicioSeleccionado.nombre} (${servicioSeleccionado.proveedor}). ` +
-        `El procesamiento real del pago se conectará en el siguiente paso.`
-    );
+    if (btnSubmit) {
+        btnSubmit.disabled = true;
+        var textoOriginalBtn = btnSubmit.innerHTML;
+        btnSubmit.innerHTML = 'Procesando pago...';
+    }
+    if (mensajeEstado) {
+        mensajeEstado.style.color = '#0284c7';
+        mensajeEstado.textContent = 'Procesando tu pago...';
+    }
+
+    try {
+        const { data: resultado, error } = await supabaseClientServicios
+            .rpc('realizar_pago_servicio', {
+                p_cuenta_origen: selectOrigen.value,
+                p_monto: monto,
+                p_id_servicio: servicioSeleccionado.id_servicio,
+                p_nombre_servicio: servicioSeleccionado.nombre,
+                p_proveedor: servicioSeleccionado.proveedor,
+                p_identificador: inputIdentificador.value.trim(),
+                p_alias: inputAlias.value.trim() || null,
+                p_id_usuario: idUsuarioServicios,
+                p_nombre_pagador: nombrePagador || null
+            });
+
+        if (error) throw error;
+
+        const simbolo = opcionOrigen.dataset.moneda === 'USD' ? '$' : 'Q';
+        const montoTexto = monto.toLocaleString('es-GT', { minimumFractionDigits: 2 });
+        const codigo = (resultado && resultado.codigo_autorizacion) ? resultado.codigo_autorizacion : '—';
+
+        if (mensajeEstado) {
+            mensajeEstado.style.color = '#16a34a';
+            mensajeEstado.textContent = `¡Pago realizado con éxito! ${simbolo} ${montoTexto} a ${servicioSeleccionado.nombre}. Código de autorización: ${codigo}.`;
+        }
+
+        document.getElementById('form-pago-servicio').reset();
+        servicioSeleccionado = null;
+        document.querySelectorAll('.card-proveedor').forEach(c => c.classList.remove('activo-card'));
+        const textoServicio = document.getElementById('servicioSeleccionadoTexto');
+        if (textoServicio) textoServicio.textContent = 'Selecciona un servicio arriba para continuar.';
+
+        // Recargar el saldo de las cuentas (ya quedó debitado)
+        await cargarCuentasOrigenServicio();
+
+    } catch (err) {
+        console.error('💥 Error al procesar el pago:', err);
+        if (mensajeEstado) {
+            mensajeEstado.style.color = '#dc2626';
+            mensajeEstado.textContent = 'Ocurrió un error al procesar el pago. Inténtalo de nuevo.';
+        } else {
+            alert('Ocurrió un error al procesar el pago. Inténtalo de nuevo.');
+        }
+    } finally {
+        if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = textoOriginalBtn;
+        }
+    }
 }

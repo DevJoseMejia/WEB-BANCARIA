@@ -1,154 +1,286 @@
-// CONTROLADOR DE LOGICA: CONSULTAS Y PRODUCTOS
 
-document.addEventListener('DOMContentLoaded', () => {
 
-    // Inicializar cliente Supabase si las credenciales existen en el scope global
+document.addEventListener('DOMContentLoaded', async () => {
+
+    // 1. Conexión a Supabase
     let supabaseClient = null;
-    if (window.supabase && typeof CONFIG !== 'undefined' && CONFIG.URL_DE_SUPABASE && CONFIG.KEY_ANON_SUPABASE) {
+    if (typeof CONFIG !== 'undefined' && CONFIG.URL_DE_SUPABASE && CONFIG.KEY_ANON_SUPABASE && window.supabase) {
         supabaseClient = window.supabase.createClient(CONFIG.URL_DE_SUPABASE, CONFIG.KEY_ANON_SUPABASE);
     } else {
-        console.warn("Cliente Supabase o archivo config.js no inicializado. Se usarán datos de respaldo locales.");
+        console.error('No se pudo inicializar Supabase. Revisa que config.example.js se cargue antes de consultas.js.');
     }
 
-    // 1. Cierre de Sesión Operativo
+    // 2. Cierre de sesión
     const btnCerrarSesion = document.getElementById('btnCerrarSesion');
     if (btnCerrarSesion) {
         btnCerrarSesion.addEventListener('click', () => {
             sessionStorage.clear();
             localStorage.clear();
-            window.location.href = "Login_personal.html";
+            window.location.href = 'Login_personal.html';
         });
     }
 
-    // 2. Lógica del Simulador de Cuotas
-    const btnCalcularCuota = document.getElementById('btnCalcularCuota');
-    const inputMonto = document.getElementById('monto');
-    const selectPlazo = document.getElementById('plazo');
-    const contenedorResultado = document.getElementById('resultadoSimulador');
+    // 3. Verificar sesión activa
+    const idUsuario = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
+    if (!idUsuario) {
+        alert('Debes iniciar sesión para acceder a tu banca en línea.');
+        window.location.href = 'Login_personal.html';
+        return;
+    }
 
-    if (btnCalcularCuota) {
-        btnCalcularCuota.addEventListener('click', async (e) => {
-            e.preventDefault();
+    if (!supabaseClient) return;
 
-            // Validación de existencia del contenedor
-            if (!contenedorResultado) {
-                console.error("Error: No se encontró el elemento con id='resultadoSimulador' en el DOM.");
-                alert("Ocurrió un error en la vista. No se encontró el contenedor de resultados.");
+    // Elementos del DOM
+    const selectCuenta = document.getElementById('select-cuenta');
+    const btnMesSelector = document.getElementById('btn-mes-selector');
+    const mesActualLabel = document.getElementById('mes-actual-label');
+    const menuMeses = document.getElementById('menu-meses');
+    const listaMeses = document.getElementById('lista-meses');
+    const contenedorMovimientos = document.getElementById('contenedorMovimientos');
+    const totalIngresosEl = document.getElementById('totalIngresos');
+    const totalEgresosEl = document.getElementById('totalEgresos');
+    const tituloHistorial = document.getElementById('tituloHistorial');
+    const btnExportarPDF = document.getElementById('btnExportarPDF');
+
+    const NOMBRES_MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+    let cuentasUsuario = [];
+    let cuentaSeleccionada = null;
+    let fechaSeleccionada = primerDiaDelMes(new Date());
+
+    // ================= FUNCIONES =================
+
+    async function cargarCuentasUsuario() {
+        try {
+            // Mismo patrón exacto que ya usa banca_personal.js:
+            // perfiles_clientes -> cuentas, vinculado por id_usuario.
+            const { data: cliente, error } = await supabaseClient
+                .from('perfiles_clientes')
+                .select(`
+                    nombres,
+                    apellidos,
+                    cuentas (
+                        numero_cuenta,
+                        tipo_cuenta,
+                        moneda
+                    )
+                `)
+                .eq('id_usuario', idUsuario)
+                .maybeSingle();
+
+            if (error) throw error;
+
+            const userNameEl = document.getElementById('userName');
+            if (userNameEl && cliente) {
+                userNameEl.textContent = `${cliente.nombres} ${cliente.apellidos}`;
+            }
+
+            cuentasUsuario = (cliente && cliente.cuentas) || [];
+
+            if (cuentasUsuario.length === 0) {
+                selectCuenta.innerHTML = '<option value="" disabled selected>No tienes cuentas registradas</option>';
+                mostrarEstadoSinCuenta();
                 return;
             }
 
-            const monto = parseFloat(inputMonto.value);
-            const meses = parseInt(selectPlazo.value, 10);
+            selectCuenta.innerHTML = '<option value="" disabled selected>Selecciona una cuenta</option>' +
+                cuentasUsuario.map(c => `
+                    <option value="${c.numero_cuenta}">${c.tipo_cuenta} (${c.moneda}) - **** ${String(c.numero_cuenta).slice(-4)}</option>
+                `).join('');
 
-            // Validaciones de entradas
-            if (isNaN(monto) || monto <= 0) {
-                mostrarMensajeSimulador('Por favor ingresa un monto válido mayor a Q0.00.', 'error');
-                return;
-            }
+        } catch (err) {
+            console.error('Error al cargar las cuentas del usuario:', err);
+            selectCuenta.innerHTML = '<option value="" disabled selected>Error al cargar tus cuentas</option>';
+        }
+    }
 
-            if (isNaN(meses) || meses <= 0) {
-                mostrarMensajeSimulador('Por favor selecciona un plazo válido.', 'error');
-                return;
-            }
+    function construirMenuMeses() {
+        const hoy = new Date();
+        let items = '';
+        for (let i = 0; i < 12; i++) {
+            const f = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
+            const etiqueta = i === 0
+                ? `${NOMBRES_MESES[f.getMonth()]} ${f.getFullYear()} (mes actual)`
+                : `${NOMBRES_MESES[f.getMonth()]} ${f.getFullYear()}`;
+            items += `<li data-anio="${f.getFullYear()}" data-mes="${f.getMonth()}">${etiqueta}</li>`;
+        }
+        listaMeses.innerHTML = items;
 
-            // Tasa por defecto de respaldo (10.5% anual)
-            let tasaAnual = 0.105; 
-
-            // Consultar tasa actualizada desde la tabla catalogo_productos en Supabase
-            if (supabaseClient) {
-                try {
-                    const { data, error } = await supabaseClient
-                        .from('catalogo_productos')
-                        .select('tasa_interes_anual')
-                        .eq('codigo_producto', 'PRESTAMO_FLEX')
-                        .maybeSingle();
-
-                    if (!error && data && data.tasa_interes_anual) {
-                        tasaAnual = parseFloat(data.tasa_interes_anual) / 100;
-                    }
-                } catch (err) {
-                    console.warn("Usando tasa local debido a un fallo en la consulta de Supabase:", err);
-                }
-            }
-
-            // Cálculo Financiero: Sistema Francés de Amortización
-            const tasaMensual = tasaAnual / 12;
-            const cuotaMensual = (monto * tasaMensual * Math.pow(1 + tasaMensual, meses)) / 
-                                 (Math.pow(1 + tasaMensual, meses) - 1);
-            const totalPagar = cuotaMensual * meses;
-            const totalIntereses = totalPagar - monto;
-
-            // Renderizado en pantalla
-            renderizarResultadoSimulador(cuotaMensual, totalPagar, totalIntereses, tasaAnual * 100);
+        listaMeses.querySelectorAll('li').forEach(li => {
+            li.addEventListener('click', () => {
+                fechaSeleccionada = new Date(parseInt(li.dataset.anio, 10), parseInt(li.dataset.mes, 10), 1);
+                actualizarLabelMes();
+                menuMeses.hidden = true;
+                if (cuentaSeleccionada) cargarMovimientos();
+            });
         });
     }
 
-    // Función para dibujar el resultado estilizado dentro del contenedor
-    function renderizarResultadoSimulador(cuota, total, intereses, tasaPorcentaje) {
-        contenedorResultado.innerHTML = `
-            <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 14px; border-radius: 8px; text-align: center; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
-                <span style="font-size: 0.75rem; display: block; color: #15803d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
-                    Cuota Mensual Estimada
-                </span>
-                <strong style="font-size: 1.6rem; display: block; margin: 4px 0; color: #166534; font-weight: 700;">
-                    Q ${cuota.toLocaleString('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </strong>
-                <div style="border-top: 1px solid #dcfce7; margin-top: 8px; padding-top: 8px; font-size: 0.78rem; color: #166534; text-align: left; display: grid; grid-template-columns: 1fr; gap: 4px;">
-                    <div>• Total a pagar: <strong>Q ${total.toLocaleString('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>
-                    <div>• Total intereses: <strong>Q ${intereses.toLocaleString('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>
-                    <div>• Tasa aplicada: <strong>${tasaPorcentaje.toFixed(2)}% Anual</strong></div>
-                </div>
-            </div>
-        `;
+    function actualizarLabelMes() {
+        mesActualLabel.textContent = `${NOMBRES_MESES[fechaSeleccionada.getMonth()]} ${fechaSeleccionada.getFullYear()}`;
     }
 
-    // Función para mostrar alertas de validación o error
-    function mostrarMensajeSimulador(mensaje, tipo) {
-        const esError = tipo === 'error';
-        contenedorResultado.innerHTML = `
-            <div style="background-color: ${esError ? '#fee2e2' : '#e0f2fe'}; color: ${esError ? '#991b1b' : '#075985'}; padding: 10px; border-radius: 6px; font-size: 0.85rem; text-align: center; border: 1px solid ${esError ? '#fca5a5' : '#7dd3fc'}; margin-top: 15px;">
-                ${mensaje}
-            </div>
-        `;
+    function mostrarEstadoSinCuenta() {
+        contenedorMovimientos.innerHTML = `
+            <tr><td colspan="5" style="text-align:center; color:#64748b; padding: 24px;">
+                Selecciona una cuenta para ver tus movimientos.
+            </td></tr>`;
+        totalIngresosEl.textContent = '--';
+        totalEgresosEl.textContent = '--';
+        btnMesSelector.disabled = true;
+        if (tituloHistorial) tituloHistorial.textContent = 'Historial de Transacciones';
     }
 
-    // 3. Captura y Registro de Solicitudes de Productos en Supabase
-    const botonesSolicitar = document.querySelectorAll('.btn-solicitar');
-    botonesSolicitar.forEach(boton => {
-        boton.addEventListener('click', async (e) => {
-            const nombreProducto = e.target.getAttribute('data-producto');
-            
-            const confirmacion = confirm(`¿Deseas solicitar el producto: "${nombreProducto}"?`);
-            if (!confirmacion) return;
+    async function cargarMovimientos() {
+        if (!cuentaSeleccionada) return;
 
-            if (!supabaseClient) {
-                alert("No hay conexión con Supabase configurada.");
-                return;
-            }
+        contenedorMovimientos.innerHTML = `
+            <tr><td colspan="5" style="text-align:center; color:#64748b; padding: 24px;">
+                Cargando movimientos...
+            </td></tr>`;
 
-            try {
-                const { data, error } = await supabaseClient
-                    .from('solicitudes_productos')
-                    .insert([
-                        {
-                            nombre_producto_solicitado: nombreProducto,
-                            estado: 'Pendiente',
-                            fecha_solicitud: new Date().toISOString()
-                        }
-                    ]);
+        const inicio = fechaSeleccionada;
+        const fin = new Date(fechaSeleccionada.getFullYear(), fechaSeleccionada.getMonth() + 1, 1);
+        const numeroCuenta = cuentaSeleccionada.numero_cuenta;
 
-                if (error) {
-                    console.error("Error en base de datos al solicitar producto:", error);
-                    alert("No se pudo registrar la solicitud. Revisa la consola o los permisos de Supabase.");
-                } else {
-                    alert(`¡Tu solicitud para "${nombreProducto}" ha sido procesada exitosamente! Un asesor se pondrá en contacto.`);
-                }
+        try {
+            const { data, error } = await supabaseClient
+                .from('transacciones')
+                .select('*')
+                .or(`cuenta_origen.eq.${numeroCuenta},cuenta_destino.eq.${numeroCuenta}`)
+                .gte('fecha_hora', inicio.toISOString())
+                .lt('fecha_hora', fin.toISOString())
+                .order('fecha_hora', { ascending: false });
 
-            } catch (err) {
-                console.error("Excepción crítica al procesar la solicitud:", err);
-                alert("Ocurrió un error inesperado al enviar la solicitud.");
-            }
-        });
+            if (error) throw error;
+
+            renderizarMovimientos(data || []);
+
+        } catch (err) {
+            console.error('Error al cargar transacciones:', err);
+            contenedorMovimientos.innerHTML = `
+                <tr><td colspan="5" style="text-align:center; color:#ef4444; padding: 24px;">
+                    Ocurrió un error al cargar tus movimientos.
+                </td></tr>`;
+        }
+    }
+
+    function renderizarMovimientos(transacciones) {
+        const simbolo = cuentaSeleccionada.moneda === 'USD' ? '$' : 'Q';
+        const cuentaLabel = `${cuentaSeleccionada.tipo_cuenta} (**** ${String(cuentaSeleccionada.numero_cuenta).slice(-4)})`;
+
+        if (tituloHistorial) {
+            tituloHistorial.textContent = `Historial de Transacciones — ${cuentaLabel}`;
+        }
+
+        if (transacciones.length === 0) {
+            contenedorMovimientos.innerHTML = `
+                <tr><td colspan="5" style="text-align:center; color:#64748b; padding: 24px;">
+                    No hay movimientos registrados en este periodo.
+                </td></tr>`;
+            totalIngresosEl.textContent = `${simbolo} 0.00`;
+            totalEgresosEl.textContent = `${simbolo} 0.00`;
+            return;
+        }
+
+        let totalIngresos = 0;
+        let totalEgresos = 0;
+
+        contenedorMovimientos.innerHTML = transacciones.map(tx => {
+            const esIngreso = tx.cuenta_destino === cuentaSeleccionada.numero_cuenta;
+            const monto = parseFloat(tx.monto);
+
+            if (esIngreso) totalIngresos += monto; else totalEgresos += monto;
+
+            const fecha = new Date(tx.fecha_hora).toLocaleDateString('es-GT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const otraCuenta = esIngreso ? tx.cuenta_origen : tx.cuenta_destino;
+            const descripcionPrincipal = tx.tipo_transaccion || 'Movimiento';
+            const descripcionSecundaria = esIngreso
+                ? `Recibido de cuenta **** ${String(otraCuenta || '----').slice(-4)}`
+                : `Enviado a cuenta **** ${String(otraCuenta || '----').slice(-4)}`;
+
+            return `
+                <tr>
+                    <td>${fecha}</td>
+                    <td>
+                        <div class="tx-info">
+                            <strong>${descripcionPrincipal}</strong>
+                            <small>${descripcionSecundaria}</small>
+                        </div>
+                    </td>
+                    <td>${cuentaLabel}</td>
+                    <td>${tx.codigo_autorizacion || '—'}</td>
+                    <td class="amount ${esIngreso ? 'positive' : 'negative'}">${esIngreso ? '+' : '-'} ${simbolo} ${monto.toLocaleString('es-GT', { minimumFractionDigits: 2 })}</td>
+                </tr>
+            `;
+        }).join('');
+
+        totalIngresosEl.textContent = `${simbolo} ${totalIngresos.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`;
+        totalEgresosEl.textContent = `${simbolo} ${totalEgresos.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`;
+    }
+
+    function exportarPDF() {
+        if (!cuentaSeleccionada) {
+            alert('Selecciona una cuenta antes de exportar.');
+            return;
+        }
+        if (typeof html2pdf === 'undefined') {
+            alert('No se pudo cargar el generador de PDF. Revisa tu conexión e inténtalo de nuevo.');
+            return;
+        }
+
+        const elemento = document.getElementById('areaExportablePDF');
+        const nombreMes = mesActualLabel.textContent.replace(/\s+/g, '_');
+        const opciones = {
+            margin: 0.5,
+            filename: `movimientos_${cuentaSeleccionada.numero_cuenta}_${nombreMes}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opciones).from(elemento).save();
+    }
+
+    function primerDiaDelMes(fecha) {
+        return new Date(fecha.getFullYear(), fecha.getMonth(), 1);
+    }
+
+    // ================= EVENTOS =================
+
+    selectCuenta.addEventListener('change', () => {
+        cuentaSeleccionada = cuentasUsuario.find(c => c.numero_cuenta === selectCuenta.value) || null;
+        fechaSeleccionada = primerDiaDelMes(new Date());
+        actualizarLabelMes();
+
+        if (cuentaSeleccionada) {
+            btnMesSelector.disabled = false;
+            cargarMovimientos();
+        } else {
+            mostrarEstadoSinCuenta();
+        }
     });
+
+    btnMesSelector.addEventListener('click', () => {
+        menuMeses.hidden = !menuMeses.hidden;
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!menuMeses.hidden && !menuMeses.contains(e.target) && !btnMesSelector.contains(e.target)) {
+            menuMeses.hidden = true;
+        }
+    });
+
+    if (btnExportarPDF) {
+        btnExportarPDF.addEventListener('click', exportarPDF);
+    }
+
+    // ================= INICIALIZACIÓN =================
+
+    await cargarCuentasUsuario();
+    construirMenuMeses();
+    actualizarLabelMes();
+    mostrarEstadoSinCuenta();
 
 });

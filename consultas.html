@@ -15,18 +15,74 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Remix Icon CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+
+    <!-- html2pdf (misma librería que ya usa transferencias.html para el comprobante) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <!-- Open Graph -->
     <meta property="og:title" content="Consultas - Banco UVG">
     <meta property="og:description" content="Consulta el historial de tus cuentas bancarias">
+
+    <!-- Estilos propios de esta pantalla: menú desplegable de meses -->
+    <style>
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-end;
+        }
+        .mes-selector-container {
+            position: relative;
+        }
+        .mes-selector {
+            position: relative;
+        }
+        #btn-mes-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        #btn-mes-selector:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .menu-meses-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            z-index: 20;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            min-width: 220px;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        .menu-meses-dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 6px 0;
+        }
+        .menu-meses-dropdown li {
+            padding: 9px 16px;
+            font-size: 0.88rem;
+            color: #1e293b;
+            cursor: pointer;
+        }
+        .menu-meses-dropdown li:hover {
+            background-color: #f1f5f9;
+        }
+    </style>
 </head>
 <body>
 
     <div class="dashboard-layout">
-        
+
         <!-- NAVEGACIÓN LATERAL (Misma estructura unificada) -->
         <aside class="nav-lateral">
             <div class="sidebar-brand">
@@ -99,7 +155,7 @@
 
         <!-- ÁREA PRINCIPAL -->
         <div class="main-wrapper">
-            
+
             <!-- Header Superior -->
             <header class="banca-header">
                 <div class="header-welcome">
@@ -124,118 +180,83 @@
                     <p>Revisa el historial detallado de tus transacciones bancarias</p>
                 </div>
 
-                <!-- Panel Filtros de Búsqueda -->
+                <!-- Panel: elegir cuenta + periodo -->
                 <div class="card-widget filter-card">
-                    <form id="form-filtros" class="filter-form">
+                    <div class="filter-form">
                         <div class="filter-group">
                             <label for="select-cuenta">Seleccionar Cuenta</label>
                             <select id="select-cuenta" class="form-control">
-                                <option value="todas">Todas las cuentas</option>
-                                <option value="monetaria">Monetaria Quetzales - **** 4821</option>
-                                <option value="ahorro">Ahorro Preferencial - **** 9012</option>
+                                <option value="" disabled selected>Cargando tus cuentas...</option>
                             </select>
                         </div>
 
-                        <div class="filter-group">
-                            <label for="fecha-desde">Desde</label>
-                            <input type="date" id="fecha-desde" class="form-control">
+                        <div class="filter-group mes-selector-container">
+                            <label>Periodo</label>
+                            <div class="mes-selector">
+                                <button type="button" id="btn-mes-selector" class="btn-primary-sm" disabled>
+                                    <i class="ri-calendar-line"></i>
+                                    <span id="mes-actual-label">Mes actual</span>
+                                    <i class="ri-arrow-down-s-line"></i>
+                                </button>
+                                <div id="menu-meses" class="menu-meses-dropdown" hidden>
+                                    <ul id="lista-meses"></ul>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="filter-group">
-                            <label for="fecha-hasta">Hasta</label>
-                            <input type="date" id="fecha-hasta" class="form-control">
+                <!-- Todo lo que se exporta a PDF va dentro de este contenedor -->
+                <div id="areaExportablePDF">
+
+                    <!-- Resumen de Totales del Periodo -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon income"><i class="ri-arrow-down-circle-line"></i></div>
+                            <div>
+                                <span>Total Ingresos</span>
+                                <h3 id="totalIngresos">Q 0.00</h3>
+                            </div>
                         </div>
+                        <div class="stat-card">
+                            <div class="stat-icon expense"><i class="ri-arrow-up-circle-line"></i></div>
+                            <div>
+                                <span>Total Egresos</span>
+                                <h3 id="totalEgresos">Q 0.00</h3>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="filter-group btn-filter-container">
-                            <button type="submit" class="btn-primary-sm">
-                                <i class="ri-filter-3-line"></i> Filtrar
+                    <!-- Tabla de Historial de Transacciones -->
+                    <div class="card-widget">
+                        <div class="widget-header space-between">
+                            <div class="header-title">
+                                <i class="ri-history-line"></i>
+                                <span id="tituloHistorial">Historial de Transacciones</span>
+                            </div>
+                            <button id="btnExportarPDF" class="btn-secondary-sm">
+                                <i class="ri-download-2-line"></i> Exportar PDF
                             </button>
                         </div>
-                    </form>
-                </div>
 
-                <!-- Resumen de Totales del Periodo -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon income"><i class="ri-arrow-down-circle-line"></i></div>
-                        <div>
-                            <span>Total Ingresos</span>
-                            <h3>Q 12,450.00</h3>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Descripción</th>
+                                        <th>Cuenta</th>
+                                        <th>Referencia</th>
+                                        <th>Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contenedorMovimientos">
+                                    <!-- Se llena dinámicamente desde consultas.js -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon expense"><i class="ri-arrow-up-circle-line"></i></div>
-                        <div>
-                            <span>Total Egresos</span>
-                            <h3>Q 4,120.50</h3>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Tabla de Historial de Transacciones -->
-                <div class="card-widget">
-                    <div class="widget-header space-between">
-                        <div class="header-title">
-                            <i class="ri-history-line"></i>
-                            3 Historial de Transacciones
-                        </div>
-                        <button class="btn-secondary-sm">
-                            <i class="ri-download-2-line"></i> Exportar PDF
-                        </button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Descripción</th>
-                                    <th>Cuenta</th>
-                                    <th>Referencia</th>
-                                    <th>Monto</th>
-                                </tr>
-                            </thead>
-                            <tbody id="contenedorMovimientos">
-                                <!-- Filas de ejemplo / renderizadas dinámicamente -->
-                                <tr>
-                                    <td>06/08/2026</td>
-                                    <td>
-                                        <div class="tx-info">
-                                            <strong>Transferencia Recibida</strong>
-                                            <small>Pago de Servicios Tutoria</small>
-                                        </div>
-                                    </td>
-                                    <td>Monetaria (**** 4821)</td>
-                                    <td>REF-890123</td>
-                                    <td class="amount positive">+ Q 450.00</td>
-                                </tr>
-                                <tr>
-                                    <td>04/08/2026</td>
-                                    <td>
-                                        <div class="tx-info">
-                                            <strong>Pago EEGSA</strong>
-                                            <small>Servicio de Energía Eléctrica</small>
-                                        </div>
-                                    </td>
-                                    <td>Monetaria (**** 4821)</td>
-                                    <td>REF-772102</td>
-                                    <td class="amount negative">- Q 215.50</td>
-                                </tr>
-                                <tr>
-                                    <td>01/08/2026</td>
-                                    <td>
-                                        <div class="tx-info">
-                                            <strong>Supermercado La Torre</strong>
-                                            <small>Compra con Tarjeta Débito</small>
-                                        </div>
-                                    </td>
-                                    <td>Monetaria (**** 4821)</td>
-                                    <td>REF-654911</td>
-                                    <td class="amount negative">- Q 680.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
 
             </main>

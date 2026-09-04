@@ -13,6 +13,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+
+    <style>
+        .campo-ayuda {
+            display: block;
+            margin-top: 4px;
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+    </style>
 </head>
 <body>
 
@@ -113,53 +122,8 @@
                     <p>Encuentra la tarjeta que mejor se adapta a tus necesidades y estilo de vida</p>
                 </div>
 
-                <div class="grid-productos">
-                    
-                    <div class="card-producto">
-                        <div class="badge-producto">Cashback</div>
-                        <div class="icono-producto">
-                            <i class="ri-cash-line"></i>
-                        </div>
-                        <h3>UVG Cashback Connect</h3>
-                        <p class="desc-producto">Recupera dinero en efectivo por cada compra realizada en supermercados y gasolineras.</p>
-                        <ul class="caracteristicas-list">
-                            <li><i class="ri-check-line"></i> 5% de reembolso en categorías seleccionadas</li>
-                            <li><i class="ri-check-line"></i> Membresía gratis el primer año</li>
-                            <li><i class="ri-check-line"></i> Tarjetas adicionales sin costo</li>
-                        </ul>
-                        <button class="btn-filter-primary btn-full btn-solicitar-tarjeta" data-tarjeta="UVG Cashback Connect">Solicitar Tarjeta</button>
-                    </div>
-
-                    <div class="card-producto">
-                        <div class="badge-producto">Viajes</div>
-                        <div class="icono-producto">
-                            <i class="ri-plane-line"></i>
-                        </div>
-                        <h3>UVG Travel Gold</h3>
-                        <p class="desc-producto">Acumula millas por tus consumos cotidianos y canjéalas por boletos aéreos y hoteles.</p>
-                        <ul class="caracteristicas-list">
-                            <li><i class="ri-check-line"></i> Bono de bienvenida de 5,000 millas</li>
-                            <li><i class="ri-check-line"></i> Seguro de viaje internacional incluido</li>
-                            <li><i class="ri-check-line"></i> Acceso a salas VIP seleccionadas</li>
-                        </ul>
-                        <button class="btn-filter-primary btn-full btn-solicitar-tarjeta" data-tarjeta="UVG Travel Gold">Solicitar Tarjeta</button>
-                    </div>
-
-                    <div class="card-producto">
-                        <div class="badge-producto">Exclusiva</div>
-                        <div class="icono-producto">
-                            <i class="ri-vip-crown-line"></i>
-                        </div>
-                        <h3>UVG Black Mastercard</h3>
-                        <p class="desc-producto">Experiencias exclusivas, alto límite crediticio y atención personalizada de primer nivel.</p>
-                        <ul class="caracteristicas-list">
-                            <li><i class="ri-check-line"></i> Concierge personal 24/7</li>
-                            <li><i class="ri-check-line"></i> Acceso ilimitado a salas LoungeKey</li>
-                            <li><i class="ri-check-line"></i> Cobertura médica global hasta $150k</li>
-                        </ul>
-                        <button class="btn-filter-primary btn-full btn-solicitar-tarjeta" data-tarjeta="UVG Black Mastercard">Solicitar Evaluación</button>
-                    </div>
-
+                <div class="grid-productos" id="contenedorTarjetasProductos">
+                    <p class="loading-text">Cargando tarjetas disponibles...</p>
                 </div>
 
                 <!-- MODAL DE FORMULARIO DE SOLICITUD -->
@@ -174,15 +138,13 @@
                                 <label for="tipoTarjeta">Tarjeta Seleccionada</label>
                                 <select id="tipoTarjeta" name="tipoTarjeta" required>
                                     <option value="" disabled selected>Selecciona una tarjeta</option>
-                                    <option value="UVG Cashback Connect">UVG Cashback Connect</option>
-                                    <option value="UVG Travel Gold">UVG Travel Gold</option>
-                                    <option value="UVG Black Mastercard">UVG Black Mastercard</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="ingresosMensuales">Ingresos Mensuales Estimados (GTQ)</label>
                                 <input type="number" id="ingresosMensuales" name="ingresosMensuales" placeholder="Ej. 7500" min="0" step="100" required>
+                                <small id="ayudaIngresosMinimos" class="campo-ayuda"></small>
                             </div>
 
                             <div class="form-group">
@@ -203,6 +165,12 @@
                             <div class="form-group">
                                 <label for="direccionEntrega">Dirección de Entrega</label>
                                 <textarea id="direccionEntrega" name="direccionEntrega" rows="3" placeholder="Dirección completa para entrega de la tarjeta" required></textarea>
+                            </div>
+
+                            <!-- Campo dinámico: solo aparece para Travel Gold (pasaporte) o Black Mastercard (ingresos adicionales) -->
+                            <div class="form-group" id="campoAdicionalContainer" style="display: none;">
+                                <label for="campoAdicional" id="labelCampoAdicional">Dato adicional</label>
+                                <input type="text" id="campoAdicional" name="campoAdicional">
                             </div>
 
                             <div id="mensajeEstado" class="mensaje-estado"></div>
@@ -232,7 +200,7 @@
     <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
-    <script src="banca_personal.js"></script>
+    <script src="sesion_comun.js"></script>
     <script src="tarjetas.js"></script>
 
 </body>

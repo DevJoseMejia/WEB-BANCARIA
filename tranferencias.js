@@ -1,4 +1,4 @@
-// EVENTOS Y LÓGICA DEL MODAL COMPROBANTE
+// EVENTOS Y LÓGICA DE LOS MODALES: confirmación previa + comprobante
 document.addEventListener('DOMContentLoaded', () => {
     const btnDescargar = document.getElementById('btnDescargarPDF');
     const btnCerrar = document.getElementById('btnCerrarComprobante');
@@ -9,7 +9,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnCerrar) {
         btnCerrar.addEventListener('click', cerrarModalComprobante);
     }
+
+    // Cerrar el modal de confirmación si se hace clic fuera del recuadro
+    const modalConfirmar = document.getElementById('modalConfirmarTransferencia');
+    if (modalConfirmar) {
+        modalConfirmar.addEventListener('click', (e) => {
+            if (e.target === modalConfirmar) {
+                modalConfirmar.classList.remove('active');
+                // Si hay una confirmación pendiente esperando respuesta, se resuelve como "cancelado"
+                if (typeof resolverConfirmacionPendiente === 'function') {
+                    resolverConfirmacionPendiente(false);
+                }
+            }
+        });
+    }
 });
+
+// Se reasigna en cada llamada a pedirConfirmacionModal() mientras el modal está abierto
+let resolverConfirmacionPendiente = null;
 
 async function manejarSubmitTransferencia(e) {
     e.preventDefault();
@@ -63,9 +80,18 @@ async function manejarSubmitTransferencia(e) {
         const simbolo = monedaOrigen === 'USD' ? '$' : 'Q';
         const montoFormateado = monto.toLocaleString('es-GT', { minimumFractionDigits: 2 });
 
-        const confirmado = confirm(
-            `¿Confirmas la transferencia de ${simbolo} ${montoFormateado} a ${titular.nombre_completo}?`
-        );
+        // ANTES: aquí se usaba confirm() del navegador. Ahora se muestra un
+        // modal propio con los datos de la transferencia y se espera a que
+        // el usuario confirme o cancele.
+        btnSubmit.innerHTML = 'Esperando confirmación...';
+
+        const confirmado = await pedirConfirmacionModal({
+            cuentaOrigenTexto: `${tipoOrigen || 'Cuenta'} (${cuentaOrigen})`,
+            cuentaDestino: cuentaDestino,
+            beneficiario: titular.nombre_completo,
+            montoTexto: `${simbolo} ${montoFormateado}`,
+            motivo: motivo
+        });
 
         if (!confirmado) return;
 
@@ -81,11 +107,15 @@ async function manejarSubmitTransferencia(e) {
 
         if (errTransferencia) throw errTransferencia;
 
-        // Generar número de referencia correlativo
-        const numReferencia = 'REF-' + Math.floor(100000 + Math.random() * 900000);
+        // Preferimos el código de autorización que ahora genera y guarda la
+        // propia RPC (queda registrado en `transacciones`); si por alguna
+        // razón no viene en la respuesta, generamos uno solo para mostrar.
+        const numReferencia = (resultado && resultado.codigo_autorizacion)
+            ? resultado.codigo_autorizacion
+            : 'REF-' + Math.floor(100000 + Math.random() * 900000);
         const fechaHora = new Date().toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'medium' });
 
-        // Desplegar Pop-Out con la información requerida
+        // Desplegar Pop-Out con la información requerida (comprobante final)
         mostrarModalComprobante({
             referencia: numReferencia,
             fecha: fechaHora,
@@ -108,6 +138,52 @@ async function manejarSubmitTransferencia(e) {
         btnSubmit.disabled = false;
         btnSubmit.innerHTML = textoOriginalBtn;
     }
+}
+
+/**
+ * Muestra el modal de confirmación previa con los datos de la transferencia
+ * y devuelve una Promise que se resuelve en `true` (confirmó) o `false`
+ * (canceló / cerró el modal), para poder usarse con await igual que el
+ * confirm() nativo que reemplaza.
+ */
+function pedirConfirmacionModal(datos) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('modalConfirmarTransferencia');
+        const btnConfirmar = document.getElementById('btnConfirmarTransferencia');
+        const btnCancelar = document.getElementById('btnCancelarTransferencia');
+
+        if (!modal || !btnConfirmar || !btnCancelar) {
+            // Si por algún motivo el modal no existe en el HTML, no bloqueamos
+            // el flujo -- mejor eso que dejar la transferencia colgada.
+            console.error('No se encontró el modal de confirmación en el HTML.');
+            resolve(true);
+            return;
+        }
+
+        document.getElementById('confCuentaOrigen').textContent = datos.cuentaOrigenTexto;
+        document.getElementById('confCuentaDestino').textContent = datos.cuentaDestino;
+        document.getElementById('confBeneficiario').textContent = datos.beneficiario;
+        document.getElementById('confMonto').textContent = datos.montoTexto;
+        document.getElementById('confMotivo').textContent = datos.motivo;
+
+        function finalizar(resultado) {
+            modal.classList.remove('active');
+            btnConfirmar.removeEventListener('click', onConfirmar);
+            btnCancelar.removeEventListener('click', onCancelar);
+            resolverConfirmacionPendiente = null;
+            resolve(resultado);
+        }
+
+        function onConfirmar() { finalizar(true); }
+        function onCancelar() { finalizar(false); }
+
+        resolverConfirmacionPendiente = finalizar;
+
+        btnConfirmar.addEventListener('click', onConfirmar);
+        btnCancelar.addEventListener('click', onCancelar);
+
+        modal.classList.add('active');
+    });
 }
 
 function mostrarModalComprobante(datos) {
