@@ -1,4 +1,5 @@
 let supabaseClientPrestamos = null;
+let idUsuarioPrestamos = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (typeof CONFIG !== 'undefined' && CONFIG.URL_DE_SUPABASE && CONFIG.KEY_ANON_SUPABASE && window.supabase) {
@@ -10,8 +11,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    await cargarPrestamosDisponibles();
+    idUsuarioPrestamos = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
+
+    await cargarCuotaCatalogoYSolicitante();
 });
+
+/**
+ * Carga en paralelo el catálogo de préstamos y los datos del solicitante
+ * (nombre y correo), para no bloquear uno con el otro.
+ */
+async function cargarCuotaCatalogoYSolicitante() {
+    await Promise.all([
+        cargarPrestamosDisponibles(),
+        cargarDatosSolicitante()
+    ]);
+}
 
 /**
  * Trae el catálogo de préstamos activos desde productos_prestamo
@@ -55,7 +69,6 @@ async function cargarPrestamosDisponibles() {
             `;
         }).join('');
 
-        // Habilitamos la apertura del modal en cada botón recién creado
         contenedor.querySelectorAll('.btn-solicitar').forEach(boton => {
             boton.addEventListener('click', manejarSolicitudPrestamo);
         });
@@ -63,6 +76,40 @@ async function cargarPrestamosDisponibles() {
     } catch (err) {
         console.error('💥 Error al cargar los préstamos disponibles:', err);
         contenedor.innerHTML = "<p style='color:#ef4444;'>No se pudieron cargar los préstamos disponibles.</p>";
+    }
+}
+
+/**
+ * Trae nombre/apellidos (perfiles_clientes) y correo (usuarios) del
+ * usuario en sesión, para pre-llenar el paso 1 del modal.
+ */
+async function cargarDatosSolicitante() {
+    const inputNombre = document.getElementById('inputNombreSolicitante');
+    const inputCorreo = document.getElementById('inputCorreoSolicitante');
+
+    if (!idUsuarioPrestamos) {
+        if (inputNombre) inputNombre.placeholder = 'No se pudo identificar al usuario';
+        return;
+    }
+
+    try {
+        const [{ data: perfil, error: errPerfil }, { data: usuario, error: errUsuario }] = await Promise.all([
+            supabaseClientPrestamos.from('perfiles_clientes').select('nombres, apellidos').eq('id_usuario', idUsuarioPrestamos).maybeSingle(),
+            supabaseClientPrestamos.from('usuarios').select('email').eq('id_usuario', idUsuarioPrestamos).maybeSingle()
+        ]);
+
+        if (errPerfil) throw errPerfil;
+        if (errUsuario) throw errUsuario;
+
+        if (inputNombre && perfil) {
+            inputNombre.value = `${perfil.nombres} ${perfil.apellidos}`;
+        }
+        if (inputCorreo && usuario) {
+            inputCorreo.value = usuario.email || '';
+        }
+
+    } catch (err) {
+        console.error('💥 Error al cargar los datos del solicitante:', err);
     }
 }
 
@@ -95,36 +142,41 @@ document.addEventListener('DOMContentLoaded', () => {
     // Campos del formulario y simulador
     const inputMonto = document.getElementById('inputMontoSolicitado');
     const selectPlazo = document.getElementById('selectPlazoMeses');
+    const inputIngresos = document.getElementById('inputIngresosMensuales');
     const textoCuota = document.getElementById('textoCuotaEstimada');
+    const checkTerminos = document.getElementById('checkTerminos');
 
     let pasoActual = 1;
 
     // --- FUNCIONES DE APERTURA Y CIERRE ---
 
-    // Función para abrir el modal
     window.abrirModalPrestamo = function (nombreProducto, idProducto) {
         if (!modal) return;
 
         productoSeleccionadoActual = { nombre: nombreProducto, id: idProducto };
 
-        // Resetear estado del formulario y pasos
         pasoActual = 1;
         mostrarPaso(pasoActual);
         if (formSolicitud) formSolicitud.reset();
         if (textoCuota) textoCuota.textContent = 'Q 0.00';
 
-        // Asignar datos del producto si existen
+        // El reset() del form también borra los campos readonly de solicitante; los volvemos a llenar
+        cargarDatosSolicitante();
+
         const tituloModal = document.getElementById('modalTitulo');
         if (tituloModal && nombreProducto) {
             tituloModal.textContent = `Solicitud de ${nombreProducto}`;
         }
 
-        // Mostrar modal
+        const resumenNombre = document.getElementById('resumenNombreProducto');
+        if (resumenNombre && nombreProducto) {
+            resumenNombre.textContent = nombreProducto;
+        }
+
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
     };
 
-    // Función para cerrar el modal
     function cerrarModal() {
         if (!modal) return;
         modal.classList.remove('active');
@@ -133,12 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EVENT LISTENERS DE CIERRE ---
 
-    // Botón X
     if (btnCerrarModal) {
         btnCerrarModal.addEventListener('click', cerrarModal);
     }
 
-    // Botón Cancelar / Atrás
     if (btnModalAtras) {
         btnModalAtras.addEventListener('click', () => {
             if (pasoActual === 1) {
@@ -150,7 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Clic fuera del recuadro blanco
     if (modal) {
         modal.addEventListener('click', (event) => {
             if (event.target === modal) {
@@ -162,14 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CONTROL DE PASOS DEL FORMULARIO ---
 
     function mostrarPaso(paso) {
-        // Ocultar todos los pasos
         document.querySelectorAll('.modal-step-content').forEach(el => el.classList.remove('active'));
 
-        // Mostrar el paso solicitado
         const pasoElemento = document.getElementById(`pasoModal${paso}`);
         if (pasoElemento) pasoElemento.classList.add('active');
 
-        // Actualizar el indicador visual de pasos
         document.querySelectorAll('.step-item').forEach(step => {
             const numPaso = parseInt(step.getAttribute('data-step'));
             if (numPaso <= paso) {
@@ -179,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Configurar botones según el paso
         if (paso === 1) {
             if (btnModalAtras) {
                 btnModalAtras.style.display = 'inline-flex';
@@ -199,17 +244,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnModalSiguiente.querySelector('span').textContent = 'Confirmar Solicitud';
             }
 
-            // Actualizar resumen
             const elResumenMonto = document.getElementById('resumenMonto');
             const elResumenPlazo = document.getElementById('resumenPlazo');
             if (elResumenMonto) {
-                elResumenMonto.textContent = `Q ${parseFloat(inputMonto ? inputMonto.value : 0 || 0).toLocaleString('es-GT', {minimumFractionDigits: 2})}`;
+                elResumenMonto.textContent = `Q ${parseFloat(inputMonto ? inputMonto.value : 0 || 0).toLocaleString('es-GT', { minimumFractionDigits: 2 })}`;
             }
             if (elResumenPlazo) {
                 elResumenPlazo.textContent = `${selectPlazo ? selectPlazo.value : 12} Meses`;
             }
         } else if (paso === 3) {
-            // Paso de éxito
             if (btnModalAtras) btnModalAtras.style.display = 'none';
             if (btnModalSiguiente) {
                 btnModalSiguiente.style.display = 'inline-flex';
@@ -227,15 +270,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 pasoActual = 2;
                 mostrarPaso(pasoActual);
             } else if (pasoActual === 2) {
-                // Registrar la solicitud en Supabase al confirmar en el paso 2
+
+                if (checkTerminos && !checkTerminos.checked) {
+                    checkTerminos.reportValidity();
+                    return;
+                }
+
                 const ticketAleatorio = `#UVG-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+                const cuotaTexto = textoCuota ? textoCuota.textContent.replace(/[^0-9.]/g, '') : '0';
 
                 if (supabaseClientPrestamos) {
                     try {
                         const { error } = await supabaseClientPrestamos
-                            .from('solicitudes_productos')
+                            .from('solicitudes_prestamos')
                             .insert([{
-                                nombre_producto_solicitado: productoSeleccionadoActual.nombre || 'Préstamo',
+                                id_usuario: idUsuarioPrestamos,
+                                id_producto_prestamo: productoSeleccionadoActual.id,
+                                nombre_producto: productoSeleccionadoActual.nombre || 'Préstamo',
+                                monto_solicitado: parseFloat(inputMonto ? inputMonto.value : 0) || 0,
+                                plazo_meses: parseInt(selectPlazo ? selectPlazo.value : 12, 10),
+                                ingresos_mensuales: parseFloat(inputIngresos ? inputIngresos.value : 0) || null,
+                                cuota_estimada: parseFloat(cuotaTexto) || null,
+                                acepto_terminos: checkTerminos ? checkTerminos.checked : false,
+                                numero_gestion: ticketAleatorio,
                                 estado: 'Pendiente',
                                 fecha_solicitud: new Date().toISOString()
                             }]);

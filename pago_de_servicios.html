@@ -166,7 +166,8 @@
                             </div>
 
                             <p id="servicioSeleccionadoTexto" class="loading-text">Selecciona un servicio arriba para continuar.</p>
-                            
+                            <p id="infoPagador" class="loading-text"></p>
+
                             <form id="form-pago-servicio" class="form-pago" onsubmit="return false;">
                                 <div class="filter-group">
                                     <label for="cuenta-origen">Cuenta a debitar</label>
@@ -178,6 +179,7 @@
                                 <div class="filter-group">
                                     <label for="identificador-servicio" id="labelIdentificadorServicio">Número de identificador</label>
                                     <input type="text" id="identificador-servicio" class="form-control" placeholder="Selecciona un servicio primero" required disabled>
+                                    <small id="ayudaIdentificador" class="campo-ayuda"></small>
                                 </div>
 
                                 <div class="filter-group">
@@ -189,6 +191,8 @@
                                     <label for="concepto">Alias o Guardar como (Opcional)</label>
                                     <input type="text" id="concepto" class="form-control" placeholder="Ej. Luz de la casa" disabled>
                                 </div>
+
+                                <div id="mensajeEstadoPago" class="mensaje-estado"></div>
 
                                 <button type="submit" class="btn-filter-primary btn-pago-submit" disabled>
                                     <i class="ri-check-double-line"></i> Pagar Servicio

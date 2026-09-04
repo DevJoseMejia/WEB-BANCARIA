@@ -1,12 +1,17 @@
 // CONTROLADOR: SOLICITUD Y APERTURA DE CUENTAS
 
 let supabaseClientCuentas = null;
+let idUsuarioCuentas = null;
 
 // Referencias globales del DOM
 let modalCuenta = null;
 let formSolicitudCuenta = null;
 let selectTipoCuenta = null;
 let mensajeEstado = null;
+
+// Catálogo real cargado desde productos_cuenta, y la cuenta que se está solicitando
+let catalogoCuentas = {}; // nombre -> registro completo
+let cuentaSeleccionadaActual = { nombre: '', id: null };
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Inicializar cliente de Supabase
@@ -19,16 +24,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // 2. Capturar elementos del DOM
+    // 2. Usuario en sesión (mismo patrón que el resto del proyecto: sessionStorage/localStorage, no Supabase Auth)
+    idUsuarioCuentas = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
+
+    // 3. Capturar elementos del DOM
     modalCuenta = document.getElementById('modalSolicitudCuenta');
     formSolicitudCuenta = document.getElementById('formSolicitudCuenta');
     selectTipoCuenta = document.getElementById('selectTipoCuenta');
     mensajeEstado = document.getElementById('mensajeEstado');
 
-    // 3. Inicializar eventos del Modal
+    // 4. Inicializar eventos del Modal
     setupModalEvents();
 
-    // 4. Cargar catálogo dinámico de cuentas
+    // 5. Cargar catálogo dinámico de cuentas (también llena el <select> del modal)
     await cargarCuentasDisponibles();
 });
 
@@ -48,12 +56,19 @@ function setupModalEvents() {
         });
     }
 
+    if (selectTipoCuenta) {
+        selectTipoCuenta.addEventListener('change', () => {
+            const producto = catalogoCuentas[selectTipoCuenta.value];
+            cuentaSeleccionadaActual = producto ? { nombre: producto.nombre, id: producto.id } : { nombre: selectTipoCuenta.value, id: null };
+        });
+    }
+
     if (formSolicitudCuenta) {
         formSolicitudCuenta.addEventListener('submit', manejarEnvioSolicitud);
     }
 }
 
-function abrirModal(nombreProducto = '') {
+function abrirModal(nombreProducto = '', idProducto = null) {
     if (!modalCuenta) return;
 
     if (mensajeEstado) {
@@ -61,7 +76,9 @@ function abrirModal(nombreProducto = '') {
         mensajeEstado.className = 'mensaje-estado';
     }
 
-    // Preselecciona el tipo de cuenta en el select si existe coincidencia
+    cuentaSeleccionadaActual = { nombre: nombreProducto, id: idProducto };
+
+    // El <select> ahora se puebla con los nombres reales del catálogo, así que sí hace match
     if (selectTipoCuenta && nombreProducto) {
         selectTipoCuenta.value = nombreProducto;
     }
@@ -78,8 +95,11 @@ function cerrarModal() {
 }
 
 /**
- * Trae el catálogo de cuentas activas desde la tabla productos_cuenta
- * y genera las tarjetas dinámicamente.
+ * Trae el catálogo de cuentas activas desde la tabla productos_cuenta,
+ * genera las tarjetas dinámicamente y puebla el <select> del modal con
+ * los MISMOS nombres reales (antes el select tenía 4 opciones inventadas
+ * que no coincidían con el catálogo real, así que preseleccionar desde
+ * una tarjeta nunca hacía match).
  */
 async function cargarCuentasDisponibles() {
     const contenedor = document.getElementById('contenedorCuentasDisponibles');
@@ -96,8 +116,12 @@ async function cargarCuentasDisponibles() {
 
         if (!productos || productos.length === 0) {
             contenedor.innerHTML = "<p style='color:#64748b;'>No hay cuentas disponibles por el momento.</p>";
+            if (selectTipoCuenta) selectTipoCuenta.innerHTML = '<option value="" disabled selected>No hay cuentas disponibles</option>';
             return;
         }
+
+        catalogoCuentas = {};
+        productos.forEach(p => { catalogoCuentas[p.nombre] = p; });
 
         // Construcción dinámica de tarjetas alineada al nuevo CSS
         contenedor.innerHTML = productos.map(p => `
@@ -114,18 +138,25 @@ async function cargarCuentasDisponibles() {
                     ${p.monto_minimo_apertura ? `<p><strong>Apertura mínima:</strong> GTQ ${p.monto_minimo_apertura}</p>` : ''}
                 </div>
                 <div class="card-producto-footer">
-                    <button class="btn-solicitar-cuenta" data-producto="${p.nombre}">
+                    <button class="btn-solicitar-cuenta" data-producto="${p.nombre}" data-id="${p.id}">
                         <i class="ri-add-line"></i> Solicitar Cuenta
                     </button>
                 </div>
             </div>
         `).join('');
 
+        // <select> del modal, con los mismos nombres reales
+        if (selectTipoCuenta) {
+            selectTipoCuenta.innerHTML = '<option value="" disabled selected>Selecciona un tipo de cuenta</option>' +
+                productos.map(p => `<option value="${p.nombre}">${p.nombre}</option>`).join('');
+        }
+
         // Evento de clic en cada tarjeta para desplegar el modal con los datos
         contenedor.querySelectorAll('.btn-solicitar-cuenta').forEach(boton => {
             boton.addEventListener('click', (e) => {
                 const productoNombre = e.currentTarget.getAttribute('data-producto');
-                abrirModal(productoNombre);
+                const productoId = e.currentTarget.getAttribute('data-id');
+                abrirModal(productoNombre, productoId);
             });
         });
 
@@ -136,8 +167,8 @@ async function cargarCuentasDisponibles() {
 }
 
 /**
- * Obtiene el usuario en sesión (Supabase Auth o localStorage) y
- * registra la solicitud en solicitudes_productos.
+ * Registra la solicitud en solicitudes_cuentas (tabla dedicada, ya no
+ * solicitudes_productos), usando el usuario real de la sesión.
  */
 async function manejarEnvioSolicitud(e) {
     e.preventDefault();
@@ -147,35 +178,19 @@ async function manejarEnvioSolicitud(e) {
         mensajeEstado.textContent = 'Enviando solicitud de apertura...';
     }
 
-    // 1. Identificar al usuario en sesión
-    let usuarioIdentificado = null;
-    try {
-        const { data: { session } } = await supabaseClientCuentas.auth.getSession();
-        if (session && session.user) {
-            usuarioIdentificado = session.user.email || session.user.id;
-        }
-    } catch (authErr) {
-        console.warn('No se pudo verificar la sesión por Auth:', authErr);
-    }
-
-    // Respaldo por localStorage
-    if (!usuarioIdentificado) {
-        usuarioIdentificado = localStorage.getItem('usuarioActivo') || localStorage.getItem('usuario') || 'Usuario Sesión';
-    }
-
-    // 2. Obtener datos ingresados en el formulario
     const tipoCuenta = selectTipoCuenta ? selectTipoCuenta.value : '';
+    const producto = catalogoCuentas[tipoCuenta];
     const moneda = document.getElementById('monedaCuenta')?.value || 'GTQ';
-    const montoInicial = parseFloat(document.getElementById('montoInicial')?.value) || 0;
+    const montoInicial = parseFloat(document.getElementById('montoInicial')?.value) || null;
     const proposito = document.getElementById('propositoCuenta')?.value || '';
 
-    // 3. Insertar datos en Supabase
     try {
         const { error } = await supabaseClientCuentas
-            .from('solicitudes_productos')
+            .from('solicitudes_cuentas')
             .insert([{
-                usuario: usuarioIdentificado,
-                nombre_producto_solicitado: tipoCuenta,
+                id_usuario: idUsuarioCuentas,
+                id_producto_cuenta: producto ? producto.id : (cuentaSeleccionadaActual.id || null),
+                nombre_producto: tipoCuenta,
                 moneda: moneda,
                 monto_inicial: montoInicial,
                 proposito: proposito,
