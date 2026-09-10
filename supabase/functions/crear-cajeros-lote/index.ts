@@ -3,15 +3,26 @@
 // que nunca puede vivir en el navegador — por eso corre como Edge Function.
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+function construirCorsHeaders() {
+  return {
+    // La función valida abajo un JWT firmado y exige rol Administrador.
+    // CORS no sustituye esa autorización; permitir el origen evita bloquear
+    // el panel si se sirve desde otro puerto o desde el dominio de producción.
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  }
 }
 
 const DOMINIO_STAFF = 'staff.bancouvg.internal'
 const CANTIDAD_MAXIMA = 50
 
 Deno.serve(async (req: Request) => {
+  const corsHeaders = construirCorsHeaders()
+  const jsonResponse = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+  })
+
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -101,11 +112,4 @@ function generarPasswordSegura(longitud: number): string {
   const valores = new Uint32Array(longitud)
   crypto.getRandomValues(valores)
   return Array.from(valores, v => alfabeto[v % alfabeto.length]).join('')
-}
-
-function jsonResponse(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-  })
 }

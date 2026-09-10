@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banca en Línea - Abrir una Cuenta | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0B1D33">
+    <meta name="theme-color" content="#081222">
     <meta name="description" content="Solicitud de cuentas monetarias y de ahorro - Banco UVG">
 
     <link rel="stylesheet" href="style_banca.css">
@@ -96,6 +96,10 @@
                     <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
+                    <button type="button" class="btn-theme-toggle" data-theme-toggle title="Cambiar a modo oscuro" aria-pressed="false">
+                        <i class="ri-moon-line icon-light"></i>
+                        <i class="ri-sun-line icon-dark"></i>
+                    </button>
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
@@ -114,7 +118,27 @@
                 </div>
 
                 <div class="grid-productos" id="contenedorCuentasDisponibles">
-                    <p class="loading-text"><i class="ri-loader-4-line ri-spin"></i> Cargando cuentas disponibles...</p>
+                    <div class="card-producto" style="pointer-events:none;">
+                        <div class="skeleton-line" style="width:48px;height:48px;border-radius:10px;margin-bottom:1.25rem;"></div>
+                        <div class="skeleton-line" style="width:60%;height:18px;margin-bottom:.5rem;"></div>
+                        <div class="skeleton-line" style="width:90%"></div>
+                        <div class="skeleton-line" style="width:80%;margin-bottom:1rem;"></div>
+                        <div class="skeleton-line" style="width:100%;height:38px;border-radius:8px;"></div>
+                    </div>
+                    <div class="card-producto" style="pointer-events:none;">
+                        <div class="skeleton-line" style="width:48px;height:48px;border-radius:10px;margin-bottom:1.25rem;"></div>
+                        <div class="skeleton-line" style="width:60%;height:18px;margin-bottom:.5rem;"></div>
+                        <div class="skeleton-line" style="width:90%"></div>
+                        <div class="skeleton-line" style="width:80%;margin-bottom:1rem;"></div>
+                        <div class="skeleton-line" style="width:100%;height:38px;border-radius:8px;"></div>
+                    </div>
+                    <div class="card-producto" style="pointer-events:none;">
+                        <div class="skeleton-line" style="width:48px;height:48px;border-radius:10px;margin-bottom:1.25rem;"></div>
+                        <div class="skeleton-line" style="width:60%;height:18px;margin-bottom:.5rem;"></div>
+                        <div class="skeleton-line" style="width:90%"></div>
+                        <div class="skeleton-line" style="width:80%;margin-bottom:1rem;"></div>
+                        <div class="skeleton-line" style="width:100%;height:38px;border-radius:8px;"></div>
+                    </div>
                 </div>
             </main>
 
@@ -173,7 +197,10 @@
 
                 <div class="form-actions">
                     <button type="button" id="btnCancelarModal" class="btn-secundario">Cancelar</button>
-                    <button type="submit" class="btn-primario">Confirmar y Solicitar</button>
+                    <button type="submit" class="btn-primario">
+                        <span class="btn-spinner"></span>
+                        <span class="btn-label-idle">Confirmar y Solicitar</span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -182,7 +209,9 @@
     <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
+    <script src="motion.js"></script>
     <script src="sesion_comun.js"></script>
+    <script src="interfaz_cliente.js"></script>
     <script src="solicitar_cuenta.js"></script>
 
 </body>

@@ -6,26 +6,117 @@
 /* --- 1. Variables de Diseño (Design Tokens) --- */
 :root {
     /* Paleta Oficial */
-    --color-primary-dark: #0B1D33; /* Azul Profundo para Navbar Lateral */
-    --color-text-main:    #1A2433; /* Gris Pizarra para Textos */
-    --color-accent:       #0068A9; /* Teal Principal */
-    --color-accent-hover: #005082; /* Teal Hover */
-    --color-gold:         #D4AF37; /* Detalle Dorado */
-    --color-bg-light:     #F2F4F7; /* Gris Claro Fondo de Contenido */
-    --color-white:        #FFFFFF; /* Blanco */
-    
+    --color-primary-dark:     #081222; /* Azul Profundo para Navbar Lateral */
+    --color-primary-elevated: #12294A; /* Superficie oscura elevada (antes hovers sueltos) */
+    --color-btn-dark-bg:      #081222; /* Botones "oscuros" (filtro, modal, solicitar) */
+    --color-btn-dark-hover:   #162E4D;
+    --color-text-main:        #0E1B2C; /* Texto fuerte / encabezados */
+    --color-accent:           #0068A9; /* Teal Principal */
+    --color-accent-hover:     #005082; /* Teal Hover */
+    --color-accent-glow:      #00A3A6; /* Teal secundario, acentos y gradientes */
+    --color-gold:              #B8933A; /* Detalle Dorado, reservado para estatus premium */
+    --color-bg-light:         #F2F4F7; /* Gris Claro Fondo de Contenido */
+    --color-white:            #FFFFFF; /* Blanco puro */
+    --color-surface:          #FFFFFF; /* Tarjetas / superficies */
+    --color-surface-2:        #F8FAFC; /* Relleno sutil (chips, filas, íconos) */
+    --color-input-bg:         #FFFFFF;
+
     /* Estados y Bordes */
     --color-border:       #E2E8F0;
-    --color-text-muted:   #64748B;
+    --color-text-muted:   #5B6B82;
     --color-sidebar-text: #94A3B8;
+
+    --color-success:      #1B8F5A;
+    --color-success-tint: #E4F5EC;
+    --color-danger:       #C6483A;
+    --color-danger-tint:  #FBEAE8;
 
     /* Tipografía y Sombras */
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --shadow-card: 0 4px 20px rgba(11, 29, 51, 0.05);
+    --shadow-card:       0 4px 20px rgba(11, 29, 51, 0.05);
+    --shadow-card-hover: 0 14px 28px -6px rgba(11, 29, 51, 0.16);
     --radius-card: 12px;
     --radius-btn: 8px;
     --sidebar-width: 260px;
-    --transition-fast: 0.2s ease;
+
+    /* Movimiento */
+    --ease-smooth: cubic-bezier(.22, 1, .36, 1);
+    --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+    --dur-fast: 150ms;
+    --dur-med: 260ms;
+    --transition-fast: var(--dur-fast) var(--ease-smooth);
+
+    color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --color-primary-dark:     #050B14;
+        --color-primary-elevated: #16283F;
+        --color-btn-dark-bg:      #1B3352;
+        --color-btn-dark-hover:   #25436A;
+        --color-text-main:        #F2F5F9;
+        --color-accent:           #2EA0D6;
+        --color-accent-hover:     #4DB4E6;
+        --color-accent-glow:      #2FC3C0;
+        --color-gold:              #D2AC5C;
+        --color-bg-light:         #0A121F;
+        --color-surface:          #101B2C;
+        --color-surface-2:        #16233A;
+        --color-input-bg:         #16233A;
+        --color-border:           #223148;
+        --color-text-muted:       #93A2B7;
+        --color-sidebar-text:     #93A2B7;
+        --color-success:          #35B37E;
+        --color-success-tint:     rgba(53, 179, 126, .16);
+        --color-danger:           #E0685A;
+        --color-danger-tint:      rgba(224, 104, 90, .16);
+        --shadow-card:       0 4px 20px rgba(0, 0, 0, .35);
+        --shadow-card-hover: 0 14px 28px -6px rgba(0, 0, 0, .5);
+    }
+}
+:root[data-theme="dark"] {
+    --color-primary-dark:     #050B14;
+    --color-primary-elevated: #16283F;
+    --color-btn-dark-bg:      #1B3352;
+    --color-btn-dark-hover:   #25436A;
+    --color-text-main:        #F2F5F9;
+    --color-accent:           #2EA0D6;
+    --color-accent-hover:     #4DB4E6;
+    --color-accent-glow:      #2FC3C0;
+    --color-gold:              #D2AC5C;
+    --color-bg-light:         #0A121F;
+    --color-surface:          #101B2C;
+    --color-surface-2:        #16233A;
+    --color-input-bg:         #16233A;
+    --color-border:           #223148;
+    --color-text-muted:       #93A2B7;
+    --color-sidebar-text:     #93A2B7;
+    --color-success:          #35B37E;
+    --color-success-tint:     rgba(53, 179, 126, .16);
+    --color-danger:           #E0685A;
+    --color-danger-tint:      rgba(224, 104, 90, .16);
+    --shadow-card:       0 4px 20px rgba(0, 0, 0, .35);
+    --shadow-card-hover: 0 14px 28px -6px rgba(0, 0, 0, .5);
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+
+/* Navegación entre páginas del sitio: transición nativa del navegador.
+   El sidebar y el encabezado quedan "fijos" (mismo view-transition-name en
+   todas las páginas del dashboard) y solo el contenido central hace la
+   transición -- progressive enhancement, no rompe nada donde no hay soporte. */
+@view-transition {
+    navigation: auto;
+}
+.nav-lateral   { view-transition-name: app-sidebar; }
+.banca-header  { view-transition-name: app-topbar; }
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
 }
 
 /* --- 2. Reseteo y Base --- */
@@ -42,6 +133,7 @@ body {
     line-height: 1.5;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    transition: background-color var(--dur-med) var(--ease-smooth);
 }
 
 a {
@@ -70,6 +162,7 @@ a {
     z-index: 200;
     padding: 1.5rem 1rem;
     border-right: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color var(--dur-med) var(--ease-smooth);
 }
 
 .sidebar-brand {
@@ -113,7 +206,7 @@ a {
     color: var(--color-sidebar-text);
     font-size: 0.9rem;
     font-weight: 500;
-    transition: all var(--transition-fast);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 .sidebar-menu a i {
@@ -152,17 +245,17 @@ a {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: var(--radius-btn);
-    color: #EF4444; /* Rojo suave para cierre de sesión */
+    color: var(--color-danger);
     font-family: inherit;
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .btn-cerrar-sesion:hover {
-    background-color: rgba(239, 68, 68, 0.1);
-    border-color: #EF4444;
+    background-color: color-mix(in srgb, var(--color-danger) 14%, transparent);
+    border-color: var(--color-danger);
 }
 
 /* --- 5. Contenedor Derecho (Header + Content) --- */
@@ -176,28 +269,31 @@ a {
 
 /* Encabezado Superior */
 .banca-header {
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
     padding: 0.85rem 2rem;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    gap: 0.75rem;
     position: sticky;
     top: 0;
     z-index: 100;
+    transition: background-color var(--dur-med) var(--ease-smooth), border-color var(--dur-med) var(--ease-smooth);
 }
 
 .header-welcome {
     display: flex;
     align-items: center;
     font-size: 1.1rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
     font-weight: 400;
+    margin-right: auto;
 }
 
 .header-welcome strong {
     font-weight: 700;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
     margin-left: 0.3rem;
 }
 
@@ -219,11 +315,37 @@ a {
     cursor: pointer;
     color: var(--color-text-main);
     font-size: 1.1rem;
-    transition: background-color var(--transition-fast);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .btn-icono:hover {
-    background-color: #E2E8F0;
+    background-color: var(--color-surface-2);
+}
+.btn-icono:active { transform: scale(.92); }
+
+/* Botón de tema claro / oscuro (ver motion.js) */
+.btn-theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-light);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+.btn-theme-toggle:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.btn-theme-toggle:active { transform: scale(.92); }
+.btn-theme-toggle .icon-dark { display: none; }
+:root[data-theme="dark"] .btn-theme-toggle .icon-light { display: none; }
+:root[data-theme="dark"] .btn-theme-toggle .icon-dark { display: inline; }
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .btn-theme-toggle .icon-light { display: none; }
+    :root:not([data-theme="light"]) .btn-theme-toggle .icon-dark { display: inline; }
 }
 
 .user-profile-badge {
@@ -236,7 +358,9 @@ a {
     align-items: center;
     justify-content: center;
     font-size: 1.1rem;
+    transition: transform var(--transition-fast);
 }
+.user-profile-badge:hover { transform: translateY(-2px); }
 
 /* --- 6. Área de Contenido Principal --- */
 .content {
@@ -251,7 +375,7 @@ a {
 .header-section h1 {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 .header-section p {
@@ -275,11 +399,12 @@ a {
 
 /* Targetas / Widgets */
 .card-widget {
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border-radius: var(--radius-card);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
     padding: 1.5rem;
+    transition: background-color var(--dur-med) var(--ease-smooth), border-color var(--dur-med) var(--ease-smooth);
 }
 
 .widget-header {
@@ -299,7 +424,7 @@ a {
 .widget-header h3 {
     font-size: 1.05rem;
     font-weight: 600;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 .loading-text {
@@ -339,13 +464,14 @@ a {
 }
 
 .tasa-item strong {
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
     font-weight: 700;
+    font-variant-numeric: tabular-nums;
 }
 
 /* --- 7. Pie de Página --- */
 .banca-footer {
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border-top: 1px solid var(--color-border);
     padding: 1rem 2rem;
     font-size: 0.8rem;
@@ -353,6 +479,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: background-color var(--dur-med) var(--ease-smooth);
 }
 
 .enlaces-footer {
@@ -380,7 +507,7 @@ a {
         width: 70px;
         padding: 1rem 0.5rem;
     }
-    
+
     .sidebar-brand .logo span,
     .sidebar-menu a span,
     .btn-cerrar-sesion span {
@@ -437,12 +564,13 @@ a {
     font-size: 0.875rem;
     color: var(--color-text-main);
     outline: none;
-    transition: border-color var(--transition-fast);
+    transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .form-control:focus {
     border-color: var(--color-accent);
-    background-color: var(--color-white);
+    background-color: var(--color-input-bg);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 20%, transparent);
 }
 
 .btn-filter-container {
@@ -463,12 +591,13 @@ a {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    transition: background-color var(--transition-fast);
+    transition: background-color var(--transition-fast), transform var(--dur-fast) var(--ease-smooth);
 }
 
 .btn-primary-sm:hover {
     background-color: var(--color-accent-hover);
 }
+.btn-primary-sm:active { transform: scale(.97); }
 
 .btn-secondary-sm {
     background-color: transparent;
@@ -483,12 +612,13 @@ a {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    transition: background-color var(--transition-fast);
+    transition: background-color var(--transition-fast), transform var(--dur-fast) var(--ease-smooth);
 }
 
 .btn-secondary-sm:hover {
     background-color: var(--color-bg-light);
 }
+.btn-secondary-sm:active { transform: scale(.97); }
 
 /* Tarjetas de Estadísticas (Totales) */
 .stats-grid {
@@ -499,7 +629,7 @@ a {
 }
 
 .stat-card {
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     padding: 1rem 1.25rem;
@@ -507,7 +637,9 @@ a {
     align-items: center;
     gap: 1rem;
     box-shadow: var(--shadow-card);
+    transition: transform var(--dur-med) var(--ease-smooth), box-shadow var(--dur-med) var(--ease-smooth), background-color var(--dur-med) var(--ease-smooth);
 }
+.stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-hover); }
 
 .stat-icon {
     width: 44px;
@@ -517,16 +649,17 @@ a {
     align-items: center;
     justify-content: center;
     font-size: 1.4rem;
+    flex-shrink: 0;
 }
 
 .stat-icon.income {
-    background-color: #DCFCE7;
-    color: #16A34A;
+    background-color: var(--color-success-tint);
+    color: var(--color-success);
 }
 
 .stat-icon.expense {
-    background-color: #FEE2E2;
-    color: #DC2626;
+    background-color: var(--color-danger-tint);
+    color: var(--color-danger);
 }
 
 .stat-card span {
@@ -537,7 +670,8 @@ a {
 .stat-card h3 {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
+    font-variant-numeric: tabular-nums;
 }
 
 /* Ajustes de Cabecera de Widget */
@@ -550,7 +684,7 @@ a {
     align-items: center;
     gap: 0.5rem;
     font-weight: 600;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 /* Tablas de Datos */
@@ -587,8 +721,12 @@ a {
     border-bottom: none;
 }
 
+.data-table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
 .data-table tbody tr:hover {
-    background-color: rgba(242, 244, 247, 0.5);
+    background-color: var(--color-surface-2);
 }
 
 .tx-info {
@@ -604,14 +742,15 @@ a {
 .amount {
     font-weight: 700;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
 
 .amount.positive {
-    color: #16A34A;
+    color: var(--color-success);
 }
 
 .amount.negative {
-    color: #DC2626;
+    color: var(--color-danger);
 }
 /* ==========================================================================
    10. Componentes para Pago de Servicios e Impuestos
@@ -631,7 +770,7 @@ a {
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 1.2rem;
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 20px;
     color: var(--color-text-muted);
@@ -640,7 +779,7 @@ a {
     font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
-    transition: all var(--transition-fast);
+    transition: border-color var(--transition-fast), color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .btn-filtro-servicio:hover {
@@ -670,20 +809,20 @@ a {
     padding: 1.25rem 1rem;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: border-color var(--transition-fast), transform var(--dur-med) var(--ease-smooth), box-shadow var(--dur-med) var(--ease-smooth), background-color var(--transition-fast);
 }
 
 .card-proveedor:hover {
     border-color: var(--color-accent);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-card);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
 }
 
 .card-proveedor.activo-card {
     border: 2px solid var(--color-accent);
-    background-color: rgba(0, 104, 169, 0.03);
+    background-color: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface));
 }
 
 .icono-proveedor {
@@ -697,7 +836,7 @@ a {
     justify-content: center;
     font-size: 1.4rem;
     margin-bottom: 0.75rem;
-    transition: all var(--transition-fast);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 .card-proveedor.activo-card .icono-proveedor,
@@ -709,7 +848,7 @@ a {
 .info-proveedor h3 {
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 .info-proveedor p {
@@ -760,7 +899,7 @@ a {
 
 .frecuente-info strong {
     font-size: 0.85rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 .frecuente-info span {
@@ -800,7 +939,7 @@ a {
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast), border-color var(--transition-fast);
     margin-bottom: -0.6rem;
 }
 
@@ -819,6 +958,14 @@ a {
 
 .tab-panel.active {
     display: block;
+    animation: uvg-tab-in var(--dur-med) var(--ease-smooth);
+}
+@keyframes uvg-tab-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .tab-panel.active { animation: none; }
 }
 
 /* ==========================================================================
@@ -830,23 +977,28 @@ a {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
+    margin-top: 1.5rem;
 }
 
+/* Tarjeta individual de producto (única definición: antes existía duplicada
+   con valores ligeramente distintos entre el catálogo general y "Abrir una
+   cuenta") */
 .card-producto {
     position: relative;
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     padding: 1.75rem 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-card);
+    transition: transform var(--dur-med) var(--ease-smooth), box-shadow var(--dur-med) var(--ease-smooth), border-color var(--transition-fast), background-color var(--transition-fast);
 }
 
 .card-producto:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-card-hover);
     border-color: var(--color-accent);
 }
 
@@ -854,7 +1006,7 @@ a {
     position: absolute;
     top: 1rem;
     right: 1rem;
-    background-color: rgba(0, 104, 169, 0.1);
+    background-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
     color: var(--color-accent);
     font-size: 0.75rem;
     font-weight: 700;
@@ -877,7 +1029,7 @@ a {
 
 .card-producto h3 {
     font-size: 1.1rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
     margin-bottom: 0.5rem;
 }
 
@@ -899,29 +1051,29 @@ a {
 
 .caracteristicas-list li {
     font-size: 0.82rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
     display: flex;
     align-items: center;
     gap: 0.4rem;
 }
 
 .caracteristicas-list li i {
-    color: #10B981; /* Verde éxito para checks */
+    color: var(--color-success);
     font-size: 1rem;
 }
 
-/* ESTILOS DE BOTONES (Alineados al color #0B1D33 de la barra lateral) */
+/* ESTILOS DE BOTONES "oscuros" (filtro, exportar, modal, solicitar) */
 .btn-filter-primary,
 .btn-export {
-    background-color: var(--color-primary-dark, #0B1D33);
+    background-color: var(--color-btn-dark-bg);
     color: #ffffff;
-    border: 1px solid var(--color-primary-dark, #0B1D33);
+    border: 1px solid var(--color-btn-dark-bg);
     padding: 0.65rem 1.25rem;
     font-size: 0.875rem;
     font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), transform var(--dur-fast) var(--ease-smooth);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -930,13 +1082,34 @@ a {
 
 .btn-filter-primary:hover,
 .btn-export:hover {
-    background-color: #162E4D; /* Elevación de contraste en hover */
-    border-color: #162E4D;
+    background-color: var(--color-btn-dark-hover);
+    border-color: var(--color-btn-dark-hover);
 }
 
 .btn-filter-primary:active,
 .btn-export:active {
     transform: scale(0.98);
+}
+
+/* Estado de carga / éxito reutilizable en cualquier botón del dashboard
+   (activado agregando data-state="loading" | "done" desde JS). El spinner
+   usa currentColor para adaptarse automáticamente al botón que lo lleve. */
+.btn-spinner {
+    display: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-top-color: currentColor;
+    animation: uvg-spin 0.7s linear infinite;
+}
+[data-state="loading"] .btn-spinner { display: inline-block; }
+[data-state="loading"] .btn-label-idle { display: none; }
+[data-state="loading"] { pointer-events: none; filter: brightness(0.94); }
+[data-state="done"] { background-color: var(--color-success) !important; border-color: var(--color-success) !important; color: #fff !important; }
+@keyframes uvg-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+    .btn-spinner { animation: none; }
 }
 
 .btn-full {
@@ -974,8 +1147,8 @@ a {
 }
 
 .gestion-icon.alerta-icon {
-    background-color: #FEE2E2;
-    color: #EF4444;
+    background-color: var(--color-danger-tint);
+    color: var(--color-danger);
 }
 
 .gestion-info {
@@ -984,25 +1157,24 @@ a {
 
 .gestion-info h3 {
     font-size: 0.95rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
     margin-bottom: 0.2rem;
 }
 
 .gestion-info p {
     font-size: 0.8rem;
     color: var(--color-text-muted);
-}   
+}
 
 /* Excepción para la acción crítica de bloqueo */
 .btn-peligro {
-    background-color: #EF4444 !important;
+    background-color: var(--color-danger) !important;
     color: #ffffff !important;
-    border-color: #EF4444 !important;
+    border-color: var(--color-danger) !important;
 }
 
 .btn-peligro:hover {
-    background-color: #DC2626 !important;
-    border-color: #DC2626 !important;
+    filter: brightness(0.9);
 }
 
 
@@ -1010,14 +1182,16 @@ a {
    13. Estilos para el Modal Emergente Dinámico
    ========================================================================== */
 
-/* Fondo Oscuro / Overlay */
+/* Fondo Oscuro / Overlay (única definición: antes existía duplicada, una
+   vez para el wizard de solicitudes y otra vez -- con otro z-index -- para
+   el comprobante de transferencias) */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(11, 29, 51, 0.65);
+    background-color: rgba(8, 18, 34, 0.65);
     backdrop-filter: blur(4px);
     z-index: 1100;
     display: flex;
@@ -1026,7 +1200,7 @@ a {
     padding: 1rem;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.25s ease, visibility 0.25s ease;
+    transition: opacity var(--dur-med) var(--ease-smooth), visibility var(--dur-med) var(--ease-smooth);
 }
 
 /* Modal Activo */
@@ -1037,7 +1211,7 @@ a {
 
 /* Ventana Contenedora */
 .modal-container {
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     width: 100%;
     max-width: 580px;
     border-radius: 16px;
@@ -1045,14 +1219,15 @@ a {
     border: 1px solid var(--color-border);
     overflow: hidden;
     transform: translateY(20px) scale(0.98);
-    transition: transform 0.25s ease;
+    transition: transform var(--dur-med) var(--ease-smooth);
 }
 
 .modal-overlay.active .modal-container {
     transform: translateY(0) scale(1);
 }
 
-/* Header */
+/* Encabezado (único: antes se definía una vez para el wizard y otra vez,
+   con otra tipografía, para el modal de solicitud de tarjetas) */
 .modal-header {
     display: flex;
     align-items: center;
@@ -1072,7 +1247,7 @@ a {
     width: 42px;
     height: 42px;
     border-radius: 10px;
-    background-color: var(--color-primary-dark, #0B1D33);
+    background-color: var(--color-btn-dark-bg);
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -1082,7 +1257,8 @@ a {
 
 .modal-header h2 {
     font-size: 1.1rem;
-    color: var(--color-primary-dark);
+    font-weight: 700;
+    color: var(--color-text-main);
     margin: 0;
 }
 
@@ -1092,7 +1268,8 @@ a {
     margin: 0;
 }
 
-.btn-close-modal {
+.btn-close-modal,
+.btn-cerrar-modal {
     background: transparent;
     border: none;
     font-size: 1.4rem;
@@ -1104,12 +1281,14 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    line-height: 1;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.btn-close-modal:hover {
-    background-color: #E2E8F0;
-    color: var(--color-primary-dark);
+.btn-close-modal:hover,
+.btn-cerrar-modal:hover {
+    background-color: var(--color-surface-2);
+    color: var(--color-text-main);
 }
 
 /* Indicador de Pasos (Wizard) */
@@ -1120,7 +1299,7 @@ a {
     gap: 0.75rem;
     padding: 0.85rem 1.5rem;
     border-bottom: 1px solid var(--color-border);
-    background-color: #ffffff;
+    background-color: var(--color-surface);
 }
 
 .step-item {
@@ -1128,7 +1307,7 @@ a {
     align-items: center;
     gap: 0.4rem;
     opacity: 0.45;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--transition-fast);
 }
 
 .step-item.active {
@@ -1139,7 +1318,7 @@ a {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background-color: var(--color-primary-dark, #0B1D33);
+    background-color: var(--color-btn-dark-bg);
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 700;
@@ -1151,7 +1330,7 @@ a {
 .step-label {
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 .step-divider {
@@ -1171,20 +1350,23 @@ a {
 
 .modal-step-content.active {
     display: block;
+    animation: uvg-tab-in var(--dur-med) var(--ease-smooth);
 }
 
-/* Formularios Internos */
+/* Formularios Internos (único: .form-group ya no se define dos veces) */
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
     margin-bottom: 1rem;
+    text-align: left;
 }
 
-.form-group label {
+.form-group label,
+.field-label {
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 .form-row-two {
@@ -1193,24 +1375,39 @@ a {
     gap: 1rem;
 }
 
-.form-control {
+.form-group input,
+.form-group select,
+.form-group textarea {
     width: 100%;
     padding: 0.65rem 0.85rem;
     font-size: 0.875rem;
+    font-family: inherit;
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    background-color: #ffffff;
-    color: var(--color-primary-dark);
+    background-color: var(--color-input-bg);
+    color: var(--color-text-main);
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+    box-sizing: border-box;
 }
 
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
 .form-control:focus {
+    outline: none;
     border-color: var(--color-accent);
+    background-color: var(--color-input-bg);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 75px;
 }
 
 .form-control[readonly] {
-    background-color: var(--color-bg-light);
+    background-color: var(--color-surface-2);
     color: var(--color-text-muted);
 }
 
@@ -1246,12 +1443,13 @@ a {
     align-items: center;
     justify-content: space-between;
     font-size: 0.85rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 .info-box-item strong {
     font-size: 1rem;
     color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
 }
 
 .info-box-note {
@@ -1272,7 +1470,7 @@ a {
 
 .summary-card h4 {
     font-size: 0.88rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
     margin-bottom: 0.75rem;
 }
 
@@ -1294,7 +1492,8 @@ a {
 }
 
 .summary-list li strong {
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
+    font-variant-numeric: tabular-nums;
 }
 
 .checkbox-group {
@@ -1303,7 +1502,7 @@ a {
 
 .checkbox-label {
     font-size: 0.78rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
     line-height: 1.3;
 }
 
@@ -1320,13 +1519,13 @@ a {
 
 .success-icon {
     font-size: 3.5rem;
-    color: #10B981;
+    color: var(--color-success);
     margin-bottom: 0.5rem;
 }
 
 .modal-success-state h3 {
     font-size: 1.2rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
     margin-bottom: 0.5rem;
 }
 
@@ -1351,7 +1550,7 @@ a {
 
 .ticket-badge strong {
     font-size: 0.95rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 /* Footer del Modal */
@@ -1365,10 +1564,12 @@ a {
     border-top: 1px solid var(--color-border);
 }
 
-.btn-modal-primary {
-    background-color: var(--color-primary-dark, #0B1D33);
+.btn-modal-primary,
+.btn-primario,
+.btn-solicitar-cuenta {
+    background-color: var(--color-btn-dark-bg);
     color: #ffffff;
-    border: 1px solid var(--color-primary-dark, #0B1D33);
+    border: 1px solid var(--color-btn-dark-bg);
     padding: 0.65rem 1.25rem;
     font-size: 0.875rem;
     font-weight: 600;
@@ -1376,29 +1577,46 @@ a {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.4rem;
-    transition: background-color 0.2s ease;
+    transition: background-color var(--transition-fast), transform var(--dur-fast) var(--ease-smooth);
 }
 
-.btn-modal-primary:hover {
-    background-color: #162E4D;
+.btn-modal-primary:hover,
+.btn-primario:hover,
+.btn-solicitar-cuenta:hover {
+    background-color: var(--color-btn-dark-hover);
+    border-color: var(--color-btn-dark-hover);
+}
+.btn-modal-primary:active,
+.btn-primario:active,
+.btn-solicitar-cuenta:active {
+    transform: scale(0.98);
 }
 
-.btn-modal-secondary {
+.btn-solicitar-cuenta { width: 100%; }
+
+/* Botones "secundarios": tres variantes de tamaño, un solo lenguaje visual */
+.btn-modal-secondary,
+.btn-secundario,
+.btn-secondary-outline {
     background-color: transparent;
     color: var(--color-text-muted);
     border: 1px solid var(--color-border);
     padding: 0.65rem 1.25rem;
     font-size: 0.875rem;
     font-weight: 600;
+    font-family: inherit;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.btn-modal-secondary:hover {
-    background-color: var(--color-bg-light);
-    color: var(--color-primary-dark);
+.btn-modal-secondary:hover,
+.btn-secundario:hover,
+.btn-secondary-outline:hover {
+    background-color: var(--color-surface-2);
+    color: var(--color-text-main);
 }
 
 /* Responsividad */
@@ -1409,10 +1627,9 @@ a {
 }
 
 /* ==========================================================================
-   ESTILOS DEL MODAL DE SOLICITUD DE TARJETAS
+   ESTILOS DEL MODAL DE SOLICITUD DE TARJETAS (usa .modal / .modal-content)
    ========================================================================== */
 
-/* Fondo flotante y superposición */
 .modal {
     display: none;
     position: fixed;
@@ -1420,7 +1637,7 @@ a {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(11, 29, 51, 0.65);
+    background-color: rgba(8, 18, 34, 0.65);
     backdrop-filter: blur(4px);
     z-index: 1000;
     justify-content: center;
@@ -1428,7 +1645,7 @@ a {
     padding: 1.5rem;
     box-sizing: border-box;
     opacity: 0;
-    transition: opacity 0.25s ease-in-out;
+    transition: opacity var(--dur-med) var(--ease-smooth);
 }
 
 .modal.active {
@@ -1438,7 +1655,7 @@ a {
 
 /* Recuadro contenedor del formulario */
 .modal-content {
-    background-color: #ffffff;
+    background-color: var(--color-surface);
     border-radius: 12px;
     width: 100%;
     max-width: 520px;
@@ -1447,7 +1664,7 @@ a {
     padding: 2rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     position: relative;
-    animation: modalEntrada 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: modalEntrada var(--dur-med) var(--ease-smooth) forwards;
 }
 
 @keyframes modalEntrada {
@@ -1460,39 +1677,8 @@ a {
         opacity: 1;
     }
 }
-
-/* Encabezado del Modal */
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
-    margin-bottom: 1.25rem;
-}
-
-.modal-header h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #0b1d33;
-    margin: 0;
-}
-
-.btn-cerrar-modal {
-    background: transparent;
-    border: none;
-    font-size: 1.5rem;
-    color: #64748b;
-    cursor: pointer;
-    padding: 0.2rem 0.5rem;
-    border-radius: 6px;
-    transition: background-color 0.2s, color 0.2s;
-    line-height: 1;
-}
-
-.btn-cerrar-modal:hover {
-    background-color: #f1f5f9;
-    color: #0b1d33;
+@media (prefers-reduced-motion: reduce) {
+    .modal-content { animation: none; }
 }
 
 /* Formulario y Campos de entrada */
@@ -1500,48 +1686,6 @@ a {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    text-align: left;
-}
-
-.form-group label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #1e293b;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 0.7rem 0.85rem;
-    font-size: 0.925rem;
-    font-family: inherit;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    background-color: #f8fafc;
-    color: #0f172a;
-    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-    box-sizing: border-box;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #0b1d33;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 3px rgba(11, 29, 51, 0.12);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 75px;
 }
 
 /* Estado y Botones de Acción */
@@ -1559,57 +1703,12 @@ a {
     gap: 0.75rem;
     margin-top: 0.5rem;
     padding-top: 1rem;
-    border-top: 1px solid #f1f5f9;
-}
-
-.btn-secundario {
-    padding: 0.7rem 1.25rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #475569;
-    background-color: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.btn-secundario:hover {
-    background-color: #e2e8f0;
-    color: #0f172a;
+    border-top: 1px solid var(--color-border);
 }
 
 /* ==========================================================================
    ESTILOS PARA ABRIR UNA CUENTA (TARJETAS DE PRODUCTOS Y MODAL)
    ========================================================================== */
-
-/* Grid contenedor de productos */
-.grid-productos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-/* Tarjeta individual de producto */
-.card-producto {
-    background-color: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    padding: 1.75rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    position: relative;
-}
-
-.card-producto:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 20px -3px rgba(11, 29, 51, 0.12);
-    border-color: #cbd5e1;
-}
 
 /* Encabezado e Icono de la tarjeta */
 .card-producto-header {
@@ -1623,8 +1722,8 @@ a {
     width: 48px;
     height: 48px;
     border-radius: 10px;
-    background-color: #f0f4f8;
-    color: #0b1d33;
+    background-color: var(--color-surface-2);
+    color: var(--color-text-main);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1632,8 +1731,8 @@ a {
 }
 
 .card-badge {
-    background-color: #e0f2fe;
-    color: #0369a1;
+    background-color: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    color: var(--color-accent);
     font-size: 0.75rem;
     font-weight: 600;
     padding: 0.3rem 0.65rem;
@@ -1646,13 +1745,13 @@ a {
 .card-producto-body h3 {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #0b1d33;
+    color: var(--color-text-main);
     margin: 0 0 0.5rem 0;
 }
 
 .card-producto-body p {
     font-size: 0.9rem;
-    color: #64748b;
+    color: var(--color-text-muted);
     line-height: 1.5;
     margin: 0 0 1.25rem 0;
 }
@@ -1669,14 +1768,14 @@ a {
 
 .lista-beneficios li {
     font-size: 0.85rem;
-    color: #334155;
+    color: var(--color-text-main);
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
 .lista-beneficios li i {
-    color: #16a34a;
+    color: var(--color-success);
     font-size: 1rem;
 }
 
@@ -1684,89 +1783,12 @@ a {
 .card-producto-footer {
     margin-top: auto;
     padding-top: 1rem;
-    border-top: 1px solid #f1f5f9;
-}
-
-.btn-solicitar-cuenta {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 0.925rem;
-    font-weight: 600;
-    color: #ffffff;
-    background-color: #0b1d33;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.btn-solicitar-cuenta:hover {
-    background-color: #152e4d;
-}
-
-/* Texto de carga */
-.loading-text {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem 1rem;
-    color: #64748b;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-/* Botón principal de envío (Confirmar y Solicitar) */
-.btn-primario {
-    padding: 0.7rem 1.25rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #ffffff;
-    background-color: #0b1d33;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.15s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.btn-primario:hover {
-    background-color: #152e4d;
-}
-
-.btn-primario:active {
-    transform: scale(0.98);
+    border-top: 1px solid var(--color-border);
 }
 
 /* --- MODAL POP-OUT COMPROBANTE --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(11, 29, 51, 0.65);
-    backdrop-filter: blur(4px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.modal-overlay.active {
-    display: flex;
-}
-
 .comprobante-box {
-    background: #ffffff;
+    background: var(--color-surface);
     width: 100%;
     max-width: 480px;
     border-radius: 16px;
@@ -1775,7 +1797,7 @@ a {
 }
 
 .comprobante-imprimible {
-    background: #ffffff;
+    background: var(--color-surface);
     padding: 1rem;
     border-radius: 12px;
 }
@@ -1784,7 +1806,7 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #f1f5f9;
+    border-bottom: 2px solid var(--color-border);
     padding-bottom: 1rem;
     margin-bottom: 1.25rem;
 }
@@ -1794,13 +1816,13 @@ a {
     align-items: center;
     gap: 0.5rem;
     font-weight: 700;
-    color: #0b1d33;
+    color: var(--color-text-main);
     font-size: 1.1rem;
 }
 
 .badge-exito {
-    color: #16a34a;
-    background: #f0fdf4;
+    color: var(--color-success);
+    background: var(--color-success-tint);
     padding: 0.35rem 0.75rem;
     border-radius: 20px;
     font-size: 0.82rem;
@@ -1812,8 +1834,8 @@ a {
 
 .comprobante-monto-box {
     text-align: center;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
     padding: 1rem;
     margin-bottom: 1.25rem;
@@ -1821,14 +1843,15 @@ a {
 
 .comprobante-monto-box p {
     font-size: 0.8rem;
-    color: #64748b;
+    color: var(--color-text-muted);
     margin: 0;
 }
 
 .comprobante-monto-box h2 {
     font-size: 1.8rem;
-    color: #0b1d33;
+    color: var(--color-text-main);
     margin: 0.2rem 0 0 0;
+    font-variant-numeric: tabular-nums;
 }
 
 .comprobante-detalles {
@@ -1841,16 +1864,16 @@ a {
 .detalle-fila {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px dashed #e2e8f0;
+    border-bottom: 1px dashed var(--color-border);
     padding-bottom: 0.5rem;
 }
 
 .detalle-fila span {
-    color: #64748b;
+    color: var(--color-text-muted);
 }
 
 .detalle-fila strong {
-    color: #1e293b;
+    color: var(--color-text-main);
     text-align: right;
 }
 
@@ -1858,7 +1881,7 @@ a {
     margin-top: 1.25rem;
     text-align: center;
     font-size: 0.72rem;
-    color: #94a3b8;
+    color: var(--color-text-muted);
 }
 
 .comprobante-acciones {
@@ -1868,18 +1891,431 @@ a {
     margin-top: 1.5rem;
 }
 
-.btn-secundario {
-    padding: 0.7rem 1.25rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #475569;
-    background-color: #f1f5f9;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s;
+/* ==========================================================================
+   14. Esqueletos de carga (reemplazan el texto "Cargando...")
+   ========================================================================== */
+.skeleton-line {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--color-surface-2) 25%, var(--color-border) 37%, var(--color-surface-2) 63%);
+    background-size: 400% 100%;
+    animation: uvg-shimmer 1.6s ease-in-out infinite;
+}
+.skeleton-line + .skeleton-line { margin-top: 0.6rem; }
+.skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.75rem 0;
+}
+.skeleton-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, var(--color-surface-2) 25%, var(--color-border) 37%, var(--color-surface-2) 63%);
+    background-size: 400% 100%;
+    animation: uvg-shimmer 1.6s ease-in-out infinite;
+}
+@keyframes uvg-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .skeleton-line, .skeleton-circle { animation: none; background: var(--color-surface-2); }
 }
 
-.btn-secundario:hover {
-    background-color: #e2e8f0;
+/* Conteo animado de montos: ver motion.js (.money-live / .money-live-container) */
+
+/* Texto de ayuda bajo un campo (saldo disponible, formatos válidos, cuentas
+   de prueba). Mismo tono que el resto de textos secundarios del dashboard. */
+.hint-saldo {
+    display: block;
+    margin-top: 4px;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+/* ---------- Factura de pago de servicios ----------
+   Reutiliza la anatomía del comprobante de transferencia (mismo contenedor,
+   monto destacado y filas de detalle); solo agrega el encabezado de factura
+   y el desglose final. */
+.factura-titulo {
+    text-align: center;
+    margin: 18px 0 6px;
+}
+.factura-titulo h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+.factura-titulo p {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+.factura-desglose {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--color-border);
+}
+.factura-desglose .detalle-fila {
+    border-bottom: none;
+    padding: 5px 0;
+}
+.factura-desglose .detalle-total {
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+}
+.factura-desglose .detalle-total span,
+.factura-desglose .detalle-total strong {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+/* ==========================================================================
+   GESTIONES Y SEGURIDAD
+   Notas, resultados y historial de los modales de gestiones.html.
+   Todo se apoya en los tokens ya definidos arriba, así el modo oscuro
+   funciona sin reglas aparte.
+   ========================================================================== */
+
+.section-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+/* Nota informativa dentro de un modal (el "por qué" de una restricción).
+   El icono va posicionado y el texto en flujo normal, NO con flex: con flex
+   cualquier <strong> o <a> dentro de la nota se vuelve una columna aparte y
+   parte la frase en pedazos. */
+.nota-gestion {
+    position: relative;
+    display: block;
+    margin: 4px 0 0;
+    padding: 10px 12px 10px 34px;
+    background-color: var(--color-surface-2);
+    border-left: 3px solid var(--color-accent);
+    border-radius: var(--radius-btn);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--color-text-muted);
+}
+.nota-gestion i {
+    position: absolute;
+    left: 11px;
+    top: 11px;
+    color: var(--color-accent);
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Resultado de la gestión: reemplaza los alert() del navegador. */
+.resultado-gestion {
+    margin-top: 14px;
+    padding: 11px 13px;
+    border-radius: var(--radius-btn);
+    font-size: 0.86rem;
+    line-height: 1.45;
+    font-weight: 500;
+}
+.resultado-gestion.exito {
+    background-color: var(--color-success-tint);
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
+}
+.resultado-gestion.error {
+    background-color: var(--color-danger-tint);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
+}
+
+/* Historial de gestiones enviadas a revisión. */
+.lista-historial-gestiones {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.fila-historial-gestion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 13px 4px;
+    border-bottom: 1px solid var(--color-border);
+}
+.fila-historial-gestion:last-child {
+    border-bottom: none;
+}
+.fila-historial-gestion strong {
+    font-size: 0.9rem;
+    color: var(--color-text-main);
+}
+.fila-historial-gestion small {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+}
+.fila-historial-gestion .texto-tenue {
+    font-size: 0.74rem;
+    opacity: 0.8;
+}
+
+/* Estado de la solicitud: pendiente / aprobada / rechazada. */
+.badge-estado {
+    flex-shrink: 0;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.badge-estado.estado-pendiente {
+    background-color: var(--color-surface-2);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+}
+.badge-estado.estado-aprobada {
+    background-color: var(--color-success-tint);
+    color: var(--color-success);
+}
+.badge-estado.estado-rechazada {
+    background-color: var(--color-danger-tint);
+    color: var(--color-danger);
+}
+
+@media (max-width: 560px) {
+    .fila-historial-gestion {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+/* ==========================================================================
+   BARRA LATERAL DESPLEGABLE
+   El estado colapsado reusa el mismo look que ya tenía el responsive a
+   768px (solo iconos, 70px de ancho): no se inventa una apariencia nueva.
+   ========================================================================== */
+
+.btn-toggle-sidebar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin-right: 4px;
+    flex-shrink: 0;
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-btn);
+    color: var(--color-text-muted);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast),
+                border-color var(--transition-fast);
+}
+.btn-toggle-sidebar:hover {
+    background-color: var(--color-surface-2);
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+.btn-toggle-sidebar:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* El ancho vive en una variable, así que colapsar es redefinirla: la barra y
+   el margen del contenido se mueven juntos y en el mismo tiempo. */
+.nav-lateral,
+.main-wrapper {
+    transition: width var(--dur-med) var(--ease-smooth),
+                margin-left var(--dur-med) var(--ease-smooth),
+                background-color var(--dur-med) var(--ease-smooth);
+}
+
+.dashboard-layout.sidebar-colapsado {
+    --sidebar-width: 74px;
+}
+.dashboard-layout.sidebar-colapsado .nav-lateral {
+    padding: 1.5rem 0.5rem;
+}
+.dashboard-layout.sidebar-colapsado .sidebar-brand {
+    padding: 0.5rem 0 1.25rem;
+}
+.dashboard-layout.sidebar-colapsado .sidebar-brand .logo span,
+.dashboard-layout.sidebar-colapsado .sidebar-menu a span,
+.dashboard-layout.sidebar-colapsado .btn-cerrar-sesion span {
+    display: none;
+}
+.dashboard-layout.sidebar-colapsado .sidebar-brand .logo,
+.dashboard-layout.sidebar-colapsado .sidebar-menu a,
+.dashboard-layout.sidebar-colapsado .btn-cerrar-sesion {
+    justify-content: center;
+    gap: 0;
+}
+.dashboard-layout.sidebar-colapsado .sidebar-menu a {
+    padding: 0.75rem 0;
+}
+
+/* Fondo oscuro del cajón en pantallas chicas.
+   Arranca donde termina el cajón (260px) y no en 0: la barra lateral tiene
+   z-index mayor, así que la parte del scrim que queda debajo de ella no se
+   puede tocar -- y además no se vería, porque el cajón es opaco. Dejarlo en
+   inset:0 hacía que medio scrim fuera un área muerta. */
+.scrim-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 260px;
+    z-index: 190;
+    background-color: rgba(8, 18, 34, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+@media (min-width: 769px) {
+    /* En escritorio el cajón no aplica: manda solo el colapso. */
+    .scrim-sidebar { display: none; }
+}
+
+@media (max-width: 768px) {
+    /* Acá la barra ya nace en modo icono. El botón la abre como cajón
+       ENCIMA del contenido, sin empujarlo, que es lo esperado en celular. */
+    .dashboard-layout.sidebar-abierto .nav-lateral {
+        width: 260px;
+        padding: 1.5rem 1rem;
+        box-shadow: 0 0 40px rgba(8, 18, 34, 0.35);
+    }
+    .dashboard-layout.sidebar-abierto .sidebar-brand .logo span,
+    .dashboard-layout.sidebar-abierto .sidebar-menu a span,
+    .dashboard-layout.sidebar-abierto .btn-cerrar-sesion span {
+        display: inline;
+    }
+    /* El contenido no se mueve: el cajón flota sobre él. */
+    .dashboard-layout.sidebar-abierto .main-wrapper {
+        margin-left: 70px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-lateral,
+    .main-wrapper {
+        transition: none;
+    }
+}
+
+/* ==========================================================================
+   VISTA DE PERFIL (modal del icono de persona)
+   ========================================================================== */
+
+.modal-perfil {
+    max-width: 560px;
+}
+
+/* Avatar con las iniciales: ocupa el lugar del .modal-icon de los otros
+   modales, con el mismo tamaño para que el header no cambie de altura. */
+.avatar-perfil {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-glow));
+    color: var(--color-white);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.bloque-perfil {
+    margin-bottom: 20px;
+}
+.bloque-perfil:last-of-type {
+    margin-bottom: 12px;
+}
+.bloque-perfil h3 {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+}
+.bloque-perfil h3 i {
+    font-size: 1rem;
+    color: var(--color-accent);
+}
+
+.lista-perfil {
+    display: flex;
+    flex-direction: column;
+}
+.fila-perfil {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 11px 2px;
+    border-bottom: 1px solid var(--color-border);
+}
+.fila-perfil:last-child {
+    border-bottom: none;
+}
+.fila-perfil strong {
+    font-size: 0.88rem;
+    color: var(--color-text-main);
+}
+.fila-perfil small {
+    font-size: 0.76rem;
+    color: var(--color-text-muted);
+}
+.fila-perfil-valor {
+    text-align: right;
+    flex-shrink: 0;
+}
+.fila-perfil-valor strong {
+    font-variant-numeric: tabular-nums;
+}
+.fila-perfil-valor .badge-estado {
+    display: inline-block;
+    margin-top: 4px;
+}
+
+/* Estados de cuenta y tarjeta que no existían en el historial de gestiones. */
+.badge-estado.estado-activa {
+    background-color: var(--color-success-tint);
+    color: var(--color-success);
+}
+.badge-estado.estado-bloqueada,
+.badge-estado.estado-cancelada {
+    background-color: var(--color-danger-tint);
+    color: var(--color-danger);
+}
+.badge-estado.estado-vencida,
+.badge-estado.estado-inactiva {
+    background-color: var(--color-surface-2);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+}
+
+@media (max-width: 560px) {
+    .fila-perfil {
+        flex-direction: column;
+        gap: 6px;
+    }
+    .fila-perfil-valor {
+        text-align: left;
+    }
 }

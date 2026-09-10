@@ -17,6 +17,11 @@
 </head>
 <body class="pagina-login">
 
+    <button type="button" class="btn-theme-toggle btn-theme-toggle-fixed" data-theme-toggle title="Cambiar a modo oscuro" aria-pressed="false">
+        <i class="ri-moon-line icon-light"></i>
+        <i class="ri-sun-line icon-dark"></i>
+    </button>
+
     <section class="login-card">
         <div class="staff-brand">
             <i class="ri-shield-user-line"></i>
@@ -49,8 +54,9 @@
             </div>
 
             <button type="submit" class="btn-primary" id="btn-submit">
-                <span>Iniciar sesión</span>
-                <i class="ri-arrow-right-line"></i>
+                <span class="btn-spinner"></span>
+                <span class="btn-label-idle">Iniciar sesión</span>
+                <i class="ri-arrow-right-line btn-label-idle"></i>
             </button>
         </form>
 
@@ -61,6 +67,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
+    <script src="../motion.js"></script>
     <script src="login.js"></script>
 </body>
 </html>

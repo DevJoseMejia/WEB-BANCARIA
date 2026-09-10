@@ -1,6 +1,6 @@
 // 1. INICIALIZACIÓN CON VARIABLE DIFERENTE PARA EVITAR ERRORES DE ÁMBITO
-const URL_DE_SUPABASE = "https://voymaybkdkoltsvbyozh.supabase.co";
-const KEY_ANON_SUPABASE = "sb_publishable_pUqqpfXH7as_2KlMp_8YeA_r17vdSLX";
+const URL_DE_SUPABASE = CONFIG.URL_DE_SUPABASE;
+const KEY_ANON_SUPABASE = CONFIG.KEY_ANON_SUPABASE;
 
 // Cambiamos el nombre de la variable local a 'supabaseClient'
 const supabaseClient = window.supabase.createClient(URL_DE_SUPABASE, KEY_ANON_SUPABASE);
@@ -9,82 +9,87 @@ const supabaseClient = window.supabase.createClient(URL_DE_SUPABASE, KEY_ANON_SU
 const formLogin = document.getElementById('form-login');
 const txtEmail = document.getElementById('usuario');
 const txtPassword = document.getElementById('contrasena');
-const btnToggle = document.getElementById('btn-toggle-password'); 
+const btnToggle = document.getElementById('btn-toggle-password');
+const btnSubmitLogin = document.getElementById('btn-submit');
 
 // ==========================================
 // 3. FUNCIONALIDAD: Mostrar / Ocultar Contraseña
 // ==========================================
 if (btnToggle) {
     btnToggle.addEventListener('click', (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         const icon = btnToggle.querySelector('i');
-        
+
         if (txtPassword.type === 'password') {
             txtPassword.type = 'text';
-            if(icon) icon.className = 'ri-eye-line'; 
+            if(icon) icon.className = 'ri-eye-line';
         } else {
             txtPassword.type = 'password';
-            if(icon) icon.className = 'ri-eye-off-line'; 
+            if(icon) icon.className = 'ri-eye-off-line';
         }
     });
 }
 
 // ==========================================
-// 4. FUNCIONALIDAD: Envío del Login (Corregido id_rol)
+// 4. FUNCIONALIDAD: Envío del Login
 // ==========================================
 if (formLogin) {
     formLogin.addEventListener('submit', async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         console.log("⏳ Iniciando handshake de autenticación...");
-        
+
         const valorLogin = txtEmail.value.trim();
         const password = txtPassword.value;
 
+        if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitLogin, 'loading');
+
         try {
-            // 1. Petición limpia a la tabla usuarios. El campo acepta tanto
-            // el username (el que entrega el cajero al abrir la cuenta) como
-            // el correo, tal como indica la etiqueta del formulario.
-            const { data: resultados, error } = await supabaseClient
-                .from('usuarios')
-                .select('id_usuario, password_hash, estado_cuenta, id_rol')
-                .or(`email.eq.${valorLogin},username.eq.${valorLogin}`);
+            // Supabase Auth autentica por correo. Esta RPC permite conservar
+            // el acceso por username sin exponer datos sensibles.
+            const { data: emailLogin, error: errorResolver } = await supabaseClient
+                .rpc('resolver_email_login', { p_valor: valorLogin });
 
-            if (error) {
-                console.error("💥 Error de base de datos:", error);
+            if (errorResolver || !emailLogin) {
+                console.error("💥 No se pudo resolver el usuario:", errorResolver);
                 alert("Error de comunicación con el servidor.");
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitLogin, null);
                 return;
             }
 
-            if (!resultados || resultados.length === 0) {
-                console.warn("⚠️ El usuario o correo no existe en la tabla usuarios.");
-                alert("Credenciales incorrectas o usuario no registrado.");
+            const { data: authData, error: errorAuth } = await supabaseClient.auth.signInWithPassword({
+                email: emailLogin,
+                password
+            });
+
+            if (errorAuth || !authData.session) {
+                console.warn("⚠️ Credenciales inválidas.");
+                alert("Usuario o contraseña incorrectos.");
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitLogin, null);
                 return;
             }
 
-            const usuario = resultados[0];
-            console.log("✅ Usuario localizado con éxito:", usuario);
+            const { data: usuario, error: errorUsuario } = await supabaseClient
+                .from('usuarios')
+                .select('id_usuario, estado_cuenta')
+                .eq('auth_uid', authData.user.id)
+                .maybeSingle();
+
+            if (errorUsuario || !usuario) {
+                await supabaseClient.auth.signOut();
+                console.error("💥 La identidad no tiene un perfil bancario:", errorUsuario);
+                alert("No se encontró un perfil bancario asociado a este acceso.");
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitLogin, null);
+                return;
+            }
 
             if (usuario.estado_cuenta === 'Bloqueada') {
+                await supabaseClient.auth.signOut();
                 alert("Esta cuenta bancaria se encuentra bloqueada.");
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitLogin, null);
                 return;
             }
 
-            // 2. Ejecución de la función remota RPC para validar contraseña
-            console.log("⏳ Solicitando verificación criptográfica al servidor...");
-            const { data: passwordValido, error: errValidacion } = await supabaseClient
-                .rpc('verificar_password', { 
-                    pass_ingresado: password, 
-                    hash_guardado: usuario.password_hash 
-                });
-
-            console.log("📊 Resultado RPC verificar_password:", passwordValido, "Error RPC:", errValidacion);
-
-            if (errValidacion || !passwordValido) {
-                alert("Contraseña incorrecta.");
-                return;
-            }
-
-            // 3. Registro de auditoría
+            // Registro de auditoría
             await supabaseClient.from('logs_accesos').insert([
                 {
                     evento: 'Login Exitoso',
@@ -94,17 +99,14 @@ if (formLogin) {
                 }
             ]);
 
-            // ==========================================
-            // GUARDAR SESIÓN (LÍNEA CLAVE AÑADIDA)
-            // ==========================================
-            sessionStorage.setItem('id_usuario', usuario.id_usuario);
-
             // Mensaje de éxito y redirección
+            if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitLogin, 'done');
             window.location.href = "Banca_personal.html";
 
         } catch (err) {
             console.error("💥 Error crítico en el pipeline de login:", err);
             alert("Error de comunicación con el servidor.");
+            if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitLogin, null);
         }
     });
 }

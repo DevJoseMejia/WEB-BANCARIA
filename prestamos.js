@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    idUsuarioPrestamos = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
+    idUsuarioPrestamos = await resolverSesionCliente(supabaseClientPrestamos);
+    if (!idUsuarioPrestamos) return; // resolverSesionCliente ya redirigió a login
 
     await cargarCuotaCatalogoYSolicitante();
 });
@@ -45,7 +46,7 @@ async function cargarPrestamosDisponibles() {
         if (error) throw error;
 
         if (!productos || productos.length === 0) {
-            contenedor.innerHTML = "<p style='color:#64748b;'>No hay préstamos disponibles por el momento.</p>";
+            contenedor.innerHTML = "<p style='color:var(--color-text-muted);'>No hay préstamos disponibles por el momento.</p>";
             return;
         }
 
@@ -64,7 +65,7 @@ async function cargarPrestamosDisponibles() {
                     ${rangoMonto ? `<p class="desc-producto"><strong>Monto:</strong> ${rangoMonto}</p>` : ''}
                     ${p.tasa_interes ? `<p class="desc-producto"><strong>Tasa:</strong> ${p.tasa_interes}</p>` : ''}
                     ${p.plazo_maximo_meses ? `<p class="desc-producto"><strong>Plazo máximo:</strong> ${p.plazo_maximo_meses} meses</p>` : ''}
-                    <button class="btn-filter-primary btn-full btn-solicitar" data-producto="${p.nombre}" data-id="${p.id}">Solicitar Préstamo</button>
+                    <button class="btn-filter-primary btn-full btn-solicitar" data-producto="${p.nombre}" data-id="${p.id_producto}">Solicitar Préstamo</button>
                 </div>
             `;
         }).join('');
@@ -75,7 +76,7 @@ async function cargarPrestamosDisponibles() {
 
     } catch (err) {
         console.error('💥 Error al cargar los préstamos disponibles:', err);
-        contenedor.innerHTML = "<p style='color:#ef4444;'>No se pudieron cargar los préstamos disponibles.</p>";
+        contenedor.innerHTML = "<p style='color:var(--color-danger);'>No se pudieron cargar los préstamos disponibles.</p>";
     }
 }
 
@@ -210,11 +211,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- CONTROL DE PASOS DEL FORMULARIO ---
 
+    /**
+     * El formulario del modal es uno solo, pero se muestra por pasos. Si un
+     * campo `required` vive en un paso oculto, la validación nativa del
+     * navegador bloquea el envío sin poder mostrar el error ("An invalid form
+     * control is not focusable") y el botón Continuar deja de responder.
+     * Por eso el `required` se aplica solo a los campos del paso visible; el
+     * original queda guardado en data-required para restaurarlo después.
+     */
+    function sincronizarRequeridosPorPaso(paso) {
+        document.querySelectorAll('.modal-step-content').forEach(contenedor => {
+            const esPasoActivo = contenedor.id === `pasoModal${paso}`;
+            contenedor.querySelectorAll('input, select, textarea').forEach(campo => {
+                if (campo.dataset.requiredOriginal === undefined) {
+                    campo.dataset.requiredOriginal = campo.required ? '1' : '0';
+                }
+                campo.required = esPasoActivo && campo.dataset.requiredOriginal === '1';
+            });
+        });
+    }
+
     function mostrarPaso(paso) {
         document.querySelectorAll('.modal-step-content').forEach(el => el.classList.remove('active'));
 
         const pasoElemento = document.getElementById(`pasoModal${paso}`);
         if (pasoElemento) pasoElemento.classList.add('active');
+
+        sincronizarRequeridosPorPaso(paso);
 
         document.querySelectorAll('.step-item').forEach(step => {
             const numPaso = parseInt(step.getAttribute('data-step'));
@@ -232,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (btnModalSiguiente) {
                 btnModalSiguiente.style.display = 'inline-flex';
-                btnModalSiguiente.querySelector('span').textContent = 'Continuar';
+                btnModalSiguiente.querySelector('.btn-label-idle').textContent = 'Continuar';
             }
         } else if (paso === 2) {
             if (btnModalAtras) {
@@ -241,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (btnModalSiguiente) {
                 btnModalSiguiente.style.display = 'inline-flex';
-                btnModalSiguiente.querySelector('span').textContent = 'Confirmar Solicitud';
+                btnModalSiguiente.querySelector('.btn-label-idle').textContent = 'Confirmar Solicitud';
             }
 
             const elResumenMonto = document.getElementById('resumenMonto');
@@ -256,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (btnModalAtras) btnModalAtras.style.display = 'none';
             if (btnModalSiguiente) {
                 btnModalSiguiente.style.display = 'inline-flex';
-                btnModalSiguiente.querySelector('span').textContent = 'Finalizar';
+                btnModalSiguiente.querySelector('.btn-label-idle').textContent = 'Finalizar';
             }
         }
     }
@@ -280,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cuotaTexto = textoCuota ? textoCuota.textContent.replace(/[^0-9.]/g, '') : '0';
 
                 if (supabaseClientPrestamos) {
+                    if (window.UVGMotion) window.UVGMotion.setButtonState(btnModalSiguiente, 'loading');
                     try {
                         const { error } = await supabaseClientPrestamos
                             .from('solicitudes_prestamos')
@@ -299,9 +323,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         if (error) {
                             console.error('Error al guardar en Supabase:', error);
+                            if (window.UVGMotion) window.UVGMotion.setButtonState(btnModalSiguiente, null);
+                        } else {
+                            if (window.UVGMotion) window.UVGMotion.setButtonState(btnModalSiguiente, 'done');
                         }
                     } catch (err) {
                         console.error('Excepción al registrar solicitud:', err);
+                        if (window.UVGMotion) window.UVGMotion.setButtonState(btnModalSiguiente, null);
                     }
                 }
 

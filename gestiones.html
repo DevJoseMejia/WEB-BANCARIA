@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banca en Línea - Gestiones y Seguridad | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0B1D33">
+    <meta name="theme-color" content="#081222">
     <meta name="description" content="Gestión de seguridad y administración de cuenta - Banco UVG">
 
     <link rel="stylesheet" href="style_banca.css">
@@ -96,6 +96,10 @@
                 <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
+                    <button type="button" class="btn-theme-toggle" data-theme-toggle title="Cambiar a modo oscuro" aria-pressed="false">
+                        <i class="ri-moon-line icon-light"></i>
+                        <i class="ri-sun-line icon-dark"></i>
+                    </button>
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
@@ -124,7 +128,7 @@
                             <h3>Reiniciar PIN de Tarjeta</h3>
                             <p>Genera o cambia el PIN de tus tarjetas de débito o crédito para cajeros automáticos.</p>
                         </div>
-                        <button class="btn-export">Gestionar PIN</button>
+                        <button type="button" class="btn-export" id="btnGestionPin">Gestionar PIN</button>
                     </div>
 
                     <!-- Opción 2: Seguridad de la Cuenta / Contraseña -->
@@ -136,7 +140,7 @@
                             <h3>Cambiar Contraseña de Banca</h3>
                             <p>Actualiza tu clave de acceso periódico para mayor seguridad en tu plataforma.</p>
                         </div>
-                        <button class="btn-export">Cambiar Clave</button>
+                        <button type="button" class="btn-export" id="btnGestionClave">Cambiar Clave</button>
                     </div>
 
                     <!-- Opción 3: Bloqueo Preventivo -->
@@ -148,7 +152,7 @@
                             <h3>Bloqueo de Tarjetas (Robo / Extravío)</h3>
                             <p>Bloquea de inmediato tus tarjetas activas en caso de emergencia o sospecha de fraude.</p>
                         </div>
-                        <button class="btn-export btn-peligro">Bloquear Tarjeta</button>
+                        <button type="button" class="btn-export btn-peligro" id="btnGestionBloqueo">Bloquear Tarjeta</button>
                     </div>
 
                     <!-- Opción 4: Actualización RTU / Datos -->
@@ -160,7 +164,7 @@
                             <h3>Actualización de Datos / RTU</h3>
                             <p>Mantén al día tus datos personales, correo, dirección e información fiscal (SAT).</p>
                         </div>
-                        <button class="btn-export">Actualizar Datos</button>
+                        <button type="button" class="btn-export" id="btnGestionDatos">Actualizar Datos</button>
                     </div>
 
                     <!-- Opción 5: Solicitud de Chequera -->
@@ -172,9 +176,20 @@
                             <h3>Solicitar Chequera</h3>
                             <p>Pide una nueva chequera de 25 ó 50 cheques con entrega en agencia o a domicilio.</p>
                         </div>
-                        <button class="btn-export">Solicitar Chequera</button>
+                        <button type="button" class="btn-export" id="btnGestionChequera">Solicitar Chequera</button>
                     </div>
 
+                </div>
+
+                <!-- Historial: gestiones que pasan por revisión de un asesor -->
+                <div class="card-widget" style="margin-top: 24px;">
+                    <div class="widget-header">
+                        <h2><i class="ri-history-line"></i> Mis gestiones recientes</h2>
+                    </div>
+                    <p class="section-desc" style="margin-bottom: 12px;">Estado de las solicitudes que requieren revisión de un asesor</p>
+                    <div id="listaHistorialGestiones" class="lista-historial-gestiones">
+                        <p class="section-desc">Cargando tus gestiones...</p>
+                    </div>
                 </div>
             </main>
 
@@ -191,10 +206,319 @@
     </div>
 
 
+    <!-- ============ MODAL 1: REINICIAR PIN ============ -->
+    <div class="modal-overlay" id="modalPin" aria-hidden="true">
+        <div class="modal-container" role="dialog" aria-labelledby="tituloModalPin">
+            <header class="modal-header">
+                <div class="modal-title-group">
+                    <div class="modal-icon"><i class="ri-lock-password-line"></i></div>
+                    <div>
+                        <h2 id="tituloModalPin">Reiniciar PIN de Tarjeta</h2>
+                        <p>Define un PIN de 4 dígitos para cajeros automáticos</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" data-cerrar-modal="modalPin" title="Cerrar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </header>
+
+            <form id="formPin" class="modal-body">
+                <div class="form-group">
+                    <label for="pinTarjeta">Tarjeta</label>
+                    <select id="pinTarjeta" class="form-control" required></select>
+                </div>
+
+                <div class="form-row-two">
+                    <div class="form-group">
+                        <label for="pinNuevo">PIN nuevo</label>
+                        <input type="password" id="pinNuevo" class="form-control" inputmode="numeric"
+                               maxlength="4" minlength="4" autocomplete="off" data-pin data-solo-digitos
+                               placeholder="••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pinConfirma">Confirmar PIN</label>
+                        <input type="password" id="pinConfirma" class="form-control" inputmode="numeric"
+                               maxlength="4" minlength="4" autocomplete="off" data-pin data-solo-digitos
+                               placeholder="••••" required>
+                    </div>
+                </div>
+
+                <p class="nota-gestion">
+                    <i class="ri-information-line"></i>
+                    El PIN se guarda cifrado: ni el banco puede verlo. No puede tener los 4 dígitos
+                    iguales ni ser una secuencia como 1234.
+                </p>
+
+                <div class="resultado-gestion" hidden></div>
+
+                <footer class="modal-footer">
+                    <button type="button" class="btn-modal-secondary" data-cerrar-modal="modalPin">Cancelar</button>
+                    <button type="submit" class="btn-modal-primary">
+                        <span class="btn-spinner"></span>
+                        <span class="btn-label-idle">Guardar PIN</span>
+                    </button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============ MODAL 2: CAMBIAR CONTRASEÑA ============ -->
+    <div class="modal-overlay" id="modalClave" aria-hidden="true">
+        <div class="modal-container" role="dialog" aria-labelledby="tituloModalClave">
+            <header class="modal-header">
+                <div class="modal-title-group">
+                    <div class="modal-icon"><i class="ri-key-2-line"></i></div>
+                    <div>
+                        <h2 id="tituloModalClave">Cambiar Contraseña de Banca</h2>
+                        <p>Cuenta: <strong id="claveCorreo">—</strong></p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" data-cerrar-modal="modalClave" title="Cerrar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </header>
+
+            <form id="formClave" class="modal-body">
+                <div class="form-group">
+                    <label for="claveActual">Contraseña actual</label>
+                    <input type="password" id="claveActual" class="form-control"
+                           autocomplete="current-password" required>
+                </div>
+
+                <div class="form-row-two">
+                    <div class="form-group">
+                        <label for="claveNueva">Contraseña nueva</label>
+                        <input type="password" id="claveNueva" class="form-control" minlength="8"
+                               autocomplete="new-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="claveConfirma">Confirmar contraseña</label>
+                        <input type="password" id="claveConfirma" class="form-control" minlength="8"
+                               autocomplete="new-password" required>
+                    </div>
+                </div>
+
+                <p class="nota-gestion">
+                    <i class="ri-shield-check-line"></i>
+                    Mínimo 8 caracteres, con al menos una letra y un número. Al cambiarla vamos a
+                    cerrar tu sesión para que entres con la nueva.
+                </p>
+
+                <div class="resultado-gestion" hidden></div>
+
+                <footer class="modal-footer">
+                    <button type="button" class="btn-modal-secondary" data-cerrar-modal="modalClave">Cancelar</button>
+                    <button type="submit" class="btn-modal-primary">
+                        <span class="btn-spinner"></span>
+                        <span class="btn-label-idle">Cambiar contraseña</span>
+                    </button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============ MODAL 3: BLOQUEO DE TARJETA ============ -->
+    <div class="modal-overlay" id="modalBloqueo" aria-hidden="true">
+        <div class="modal-container" role="dialog" aria-labelledby="tituloModalBloqueo">
+            <header class="modal-header">
+                <div class="modal-title-group">
+                    <div class="modal-icon alerta-icon"><i class="ri-shield-cross-line"></i></div>
+                    <div>
+                        <h2 id="tituloModalBloqueo">Bloquear Tarjeta</h2>
+                        <p>El bloqueo es inmediato y no se puede revertir en línea</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" data-cerrar-modal="modalBloqueo" title="Cerrar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </header>
+
+            <form id="formBloqueo" class="modal-body">
+                <div class="form-group">
+                    <label for="bloqueoTarjeta">Tarjeta a bloquear</label>
+                    <select id="bloqueoTarjeta" class="form-control" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bloqueoMotivo">Motivo</label>
+                    <select id="bloqueoMotivo" class="form-control" required>
+                        <option value="Robo">Robo</option>
+                        <option value="Extravío">Extravío</option>
+                        <option value="Sospecha de fraude">Sospecha de fraude</option>
+                        <option value="Deterioro">Deterioro / no funciona</option>
+                    </select>
+                </div>
+
+                <p id="bloqueoYaBloqueadas" class="nota-gestion" hidden></p>
+
+                <div class="form-group checkbox-group">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="bloqueoReposicion">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-label">Quiero solicitar la reposición de esta tarjeta.</span>
+                    </label>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="bloqueoConfirmo" required>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-label">Entiendo que el bloqueo es inmediato y que para reactivar la tarjeta tengo que ir a una agencia.</span>
+                    </label>
+                </div>
+
+                <div class="resultado-gestion" hidden></div>
+
+                <footer class="modal-footer">
+                    <button type="button" class="btn-modal-secondary" data-cerrar-modal="modalBloqueo">Cancelar</button>
+                    <button type="submit" class="btn-modal-primary btn-peligro">
+                        <span class="btn-spinner"></span>
+                        <span class="btn-label-idle">Bloquear ahora</span>
+                    </button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============ MODAL 4: ACTUALIZAR DATOS / RTU ============ -->
+    <div class="modal-overlay" id="modalDatos" aria-hidden="true">
+        <div class="modal-container" role="dialog" aria-labelledby="tituloModalDatos">
+            <header class="modal-header">
+                <div class="modal-title-group">
+                    <div class="modal-icon"><i class="ri-file-user-line"></i></div>
+                    <div>
+                        <h2 id="tituloModalDatos">Actualización de Datos</h2>
+                        <p>Mantén al día tu teléfono y dirección</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" data-cerrar-modal="modalDatos" title="Cerrar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </header>
+
+            <form id="formDatos" class="modal-body">
+                <div class="form-row-two">
+                    <div class="form-group">
+                        <label for="datosNombre">Nombre completo</label>
+                        <input type="text" id="datosNombre" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="datosDpi">DPI</label>
+                        <input type="text" id="datosDpi" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="datosCorreo">Correo electrónico</label>
+                    <input type="email" id="datosCorreo" class="form-control" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="datosTelefono">Teléfono</label>
+                    <div class="input-prefix-wrapper">
+                        <span class="input-prefix">+502</span>
+                        <input type="tel" id="datosTelefono" class="form-control with-prefix"
+                               inputmode="numeric" maxlength="8" minlength="8" data-solo-digitos
+                               placeholder="12345678" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="datosDireccion">Dirección</label>
+                    <textarea id="datosDireccion" class="form-control" rows="3" minlength="10"
+                              placeholder="Zona, calle, número de casa, referencias" required></textarea>
+                </div>
+
+                <p class="nota-gestion">
+                    <i class="ri-information-line"></i>
+                    Nombre, DPI y correo no se editan en línea. Si alguno está mal, un cajero
+                    tiene que corregirlo en agencia con tu documento a la vista.
+                </p>
+
+                <div class="resultado-gestion" hidden></div>
+
+                <footer class="modal-footer">
+                    <button type="button" class="btn-modal-secondary" data-cerrar-modal="modalDatos">Cancelar</button>
+                    <button type="submit" class="btn-modal-primary">
+                        <span class="btn-spinner"></span>
+                        <span class="btn-label-idle">Guardar cambios</span>
+                    </button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============ MODAL 5: SOLICITAR CHEQUERA ============ -->
+    <div class="modal-overlay" id="modalChequera" aria-hidden="true">
+        <div class="modal-container" role="dialog" aria-labelledby="tituloModalChequera">
+            <header class="modal-header">
+                <div class="modal-title-group">
+                    <div class="modal-icon"><i class="ri-booklet-line"></i></div>
+                    <div>
+                        <h2 id="tituloModalChequera">Solicitar Chequera</h2>
+                        <p>Disponible solo para cuentas monetarias</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" data-cerrar-modal="modalChequera" title="Cerrar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </header>
+
+            <form id="formChequera" class="modal-body">
+                <div class="form-group">
+                    <label for="chequeraCuenta">Cuenta monetaria</label>
+                    <select id="chequeraCuenta" class="form-control" required></select>
+                </div>
+
+                <p id="chequeraAviso" class="nota-gestion" hidden>
+                    <i class="ri-error-warning-line"></i>
+                    Las chequeras solo se emiten sobre cuentas monetarias. Una cuenta de ahorro no
+                    gira cheques, así que primero tendrías que abrir una monetaria.
+                </p>
+
+                <div class="form-row-two">
+                    <div class="form-group">
+                        <label for="chequeraCantidad">Cantidad de cheques</label>
+                        <select id="chequeraCantidad" class="form-control" required>
+                            <option value="25">25 cheques</option>
+                            <option value="50">50 cheques</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="chequeraEntrega">Forma de entrega</label>
+                        <select id="chequeraEntrega" class="form-control" required>
+                            <option value="Agencia">Retiro en agencia</option>
+                            <option value="Domicilio">Entrega a domicilio</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="grupoDireccionChequera" hidden>
+                    <label for="chequeraDireccion">Dirección de entrega</label>
+                    <textarea id="chequeraDireccion" class="form-control" rows="3" minlength="10"
+                              placeholder="Zona, calle, número de casa, referencias"></textarea>
+                </div>
+
+                <div class="resultado-gestion" hidden></div>
+
+                <footer class="modal-footer">
+                    <button type="button" class="btn-modal-secondary" data-cerrar-modal="modalChequera">Cancelar</button>
+                    <button type="submit" class="btn-modal-primary">
+                        <span class="btn-spinner"></span>
+                        <span class="btn-label-idle">Enviar solicitud</span>
+                    </button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
        <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
+    <script src="motion.js"></script>
     <script src="sesion_comun.js"></script>
+    <script src="interfaz_cliente.js"></script>
+    <script src="gestiones.js"></script>
 
 </body>
 </html>

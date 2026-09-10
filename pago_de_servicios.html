@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banca en Línea - Pago de Servicios | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0B1D33">
+    <meta name="theme-color" content="#081222">
     <meta name="description" content="Pago de servicios e impuestos - Banco UVG">
 
     <!-- Hoja de estilos compartida de la banca -->
@@ -107,6 +107,10 @@
                 <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
+                    <button type="button" class="btn-theme-toggle" data-theme-toggle title="Cambiar a modo oscuro" aria-pressed="false">
+                        <i class="ri-moon-line icon-light"></i>
+                        <i class="ri-sun-line icon-dark"></i>
+                    </button>
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
@@ -154,7 +158,30 @@
                             </div>
                             
                             <div class="grid-proveedores" id="contenedorServicios">
-                                <p class="loading-text">Cargando servicios disponibles...</p>
+                                <div class="card-proveedor" style="pointer-events:none;">
+                                    <div class="skeleton-circle" style="margin-bottom:.75rem;"></div>
+                                    <div class="skeleton-line" style="width:70%"></div>
+                                </div>
+                                <div class="card-proveedor" style="pointer-events:none;">
+                                    <div class="skeleton-circle" style="margin-bottom:.75rem;"></div>
+                                    <div class="skeleton-line" style="width:70%"></div>
+                                </div>
+                                <div class="card-proveedor" style="pointer-events:none;">
+                                    <div class="skeleton-circle" style="margin-bottom:.75rem;"></div>
+                                    <div class="skeleton-line" style="width:70%"></div>
+                                </div>
+                                <div class="card-proveedor" style="pointer-events:none;">
+                                    <div class="skeleton-circle" style="margin-bottom:.75rem;"></div>
+                                    <div class="skeleton-line" style="width:70%"></div>
+                                </div>
+                                <div class="card-proveedor" style="pointer-events:none;">
+                                    <div class="skeleton-circle" style="margin-bottom:.75rem;"></div>
+                                    <div class="skeleton-line" style="width:70%"></div>
+                                </div>
+                                <div class="card-proveedor" style="pointer-events:none;">
+                                    <div class="skeleton-circle" style="margin-bottom:.75rem;"></div>
+                                    <div class="skeleton-line" style="width:70%"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -174,6 +201,7 @@
                                     <select id="cuenta-origen" class="form-control" required disabled>
                                         <option value="" disabled selected>Cargando tus cuentas...</option>
                                     </select>
+                                    <small id="ayudaCuentaOrigen" class="hint-saldo"></small>
                                 </div>
 
                                 <div class="filter-group">
@@ -184,7 +212,8 @@
 
                                 <div class="filter-group">
                                     <label for="monto-pago">Monto a pagar (Q)</label>
-                                    <input type="number" step="0.01" id="monto-pago" class="form-control" placeholder="0.00" required disabled>
+                                    <input type="number" step="0.01" min="0.01" max="50000" id="monto-pago" class="form-control" placeholder="0.00" required disabled>
+                                    <small class="hint-saldo">Monto máximo por pago: Q 50,000.00</small>
                                 </div>
 
                                 <div class="filter-group">
@@ -192,10 +221,11 @@
                                     <input type="text" id="concepto" class="form-control" placeholder="Ej. Luz de la casa" disabled>
                                 </div>
 
-                                <div id="mensajeEstadoPago" class="mensaje-estado"></div>
+                                <div id="mensajeEstadoPago" class="mensaje-estado money-live-container"></div>
 
                                 <button type="submit" class="btn-filter-primary btn-pago-submit" disabled>
-                                    <i class="ri-check-double-line"></i> Pagar Servicio
+                                    <span class="btn-spinner"></span>
+                                    <i class="ri-check-double-line btn-label-idle"></i> <span class="btn-label-idle">Pagar Servicio</span>
                                 </button>
                             </form>
                         </div>
@@ -213,15 +243,111 @@
                     <a href="#">Términos y condiciones</a>
                     <a href="#">Centro de ayuda</a>
                 </div>
+
+    <!-- MODAL: FACTURA DEL PAGO DE SERVICIO -->
+    <div id="modalFactura" class="modal-overlay">
+        <div class="modal-container comprobante-box">
+
+            <div id="areaFacturaPDF" class="comprobante-imprimible">
+                <div class="comprobante-header">
+                    <div class="logo-comprobante">
+                        <i class="ri-bank-fill"></i>
+                        <span>Banco UVG</span>
+                    </div>
+                    <div class="badge-exito">
+                        <i class="ri-checkbox-circle-fill"></i> Pago Aplicado
+                    </div>
+                </div>
+
+                <div class="factura-titulo">
+                    <h3>Factura de Pago de Servicio</h3>
+                    <p>Documento generado electrónicamente</p>
+                </div>
+
+                <div class="comprobante-monto-box">
+                    <p>Total Pagado</p>
+                    <h2 id="facMontoTotal">Q 0.00</h2>
+                </div>
+
+                <div class="comprobante-detalles">
+                    <div class="detalle-fila">
+                        <span>No. de Factura:</span>
+                        <strong id="facNumero">—</strong>
+                    </div>
+                    <div class="detalle-fila">
+                        <span>Fecha y Hora:</span>
+                        <strong id="facFecha">—</strong>
+                    </div>
+                    <div class="detalle-fila">
+                        <span>Servicio:</span>
+                        <strong id="facServicio">—</strong>
+                    </div>
+                    <div class="detalle-fila">
+                        <span>Proveedor:</span>
+                        <strong id="facProveedor">—</strong>
+                    </div>
+                    <div class="detalle-fila">
+                        <span id="facEtiquetaIdentificador">Identificador:</span>
+                        <strong id="facIdentificador">—</strong>
+                    </div>
+                    <div class="detalle-fila">
+                        <span>Cuenta Debitada:</span>
+                        <strong id="facCuenta">—</strong>
+                    </div>
+                    <div class="detalle-fila">
+                        <span>Titular:</span>
+                        <strong id="facTitular">—</strong>
+                    </div>
+                    <div class="detalle-fila">
+                        <span>Código de Autorización:</span>
+                        <strong id="facAutorizacion">—</strong>
+                    </div>
+                </div>
+
+                <div class="factura-desglose">
+                    <div class="detalle-fila">
+                        <span>Monto del servicio</span>
+                        <strong id="facSubtotal">Q 0.00</strong>
+                    </div>
+                    <div class="detalle-fila">
+                        <span>Comisión bancaria</span>
+                        <strong>Q 0.00</strong>
+                    </div>
+                    <div class="detalle-fila detalle-total">
+                        <span>Total debitado</span>
+                        <strong id="facTotalDesglose">Q 0.00</strong>
+                    </div>
+                </div>
+
+                <div class="comprobante-footer-nota">
+                    <p>Este documento es el respaldo oficial de tu pago ante Banco UVG. Consérvalo para cualquier aclaración con el proveedor del servicio.</p>
+                </div>
+            </div>
+
+            <div class="comprobante-acciones">
+                <button id="btnDescargarFactura" class="btn-primario">
+                    <i class="ri-download-2-line"></i> Descargar Factura (PDF)
+                </button>
+                <button id="btnCerrarFactura" class="btn-secundario">
+                    Finalizar
+                </button>
+            </div>
+
+        </div>
+    </div>
+
             </footer>
 
         </div>
     </div>
 
     <!-- Scripts de Supabase y Lógica -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
+    <script src="motion.js"></script>
     <script src="sesion_comun.js"></script>
+    <script src="interfaz_cliente.js"></script>
     <script src="pago_de_servicios.js"></script>
 </body>
 </html>

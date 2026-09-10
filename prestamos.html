@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banca en Línea - Préstamos e Hipotecas | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0B1D33">
+    <meta name="theme-color" content="#081222">
     <meta name="description" content="Solicitud de préstamos personales, de vehículo e hipotecas - Banco UVG">
 
     <link rel="stylesheet" href="style_banca.css">
@@ -96,6 +96,10 @@
                     <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
+                    <button type="button" class="btn-theme-toggle" data-theme-toggle title="Cambiar a modo oscuro" aria-pressed="false">
+                        <i class="ri-moon-line icon-light"></i>
+                        <i class="ri-sun-line icon-dark"></i>
+                    </button>
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
@@ -114,7 +118,24 @@
                 </div>
 
                 <div class="grid-productos" id="contenedorPrestamosDisponibles">
-                    <p class="loading-text">Cargando préstamos disponibles...</p>
+                    <div class="card-producto" style="pointer-events:none;">
+                        <div class="skeleton-line" style="width:40%;height:44px;border-radius:10px;margin-bottom:1rem;"></div>
+                        <div class="skeleton-line" style="width:70%;height:18px;margin-bottom:.5rem;"></div>
+                        <div class="skeleton-line" style="width:95%"></div>
+                        <div class="skeleton-line" style="width:85%"></div>
+                    </div>
+                    <div class="card-producto" style="pointer-events:none;">
+                        <div class="skeleton-line" style="width:40%;height:44px;border-radius:10px;margin-bottom:1rem;"></div>
+                        <div class="skeleton-line" style="width:70%;height:18px;margin-bottom:.5rem;"></div>
+                        <div class="skeleton-line" style="width:95%"></div>
+                        <div class="skeleton-line" style="width:85%"></div>
+                    </div>
+                    <div class="card-producto" style="pointer-events:none;">
+                        <div class="skeleton-line" style="width:40%;height:44px;border-radius:10px;margin-bottom:1rem;"></div>
+                        <div class="skeleton-line" style="width:70%;height:18px;margin-bottom:.5rem;"></div>
+                        <div class="skeleton-line" style="width:95%"></div>
+                        <div class="skeleton-line" style="width:85%"></div>
+                    </div>
                 </div>
             </main>
 
@@ -230,11 +251,11 @@
 
                 <!-- PASO 2: Confirmación y Términos -->
                 <div class="modal-step-content" id="pasoModal2">
-                    <div class="summary-card">
+                    <div class="summary-card money-live-container">
                         <h4>Resumen de la Solicitud</h4>
                         <ul class="summary-list">
                             <li><span>Producto:</span> <strong id="resumenNombreProducto">Préstamo Personal</strong></li>
-                            <li><span>Monto Solicitado:</span> <strong id="resumenMonto">Q 0.00</strong></li>
+                            <li><span>Monto Solicitado:</span> <strong id="resumenMonto" class="money-live">--</strong></li>
                             <li><span>Plazo:</span> <strong id="resumenPlazo">24 Meses</strong></li>
                             <li><span>Cuenta de Depósito:</span> <strong>Cuenta Monetaria Principal</strong></li>
                         </ul>
@@ -269,8 +290,9 @@
                 <footer class="modal-footer" id="modalFooterAcciones">
                     <button type="button" class="btn-modal-secondary" id="btnModalAtras">Cancelar</button>
                     <button type="submit" class="btn-modal-primary" id="btnModalSiguiente">
-                        <span>Continuar</span>
-                        <i class="ri-arrow-right-line"></i>
+                        <span class="btn-spinner"></span>
+                        <span class="btn-label-idle">Continuar</span>
+                        <i class="ri-arrow-right-line btn-label-idle"></i>
                     </button>
                 </footer>
 
@@ -281,7 +303,9 @@
     <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
+    <script src="motion.js"></script>
     <script src="sesion_comun.js"></script>
+    <script src="interfaz_cliente.js"></script>
     <script src="prestamos.js"></script>
 
 </body>

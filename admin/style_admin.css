@@ -6,10 +6,13 @@
 
 :root {
     --color-primary-dark: #171B24; /* Grafito profundo (Fondo Main) */
-    --color-text-main:    #1A2433;
+    --color-text-main:    #171B24;
     --color-accent:       #B08D2B; /* Dorado, distinto del teal de clientes */
     --color-accent-hover: #8F7220;
     --color-white:        #FFFFFF;
+    --color-surface:      #FFFFFF;
+    --color-surface-2:    #F1F5F9;
+    --color-input-bg:     #FFFFFF;
 
     --color-border:       #E2E8F0;
     --color-border-input: #CBD5E1;
@@ -27,7 +30,68 @@
     --shadow-card: 0 4px 20px rgba(23, 27, 36, 0.06);
     --radius-card: 16px;
     --radius-input: 8px;
-    --transition-fast: 0.2s ease;
+
+    --ease-smooth: cubic-bezier(.22, 1, .36, 1);
+    --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+    --dur-fast: 150ms;
+    --dur-med: 260ms;
+    --transition-fast: var(--dur-fast) var(--ease-smooth);
+
+    color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --color-primary-dark: #101319;
+        --color-text-main:    #F1F2F4;
+        --color-accent:       #D8B056;
+        --color-accent-hover: #EAC876;
+        --color-surface:      #1B1F29;
+        --color-surface-2:    #262B37;
+        --color-input-bg:     #262B37;
+        --color-border:       #323847;
+        --color-border-input: #3B4152;
+        --color-text-muted:   #9AA3B5;
+        --color-bg-light:     #0D0F14;
+        --color-focus-ring:   rgba(216, 176, 86, 0.3);
+        --color-danger:       #E0685A;
+        --color-danger-bg:    rgba(224, 104, 90, 0.16);
+        --color-success:      #35B37E;
+        --color-success-bg:   rgba(53, 179, 126, 0.16);
+        --shadow-floating-card: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+}
+:root[data-theme="dark"] {
+    --color-primary-dark: #101319;
+    --color-text-main:    #F1F2F4;
+    --color-accent:       #D8B056;
+    --color-accent-hover: #EAC876;
+    --color-surface:      #1B1F29;
+    --color-surface-2:    #262B37;
+    --color-input-bg:     #262B37;
+    --color-border:       #323847;
+    --color-border-input: #3B4152;
+    --color-text-muted:   #9AA3B5;
+    --color-bg-light:     #0D0F14;
+    --color-focus-ring:   rgba(216, 176, 86, 0.3);
+    --color-danger:       #E0685A;
+    --color-danger-bg:    rgba(224, 104, 90, 0.16);
+    --color-success:      #35B37E;
+    --color-success-bg:   rgba(53, 179, 126, 0.16);
+    --shadow-floating-card: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+
+@view-transition {
+    navigation: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,9 +102,10 @@ body {
     line-height: 1.5;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    transition: background-color var(--dur-med) var(--ease-smooth);
 }
 
-a { color: var(--color-accent); text-decoration: none; }
+a { color: var(--color-accent); text-decoration: none; transition: color var(--transition-fast); }
 a:hover { color: var(--color-accent-hover); }
 
 /* --- Login --- */
@@ -51,15 +116,17 @@ body.pagina-login {
     align-items: center;
     justify-content: center;
     padding: 2rem 1.5rem;
+    position: relative;
 }
 
 .login-card {
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-floating-card);
     width: 100%;
     max-width: 400px;
     padding: 2.5rem;
+    transition: background-color var(--dur-med) var(--ease-smooth);
 }
 
 .staff-brand {
@@ -74,12 +141,12 @@ body.pagina-login {
     text-transform: uppercase;
 }
 
-.login-header h2 { font-size: 1.5rem; font-weight: 700; color: var(--color-primary-dark); }
+.login-header h2 { font-size: 1.5rem; font-weight: 700; color: var(--color-text-main); }
 .login-header p { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 0.25rem; margin-bottom: 1.75rem; }
 
 .login-form { display: flex; flex-direction: column; gap: 1.1rem; }
 .input-group { display: flex; flex-direction: column; gap: 0.4rem; }
-.input-group label { font-size: 0.85rem; font-weight: 600; }
+.input-group label { font-size: 0.85rem; font-weight: 600; color: var(--color-text-main); }
 
 .input-wrapper { position: relative; display: flex; align-items: center; }
 .input-icon { position: absolute; left: 0.85rem; font-size: 1.1rem; color: var(--color-text-muted); pointer-events: none; }
@@ -88,34 +155,55 @@ body.pagina-login {
     padding: 0.75rem 0.85rem 0.75rem 2.6rem;
     font-size: 0.9rem;
     font-family: inherit;
+    color: var(--color-text-main);
+    background-color: var(--color-input-bg);
     border: 1px solid var(--color-border-input);
     border-radius: var(--radius-input);
     outline: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
 }
 .input-wrapper input:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-focus-ring); }
 
 .toggle-password {
     position: absolute; right: 0.85rem; background: none; border: none;
     color: var(--color-text-muted); font-size: 1.1rem; cursor: pointer;
+    transition: color var(--transition-fast);
 }
+.toggle-password:hover { color: var(--color-text-main); }
 
 .btn-primary {
     background-color: var(--color-accent);
-    color: var(--color-white);
+    color: #171B24;
     border: none;
     border-radius: var(--radius-input);
     padding: 0.85rem 1.25rem;
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
     font-family: inherit;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 0.5rem;
     margin-top: 0.4rem;
-    transition: background-color var(--transition-fast);
+    transition: background-color var(--transition-fast), transform var(--dur-fast) var(--ease-smooth), filter var(--transition-fast);
 }
 .btn-primary:hover { background-color: var(--color-accent-hover); }
+.btn-primary:active { transform: scale(0.98); }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Estado de carga / éxito reutilizable (data-state="loading" | "done") */
+.btn-spinner {
+    display: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-top-color: currentColor;
+    animation: uvg-spin 0.7s linear infinite;
+}
+[data-state="loading"] .btn-spinner { display: inline-block; }
+[data-state="loading"] .btn-label-idle { display: none; }
+[data-state="loading"] { pointer-events: none; filter: brightness(0.94); }
+[data-state="done"] { background-color: var(--color-success) !important; border-color: var(--color-success) !important; color: #fff !important; }
+@keyframes uvg-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .btn-spinner { animation: none; } }
 
 .login-footer-note {
     margin-top: 1.5rem;
@@ -125,6 +213,29 @@ body.pagina-login {
     border-top: 1px solid var(--color-border);
     padding-top: 1.25rem;
 }
+
+/* Botón de tema claro / oscuro (ver ../motion.js) */
+.btn-theme-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface-2);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+.btn-theme-toggle:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.btn-theme-toggle:active { transform: scale(.92); }
+.btn-theme-toggle .icon-dark { display: none; }
+:root[data-theme="dark"] .btn-theme-toggle .icon-light { display: none; }
+:root[data-theme="dark"] .btn-theme-toggle .icon-dark { display: inline; }
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .btn-theme-toggle .icon-light { display: none; }
+    :root:not([data-theme="light"]) .btn-theme-toggle .icon-dark { display: inline; }
+}
+.btn-theme-toggle-fixed { position: fixed; top: 1.1rem; right: 1.1rem; z-index: 500; }
 
 /* --- Panel --- */
 body.pagina-panel { background-color: var(--color-bg-light); }
@@ -136,6 +247,9 @@ body.pagina-panel { background-color: var(--color-bg-light); }
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .panel-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; }
@@ -169,8 +283,25 @@ body.pagina-panel { background-color: var(--color-bg-light); }
     display: flex; align-items: center; gap: 0.4rem;
     font-family: inherit;
     font-size: 0.85rem;
+    transition: background-color var(--transition-fast);
 }
 .btn-logout:hover { background: rgba(255,255,255,0.08); }
+
+/* El toggle de tema vive sobre el grafito oscuro del header del panel y del
+   fondo del login (ninguno de los dos cambia entre temas), así que necesita
+   su propia variante -- no la superficie clara del panel-content. */
+.panel-header .btn-theme-toggle,
+.pagina-login .btn-theme-toggle {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--color-white);
+}
+.panel-header .btn-theme-toggle:hover,
+.pagina-login .btn-theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: var(--color-white);
+}
 
 .panel-content {
     max-width: 960px;
@@ -182,16 +313,18 @@ body.pagina-panel { background-color: var(--color-bg-light); }
 }
 
 .panel-section {
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
     padding: 1.75rem;
+    transition: background-color var(--dur-med) var(--ease-smooth);
 }
 
 .panel-section h2 {
     font-size: 1.15rem;
     margin-bottom: 0.35rem;
     display: flex; align-items: center; gap: 0.5rem;
+    color: var(--color-text-main);
 }
 .panel-section h2 i { color: var(--color-accent); }
 .panel-section > p.section-desc { color: var(--color-text-muted); font-size: 0.85rem; margin-bottom: 1.25rem; }
@@ -208,17 +341,20 @@ body.pagina-panel { background-color: var(--color-bg-light); }
     padding: 0.7rem 0.85rem;
     font-size: 0.9rem;
     font-family: inherit;
+    color: var(--color-text-main);
+    background-color: var(--color-input-bg);
     border: 1px solid var(--color-border-input);
     border-radius: var(--radius-input);
     outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
 }
 .form-control:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-focus-ring); }
-.form-control[readonly] { background-color: #F1F5F9; color: var(--color-text-muted); }
+.form-control[readonly] { background-color: var(--color-surface-2); color: var(--color-text-muted); }
 
 .tel-group { display: flex; align-items: center; gap: 0.5rem; }
 .tel-prefix {
     padding: 0.7rem 0.65rem;
-    background-color: #F1F5F9;
+    background-color: var(--color-surface-2);
     border: 1px solid var(--color-border-input);
     border-radius: var(--radius-input);
     font-size: 0.9rem;
@@ -227,7 +363,7 @@ body.pagina-panel { background-color: var(--color-bg-light); }
     flex-shrink: 0;
 }
 
-.field-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem; }
+.field-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--color-text-main); }
 
 .inline-form { display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap; }
 .inline-form .field-block { max-width: 220px; }
@@ -241,13 +377,14 @@ body.pagina-panel { background-color: var(--color-bg-light); }
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
+    transition: background-color var(--transition-fast);
 }
-.btn-secondary-outline:hover { background: rgba(176,141,43,0.08); }
+.btn-secondary-outline:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
 
 .resultado-box {
     margin-top: 1.25rem;
     background-color: var(--color-success-bg);
-    border: 1px solid #bbf7d0;
+    border: 1px solid color-mix(in srgb, var(--color-success) 35%, transparent);
     color: var(--color-success);
     border-radius: var(--radius-input);
     padding: 1rem 1.25rem;
@@ -255,7 +392,7 @@ body.pagina-panel { background-color: var(--color-bg-light); }
 }
 .resultado-box.error {
     background-color: var(--color-danger-bg);
-    border-color: #fca5a5;
+    border-color: color-mix(in srgb, var(--color-danger) 35%, transparent);
     color: var(--color-danger);
 }
 .resultado-box strong { display: block; margin-bottom: 0.4rem; }
@@ -270,9 +407,10 @@ body.pagina-panel { background-color: var(--color-bg-light); }
     text-align: left;
     padding: 0.5rem 0.6rem;
     border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-main);
 }
 .tabla-credenciales code {
-    background: #F1F5F9;
+    background: var(--color-surface-2);
     padding: 0.15rem 0.4rem;
     border-radius: 4px;
     font-size: 0.82rem;
@@ -286,10 +424,740 @@ body.pagina-panel { background-color: var(--color-bg-light); }
     cursor: pointer;
     font-size: 0.8rem;
     color: var(--color-text-muted);
+    transition: color var(--transition-fast), border-color var(--transition-fast);
 }
 .btn-copy:hover { color: var(--color-accent-hover); border-color: var(--color-accent); }
+
+/* --- Campana de notificaciones (header) --- */
+.btn-campana {
+    position: relative;
+    background: none;
+    border: none;
+    color: var(--color-white);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0.3rem;
+    display: flex;
+    align-items: center;
+    transition: transform var(--transition-fast);
+}
+.btn-campana:active { transform: scale(.9); }
+.badge-campana {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    background: var(--color-danger);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 3px 5px;
+    border-radius: 999px;
+    min-width: 16px;
+    text-align: center;
+}
+
+/* --- Badge de conteo junto a un título de sección --- */
+.badge-contador {
+    background: var(--color-accent);
+    color: #171B24;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 999px;
+    margin-left: 0.4rem;
+}
+
+/* --- Tabs de notificaciones --- */
+.tabs-notif {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+.tab-notif-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.6rem 0.25rem;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+.tab-notif-btn.active {
+    color: var(--color-accent-hover);
+    border-bottom-color: var(--color-accent);
+}
+.tab-notif-count {
+    background: var(--color-surface-2);
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 999px;
+}
+.tab-notif-btn.active .tab-notif-count {
+    background: rgba(176, 141, 43, 0.15);
+    color: var(--color-accent-hover);
+}
+
+/* --- Tarjetas de solicitud pendiente --- */
+.solicitud-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--color-border);
+    flex-wrap: wrap;
+}
+.solicitud-item:last-child { border-bottom: none; }
+.solicitud-info strong { display: block; font-size: 0.9rem; color: var(--color-text-main); }
+.solicitud-info small { color: var(--color-text-muted); font-size: 0.8rem; }
+.solicitud-acciones { display: flex; gap: 0.5rem; }
+
+.btn-aprobar, .btn-rechazar {
+    border: none;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter var(--transition-fast), transform var(--dur-fast) var(--ease-smooth);
+}
+.btn-aprobar:active, .btn-rechazar:active { transform: scale(.96); }
+.btn-aprobar { background: var(--color-success-bg); color: var(--color-success); }
+.btn-aprobar:hover { filter: brightness(0.95); }
+.btn-rechazar { background: var(--color-danger-bg); color: var(--color-danger); }
+.btn-rechazar:hover { filter: brightness(0.95); }
+
+/* --- Dashboard: KPI tiles + gráficas ---
+   Paleta de datos deliberadamente fija en claro ("color-scheme: light" ya
+   declarado abajo): así los gráficos se mantienen legibles y consistentes
+   sin importar el tema del panel, igual que se validó originalmente. */
+.viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --series-blue:    #2a78d6;
+    --series-orange:  #eb6834;
+    --status-warning: #fab219;
+}
+
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+.kpi-tile {
+    background: var(--color-bg-light);
+    border-radius: var(--radius-input);
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    transition: transform var(--dur-med) var(--ease-smooth), background-color var(--transition-fast);
+}
+.kpi-tile:hover { transform: translateY(-2px); }
+.kpi-tile .kpi-label {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+.kpi-tile .kpi-value {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    font-variant-numeric: tabular-nums;
+}
+.kpi-tile.kpi-warning {
+    background: rgba(250, 178, 25, 0.12);
+}
+.kpi-tile.kpi-warning .kpi-label {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: #8a5c00;
+}
+.kpi-tile.kpi-warning .kpi-label i { color: #fab219; }
+
+.charts-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+}
+.chart-card {
+    /* Ficha "de papel", fija en claro a propósito para que la gráfica de
+       adentro (.viz-root) nunca quede sobre un fondo oscuro. */
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-input);
+    padding: 1rem;
+    background: #fcfcfb;
+    position: relative;
+}
+.chart-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #171B24;
+    margin-bottom: 0.75rem;
+}
+.chart-card svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart-bar { cursor: pointer; transition: opacity 0.15s ease; }
+.chart-bar:hover, .chart-bar:focus { opacity: 0.82; outline: none; }
+.chart-axis-label { font-size: 10px; fill: var(--text-muted); }
+.chart-value-label { font-size: 11px; font-weight: 600; fill: var(--text-primary); }
+
+.chart-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: #0b0b0b;
+    color: #ffffff;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    transform: translate(-50%, -115%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    z-index: 10;
+}
+.chart-tooltip.visible { opacity: 1; }
+.chart-tooltip strong { font-weight: 700; }
+.chart-tooltip span { color: #c3c2b7; margin-left: 0.35rem; }
+
+/* --- Esqueletos de carga --- */
+.skeleton-line {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--color-surface-2) 25%, var(--color-border) 37%, var(--color-surface-2) 63%);
+    background-size: 400% 100%;
+    animation: uvg-shimmer 1.6s ease-in-out infinite;
+}
+.skeleton-line + .skeleton-line { margin-top: 0.6rem; }
+.skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.6rem 0;
+}
+.skeleton-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, var(--color-surface-2) 25%, var(--color-border) 37%, var(--color-surface-2) 63%);
+    background-size: 400% 100%;
+    animation: uvg-shimmer 1.6s ease-in-out infinite;
+}
+@keyframes uvg-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .skeleton-line, .skeleton-circle { animation: none; background: var(--color-surface-2); }
+}
 
 @media (max-width: 700px) {
     .form-grid { grid-template-columns: 1fr; }
     .panel-header { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+}
+
+/* ==========================================================================
+   BARRA LATERAL DEL PANEL Y VISTAS
+   El panel tenía las 5 secciones apiladas: se veían todas de corrido y con
+   muchas solicitudes pendientes había que bajar muchísimo. Ahora la barra
+   lateral elige la vista. Reusa la misma paleta grafito + dorado del header,
+   así que no aparece ningún color nuevo.
+   ========================================================================== */
+
+.panel-layout {
+    display: flex;
+    min-height: 100vh;
+    --panel-sidebar-width: 250px;
+}
+
+.panel-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 150;
+    width: var(--panel-sidebar-width);
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 0.85rem;
+    background-color: var(--color-primary-dark);
+    color: var(--color-white);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    overflow-y: auto;
+}
+
+.panel-sidebar .panel-brand {
+    padding: 0.35rem 0.6rem 1.1rem;
+    margin-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.95rem;
+    line-height: 1.25;
+}
+
+.panel-nav {
+    flex: 1;
+}
+.panel-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.panel-nav-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 0.85rem;
+    background: none;
+    border: none;
+    border-radius: var(--radius-input);
+    color: rgba(255, 255, 255, 0.62);
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+.panel-nav-btn i {
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+.panel-nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+    color: var(--color-white);
+}
+.panel-nav-btn.active {
+    background-color: var(--color-accent);
+    color: #171B24;
+    font-weight: 600;
+}
+.panel-nav-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Contador de pendientes en la barra: con la vista cerrada es la única
+   señal de que hay algo esperando revisión. */
+.nav-badge {
+    margin-left: auto;
+    flex-shrink: 0;
+    min-width: 22px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background-color: var(--color-danger);
+    color: #FFFFFF;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-align: center;
+}
+.panel-nav-btn.active .nav-badge {
+    background-color: #171B24;
+    color: var(--color-white);
+}
+
+.panel-sidebar-footer {
+    padding-top: 0.9rem;
+    margin-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.panel-sidebar-footer .btn-logout {
+    width: 100%;
+    justify-content: center;
+}
+
+/* En bloque a propósito, NO flex: .panel-content se centra con
+   `margin: 0 auto`, y como hijo de un contenedor flex esos márgenes
+   automáticos anulan el estirado y la columna se encoge a fit-content
+   (quedaba de ~390px en una pantalla de 1400). En bloque se comporta igual
+   que cuando colgaba del body. */
+.panel-main {
+    flex: 1;
+    min-width: 0;
+    margin-left: var(--panel-sidebar-width);
+}
+
+/* Con la barra ocupando 250px, 960px centrados dejaban al dashboard
+   apretado y con medio ancho vacío. */
+.panel-main > .panel-content {
+    max-width: 1120px;
+}
+
+/* Solo la vista elegida ocupa la pantalla. */
+.panel-section {
+    display: none;
+}
+.panel-section.vista-activa {
+    display: block;
+}
+
+.btn-toggle-panel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--radius-input);
+    color: var(--color-white);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+.btn-toggle-panel:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+.btn-toggle-panel:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Colapsada: solo iconos, mismo ancho reducido que usa el responsive. */
+.panel-sidebar,
+.panel-main {
+    transition: width var(--dur-med) var(--ease-smooth),
+                margin-left var(--dur-med) var(--ease-smooth);
+}
+.panel-layout.sidebar-colapsado {
+    --panel-sidebar-width: 68px;
+}
+.panel-layout.sidebar-colapsado .panel-sidebar {
+    padding: 1.25rem 0.5rem;
+}
+.panel-layout.sidebar-colapsado .panel-brand span,
+.panel-layout.sidebar-colapsado .panel-nav-btn span:not(.nav-badge),
+.panel-layout.sidebar-colapsado .btn-logout span {
+    display: none;
+}
+.panel-layout.sidebar-colapsado .panel-brand,
+.panel-layout.sidebar-colapsado .panel-nav-btn,
+.panel-layout.sidebar-colapsado .btn-logout {
+    justify-content: center;
+    gap: 0;
+}
+.panel-layout.sidebar-colapsado .panel-nav-btn {
+    padding: 0.7rem 0;
+    position: relative;
+}
+/* Colapsada no hay espacio para el contador en línea: se pone sobre el icono. */
+.panel-layout.sidebar-colapsado .nav-badge {
+    position: absolute;
+    top: 3px;
+    right: 6px;
+    margin-left: 0;
+    min-width: 17px;
+    padding: 0 4px;
+    font-size: 0.62rem;
+}
+
+/* Fondo oscuro del cajón. Arranca donde termina la barra porque la barra
+   tiene z-index mayor: si empezara en 0, esa mitad sería área muerta. */
+.scrim-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 250px;
+    z-index: 140;
+    background-color: rgba(10, 12, 16, 0.55);
+}
+
+@media (min-width: 901px) {
+    .scrim-panel { display: none; }
+}
+
+@media (max-width: 900px) {
+    /* Acá la barra nace en modo icono y el botón la abre como cajón encima
+       del contenido, sin empujarlo. */
+    .panel-layout {
+        --panel-sidebar-width: 68px;
+    }
+    .panel-sidebar {
+        padding: 1.25rem 0.5rem;
+    }
+    .panel-brand span,
+    .panel-nav-btn span:not(.nav-badge),
+    .panel-sidebar-footer .btn-logout span {
+        display: none;
+    }
+    .panel-brand,
+    .panel-nav-btn,
+    .panel-sidebar-footer .btn-logout {
+        justify-content: center;
+        gap: 0;
+    }
+    .panel-nav-btn {
+        position: relative;
+        padding: 0.7rem 0;
+    }
+    .nav-badge {
+        position: absolute;
+        top: 3px;
+        right: 6px;
+        margin-left: 0;
+        min-width: 17px;
+        padding: 0 4px;
+        font-size: 0.62rem;
+    }
+
+    .panel-layout.sidebar-abierto .panel-sidebar {
+        width: 250px;
+        padding: 1.25rem 0.85rem;
+        box-shadow: var(--shadow-floating-card);
+    }
+    .panel-layout.sidebar-abierto .panel-brand span,
+    .panel-layout.sidebar-abierto .panel-nav-btn span,
+    .panel-layout.sidebar-abierto .btn-logout span {
+        display: inline;
+    }
+    .panel-layout.sidebar-abierto .panel-brand,
+    .panel-layout.sidebar-abierto .panel-nav-btn,
+    .panel-layout.sidebar-abierto .btn-logout {
+        justify-content: flex-start;
+        gap: 0.8rem;
+    }
+    .panel-layout.sidebar-abierto .panel-nav-btn {
+        padding: 0.7rem 0.85rem;
+        position: static;
+    }
+    .panel-layout.sidebar-abierto .nav-badge {
+        position: static;
+        margin-left: auto;
+        min-width: 22px;
+        padding: 1px 6px;
+        font-size: 0.7rem;
+    }
+    /* El contenido no se mueve: el cajón flota sobre él. */
+    .panel-layout.sidebar-abierto .panel-main {
+        margin-left: 68px;
+    }
+
+    .panel-header {
+        padding: 1rem;
+    }
+    .panel-user {
+        gap: 0.6rem;
+        font-size: 0.78rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .panel-sidebar,
+    .panel-main {
+        transition: none;
+    }
+}
+
+/* ==========================================================================
+   DEPÓSITOS EN EFECTIVO
+   Ficha de previsualización de cuenta + modal de confirmación + voucher
+   descargable. El voucher reutiliza la misma anatomía "comprobante" del
+   sitio de clientes (encabezado, monto destacado, filas de detalle), pero
+   con la paleta grafito + dorado propia de este portal, nunca el teal del
+   sitio de clientes.
+   ========================================================================== */
+
+/* --- Ficha de previsualización al escribir un número de cuenta --- */
+.cuenta-preview {
+    margin-top: 1rem;
+    padding: 1rem 1.1rem;
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-input);
+    font-size: 0.86rem;
+}
+.cuenta-preview .cuenta-preview-fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.3rem 0;
+}
+.cuenta-preview .cuenta-preview-fila span {
+    color: var(--color-text-muted);
+}
+.cuenta-preview .cuenta-preview-fila strong {
+    color: var(--color-text-main);
+    text-align: right;
+}
+.cuenta-preview.cuenta-preview-error {
+    background-color: var(--color-danger-bg);
+    border-color: color-mix(in srgb, var(--color-danger) 35%, transparent);
+    color: var(--color-danger);
+}
+.cuenta-preview.cuenta-preview-inactiva {
+    background-color: color-mix(in srgb, #fab219 14%, var(--color-surface-2));
+    border-color: color-mix(in srgb, #fab219 40%, transparent);
+}
+
+/* --- Modales del portal (confirmación + voucher) --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background-color: rgba(10, 12, 16, 0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--dur-med) var(--ease-smooth), visibility var(--dur-med) var(--ease-smooth);
+}
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.modal-container {
+    width: 100%;
+    max-width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-floating-card);
+    transform: translateY(12px) scale(0.98);
+    transition: transform var(--dur-med) var(--ease-spring);
+}
+.modal-overlay.active .modal-container {
+    transform: translateY(0) scale(1);
+}
+.modal-container h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+    color: var(--color-text-main);
+    margin-bottom: 0.35rem;
+}
+.modal-container h3 i {
+    color: var(--color-accent);
+}
+
+/* --- Anatomía del comprobante / voucher, versión grafito + dorado --- */
+.comprobante-box {
+    max-width: 480px;
+}
+.comprobante-imprimible {
+    background: var(--color-surface);
+}
+.comprobante-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+}
+.logo-comprobante {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    font-size: 1.1rem;
+}
+.logo-comprobante i {
+    color: var(--color-accent);
+}
+.badge-exito {
+    color: var(--color-success);
+    background: var(--color-success-bg);
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.comprobante-monto-box {
+    text-align: center;
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+}
+.comprobante-monto-box p {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+.comprobante-monto-box h2 {
+    font-size: 1.8rem;
+    color: var(--color-text-main);
+    margin: 0.2rem 0 0 0;
+    font-variant-numeric: tabular-nums;
+}
+.comprobante-detalles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    font-size: 0.86rem;
+}
+.detalle-fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px dashed var(--color-border);
+    padding-bottom: 0.5rem;
+}
+.detalle-fila span {
+    color: var(--color-text-muted);
+}
+.detalle-fila strong {
+    color: var(--color-text-main);
+    text-align: right;
+}
+.comprobante-footer-nota {
+    margin-top: 1.25rem;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+}
+.comprobante-acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+}
+.factura-titulo {
+    text-align: center;
+    margin: 4px 0 6px;
+}
+.factura-titulo h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+.factura-titulo p {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    margin-top: 2px;
 }

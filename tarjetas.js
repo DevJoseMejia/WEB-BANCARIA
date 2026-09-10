@@ -43,6 +43,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             mensajeEstado.className = 'mensaje-estado';
         }
 
+        if (window.UVGMotion) window.UVGMotion.setButtonState(document.getElementById('btnEnviarSolicitud'), null);
+
         if (selectTipoTarjeta && nombreTarjeta) {
             selectTipoTarjeta.value = nombreTarjeta;
         }
@@ -81,13 +83,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (err) {
             console.error('Error al cargar el catálogo de tarjetas:', err);
-            contenedorTarjetas.innerHTML = '<p style="color:#ef4444;">No se pudo cargar el catálogo de tarjetas.</p>';
+            contenedorTarjetas.innerHTML = '<p style="color:var(--color-danger);">No se pudo cargar el catálogo de tarjetas.</p>';
         }
     }
 
     function renderizarTarjetas(tarjetas) {
         if (tarjetas.length === 0) {
-            contenedorTarjetas.innerHTML = '<p style="color:#64748b;">No hay tarjetas disponibles en este momento.</p>';
+            contenedorTarjetas.innerHTML = '<p style="color:var(--color-text-muted);">No hay tarjetas disponibles en este momento.</p>';
             return;
         }
 
@@ -208,9 +210,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             validarIngresos();
             if (!formSolicitud.reportValidity()) return;
 
+            const btnEnviar = document.getElementById('btnEnviarSolicitud');
+            if (window.UVGMotion) window.UVGMotion.setButtonState(btnEnviar, 'loading');
+
             const tipoTarjeta = selectTipoTarjeta ? selectTipoTarjeta.value : '';
             const tarjeta = mapaTarjetas[tipoTarjeta];
-            const idUsuario = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
+            const idUsuario = await resolverSesionCliente(supabaseClientTarjetas);
+            if (!idUsuario) { // resolverSesionCliente ya redirigió a login
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnEnviar, null);
+                return;
+            }
 
             const datosSolicitud = {
                 nombre_producto_solicitado: `Tarjeta: ${tipoTarjeta}`,
@@ -231,7 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
 
             if (mensajeEstado) {
-                mensajeEstado.style.color = '#0284c7';
+                mensajeEstado.style.color = 'var(--color-accent)';
                 mensajeEstado.textContent = 'Enviando solicitud...';
             }
 
@@ -243,11 +252,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (error) throw error;
 
                 if (mensajeEstado) {
-                    mensajeEstado.style.color = '#16a34a';
+                    mensajeEstado.style.color = 'var(--color-success)';
                     mensajeEstado.textContent = tarjeta && tarjeta.categoria === 'Exclusiva'
                         ? '¡Solicitud de evaluación enviada con éxito! Un asesor se pondrá en contacto contigo.'
                         : '¡Solicitud enviada con éxito! Nos pondremos en contacto contigo.';
                 }
+
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnEnviar, 'done');
 
                 setTimeout(() => {
                     cerrarModal();
@@ -256,9 +267,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch (err) {
                 console.error('Error al procesar la solicitud:', err);
                 if (mensajeEstado) {
-                    mensajeEstado.style.color = '#dc2626';
+                    mensajeEstado.style.color = 'var(--color-danger)';
                     mensajeEstado.textContent = 'Ocurrió un error al enviar la solicitud. Inténtalo de nuevo.';
                 }
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnEnviar, null);
             }
         });
     }
