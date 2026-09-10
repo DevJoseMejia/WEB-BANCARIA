@@ -6,27 +6,102 @@
 /* --- 1. Variables de Diseño --- */
 :root {
     /* Paleta Oficial */
-    --color-primary-dark: #0B1D33; /* Azul Profundo (Fondo Main) */
-    --color-text-main:    #1A2433; /* Gris Pizarra (Textos en Formulario) */
+    --color-primary-dark: #081222; /* Azul Profundo (Fondo Main) */
+    --color-primary-elevated: #12294A; /* Superficie oscura elevada (antes hovers sueltos) */
+    --color-text-main:    #0E1B2C; /* Gris Pizarra (Textos en Formulario) */
     --color-accent:       #0068A9; /* Teal Principal */
     --color-accent-hover: #005082; /* Teal Hover */
-    --color-gold:         #D4AF37; /* Detalle Dorado */
-    --color-white:        #FFFFFF; /* Blanco */
-    
+    --color-accent-glow:  #00A3A6; /* Teal secundario, para acentos y gradientes */
+    --color-gold:         #B8933A; /* Detalle Dorado, reservado para estatus premium */
+    --color-white:        #FFFFFF; /* Blanco puro (texto sobre superficies de color) */
+
+    /* Superficies que sí cambian entre tema claro / oscuro */
+    --color-surface:      #FFFFFF;
+    --color-surface-2:    #F8FAFC;
+    --color-input-bg:     #FFFFFF;
+
     /* Estados y Bordes */
     --color-border:       #E2E8F0;
     --color-border-input: #CBD5E1;
-    --color-text-muted:   #64748B;
+    --color-text-muted:   #5B6B82;
     --color-focus-ring:   rgba(0, 104, 169, 0.25);
+    --color-success:      #1B8F5A;
+    --color-danger:       #C6483A;
 
     /* Tipografía y Sombras */
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
     /* Sombra profunda para destacar la tarjeta blanca sobre el fondo azul */
     --shadow-floating-card: 0 20px 40px rgba(0, 0, 0, 0.35);
     --shadow-input: 0 1px 2px rgba(0, 0, 0, 0.05);
     --radius-card: 16px;
     --radius-input: 8px;
-    --transition-fast: 0.2s ease;
+
+    /* Movimiento */
+    --ease-smooth: cubic-bezier(.22, 1, .36, 1);
+    --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+    --dur-fast: 150ms;
+    --dur-med: 260ms;
+    --transition-fast: var(--dur-fast) var(--ease-smooth);
+
+    color-scheme: light dark;
+}
+
+/* Tema oscuro: sigue el sistema operativo salvo que se elija explícitamente */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --color-primary-dark: #050B14;
+        --color-primary-elevated: #16283F;
+        --color-text-main:    #F2F5F9;
+        --color-accent:       #2EA0D6;
+        --color-accent-hover: #4DB4E6;
+        --color-accent-glow:  #2FC3C0;
+        --color-gold:         #D2AC5C;
+        --color-surface:      #101B2C;
+        --color-surface-2:    #16233A;
+        --color-input-bg:     #16233A;
+        --color-border:       #223148;
+        --color-border-input: #2B3B54;
+        --color-text-muted:   #93A2B7;
+        --color-focus-ring:   rgba(46, 160, 214, 0.3);
+        --color-success:      #35B37E;
+        --color-danger:       #E0685A;
+        --shadow-floating-card: 0 20px 40px rgba(0, 0, 0, 0.55);
+    }
+}
+:root[data-theme="dark"] {
+    --color-primary-dark: #050B14;
+    --color-primary-elevated: #16283F;
+    --color-text-main:    #F2F5F9;
+    --color-accent:       #2EA0D6;
+    --color-accent-hover: #4DB4E6;
+    --color-accent-glow:  #2FC3C0;
+    --color-gold:         #D2AC5C;
+    --color-surface:      #101B2C;
+    --color-surface-2:    #16233A;
+    --color-input-bg:     #16233A;
+    --color-border:       #223148;
+    --color-border-input: #2B3B54;
+    --color-text-muted:   #93A2B7;
+    --color-focus-ring:   rgba(46, 160, 214, 0.3);
+    --color-success:      #35B37E;
+    --color-danger:       #E0685A;
+    --shadow-floating-card: 0 20px 40px rgba(0, 0, 0, 0.55);
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+
+/* Navegación entre páginas del sitio: transición nativa del navegador
+   (progressive enhancement -- en navegadores sin soporte simplemente no pasa nada) */
+@view-transition {
+    navigation: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
 }
 
 /* --- 2. Reseteo y Base --- */
@@ -60,12 +135,13 @@ a:hover {
 
 /* --- 3. Encabezado Principal (Header) --- */
 .main-header {
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
     padding: 0.85rem 1.5rem;
     position: sticky;
     top: 0;
     z-index: 100;
+    transition: background-color var(--dur-med) var(--ease-smooth), border-color var(--dur-med) var(--ease-smooth);
 }
 
 .header-container {
@@ -82,7 +158,7 @@ a:hover {
     gap: 0.6rem;
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 .logo i {
@@ -109,11 +185,17 @@ a:hover {
     background-color: rgba(0, 104, 169, 0.08);
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
 .lang-select {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    background-color: #F8FAFC;
+    background-color: var(--color-surface-2);
     padding: 0.4rem 0.75rem;
     border-radius: 20px;
     border: 1px solid var(--color-border);
@@ -130,6 +212,37 @@ a:hover {
     color: var(--color-text-main);
     font-weight: 500;
     cursor: pointer;
+}
+
+/* Botón de tema claro / oscuro (compartido en todo el sitio, ver motion.js) */
+.btn-theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface-2);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: background-color var(--dur-fast) var(--ease-smooth), color var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-smooth);
+}
+.btn-theme-toggle:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.btn-theme-toggle:active { transform: scale(.92); }
+.btn-theme-toggle .icon-dark { display: none; }
+:root[data-theme="dark"] .btn-theme-toggle .icon-light { display: none; }
+:root[data-theme="dark"] .btn-theme-toggle .icon-dark { display: inline; }
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .btn-theme-toggle .icon-light { display: none; }
+    :root:not([data-theme="light"]) .btn-theme-toggle .icon-dark { display: inline; }
+}
+.btn-theme-toggle-fixed {
+    position: fixed;
+    top: 1.1rem;
+    right: 1.1rem;
+    z-index: 500;
 }
 
 /* --- 4. Contenedor Principal Main (Azul Profundo) --- */
@@ -173,9 +286,10 @@ a:hover {
 }
 
 .info-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    line-height: 1.2;
+    font-family: var(--font-display);
+    font-size: 2.3rem;
+    font-weight: 600;
+    line-height: 1.16;
     margin-bottom: 2rem;
     color: var(--color-white);
 }
@@ -232,13 +346,14 @@ a:hover {
 
 /* --- 6. Tarjeta Flotante del Formulario --- */
 .login-card {
-    background-color: var(--color-white);
+    background-color: var(--color-surface);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-floating-card);
     width: 100%;
     max-width: 420px; /* Tamaño contenido y compacto */
     padding: 2.5rem;
     height: fit-content;
+    transition: background-color var(--dur-med) var(--ease-smooth), box-shadow var(--dur-med) var(--ease-smooth);
 }
 
 .login-header {
@@ -248,7 +363,7 @@ a:hover {
 .login-header h2 {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--color-primary-dark);
+    color: var(--color-text-main);
 }
 
 .login-header p {
@@ -296,12 +411,12 @@ a:hover {
     font-size: 0.9rem;
     font-family: inherit;
     color: var(--color-text-main);
-    background-color: var(--color-white);
+    background-color: var(--color-input-bg);
     border: 1px solid var(--color-border-input);
     border-radius: var(--radius-input);
     box-shadow: var(--shadow-input);
     outline: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
 }
 
 .input-wrapper input:focus {
@@ -322,6 +437,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     padding: 0.2rem;
+    transition: color var(--transition-fast);
 }
 
 .toggle-password:hover {
@@ -374,7 +490,8 @@ a:hover {
     justify-content: center;
     gap: 0.5rem;
     margin-top: 0.5rem;
-    transition: background-color var(--transition-fast), transform var(--transition-fast);
+    transition: background-color var(--transition-fast), transform var(--dur-fast) var(--ease-smooth), filter var(--transition-fast);
+    position: relative;
 }
 
 .btn-primary:hover {
@@ -382,11 +499,36 @@ a:hover {
 }
 
 .btn-primary:active {
-    transform: scale(0.99);
+    transform: scale(0.98);
 }
 
 .btn-primary i {
     font-size: 1.1rem;
+}
+
+.btn-primary:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Estado de carga / éxito reutilizable en botones de todo el sitio
+   (activado agregando data-state="loading" | "done" desde JS) */
+.btn-spinner {
+    display: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-top-color: currentColor;
+    animation: uvg-spin 0.7s linear infinite;
+}
+[data-state="loading"] .btn-spinner { display: inline-block; }
+[data-state="loading"] .btn-label-idle { display: none; }
+[data-state="loading"] { pointer-events: none; filter: brightness(0.94); }
+[data-state="done"] { background-color: var(--color-success) !important; }
+@keyframes uvg-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+    .btn-spinner { animation: none; }
 }
 
 /* Pie de Tarjeta */
@@ -405,7 +547,7 @@ a:hover {
 
 /* --- 8. Pie de Página General --- */
 .main-footer {
-    background-color: #071322; /* Tono ligeramente más oscuro para cerrar la página */
+    background-color: #071322;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding: 1.25rem 1.5rem;
     font-size: 0.8rem;
@@ -436,14 +578,30 @@ a:hover {
     color: var(--color-white);
 }
 
-/* --- 9. Adaptabilidad Responsive --- */
+/* --- 9. Esqueletos de carga (reemplazan el texto "Cargando...") --- */
+.skeleton-line {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--color-surface-2) 25%, var(--color-border) 37%, var(--color-surface-2) 63%);
+    background-size: 400% 100%;
+    animation: uvg-shimmer 1.6s ease-in-out infinite;
+}
+@keyframes uvg-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .skeleton-line { animation: none; background: var(--color-surface-2); }
+}
+
+/* --- 10. Adaptabilidad Responsive --- */
 @media (max-width: 850px) {
     .login-wrapper {
         flex-direction: column;
         align-items: center;
         gap: 2rem;
     }
-    
+
     .login-info {
         text-align: center;
         max-width: 100%;

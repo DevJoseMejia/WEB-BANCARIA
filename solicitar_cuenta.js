@@ -8,6 +8,7 @@ let modalCuenta = null;
 let formSolicitudCuenta = null;
 let selectTipoCuenta = null;
 let mensajeEstado = null;
+let btnSubmitSolicitud = null;
 
 // Catálogo real cargado desde productos_cuenta, y la cuenta que se está solicitando
 let catalogoCuentas = {}; // nombre -> registro completo
@@ -24,14 +25,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // 2. Usuario en sesión (mismo patrón que el resto del proyecto: sessionStorage/localStorage, no Supabase Auth)
-    idUsuarioCuentas = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
+    // 2. Usuario en sesión (Supabase Auth real, resuelto por sesion_comun.js)
+    idUsuarioCuentas = await resolverSesionCliente(supabaseClientCuentas);
+    if (!idUsuarioCuentas) return; // resolverSesionCliente ya redirigió a login
 
     // 3. Capturar elementos del DOM
     modalCuenta = document.getElementById('modalSolicitudCuenta');
     formSolicitudCuenta = document.getElementById('formSolicitudCuenta');
     selectTipoCuenta = document.getElementById('selectTipoCuenta');
     mensajeEstado = document.getElementById('mensajeEstado');
+    btnSubmitSolicitud = formSolicitudCuenta ? formSolicitudCuenta.querySelector('.btn-primario') : null;
 
     // 4. Inicializar eventos del Modal
     setupModalEvents();
@@ -59,7 +62,7 @@ function setupModalEvents() {
     if (selectTipoCuenta) {
         selectTipoCuenta.addEventListener('change', () => {
             const producto = catalogoCuentas[selectTipoCuenta.value];
-            cuentaSeleccionadaActual = producto ? { nombre: producto.nombre, id: producto.id } : { nombre: selectTipoCuenta.value, id: null };
+            cuentaSeleccionadaActual = producto ? { nombre: producto.nombre, id: producto.id_producto } : { nombre: selectTipoCuenta.value, id: null };
         });
     }
 
@@ -92,6 +95,7 @@ function cerrarModal() {
     modalCuenta.style.display = 'none';
     modalCuenta.classList.remove('active');
     if (formSolicitudCuenta) formSolicitudCuenta.reset();
+    if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitSolicitud, null);
 }
 
 /**
@@ -115,7 +119,7 @@ async function cargarCuentasDisponibles() {
         if (error) throw error;
 
         if (!productos || productos.length === 0) {
-            contenedor.innerHTML = "<p style='color:#64748b;'>No hay cuentas disponibles por el momento.</p>";
+            contenedor.innerHTML = "<p style='color:var(--color-text-muted);'>No hay cuentas disponibles por el momento.</p>";
             if (selectTipoCuenta) selectTipoCuenta.innerHTML = '<option value="" disabled selected>No hay cuentas disponibles</option>';
             return;
         }
@@ -138,7 +142,7 @@ async function cargarCuentasDisponibles() {
                     ${p.monto_minimo_apertura ? `<p><strong>Apertura mínima:</strong> GTQ ${p.monto_minimo_apertura}</p>` : ''}
                 </div>
                 <div class="card-producto-footer">
-                    <button class="btn-solicitar-cuenta" data-producto="${p.nombre}" data-id="${p.id}">
+                    <button class="btn-solicitar-cuenta" data-producto="${p.nombre}" data-id="${p.id_producto}">
                         <i class="ri-add-line"></i> Solicitar Cuenta
                     </button>
                 </div>
@@ -162,7 +166,7 @@ async function cargarCuentasDisponibles() {
 
     } catch (err) {
         console.error('💥 Error al cargar las cuentas disponibles:', err);
-        contenedor.innerHTML = "<p style='color:#ef4444;'>No se pudieron cargar las cuentas disponibles.</p>";
+        contenedor.innerHTML = "<p style='color:var(--color-danger);'>No se pudieron cargar las cuentas disponibles.</p>";
     }
 }
 
@@ -174,7 +178,7 @@ async function manejarEnvioSolicitud(e) {
     e.preventDefault();
 
     if (mensajeEstado) {
-        mensajeEstado.style.color = '#0284c7';
+        mensajeEstado.style.color = 'var(--color-accent)';
         mensajeEstado.textContent = 'Enviando solicitud de apertura...';
     }
 
@@ -184,12 +188,14 @@ async function manejarEnvioSolicitud(e) {
     const montoInicial = parseFloat(document.getElementById('montoInicial')?.value) || null;
     const proposito = document.getElementById('propositoCuenta')?.value || '';
 
+    if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitSolicitud, 'loading');
+
     try {
         const { error } = await supabaseClientCuentas
             .from('solicitudes_cuentas')
             .insert([{
                 id_usuario: idUsuarioCuentas,
-                id_producto_cuenta: producto ? producto.id : (cuentaSeleccionadaActual.id || null),
+                id_producto_cuenta: producto ? producto.id_producto : (cuentaSeleccionadaActual.id || null),
                 nombre_producto: tipoCuenta,
                 moneda: moneda,
                 monto_inicial: montoInicial,
@@ -201,9 +207,11 @@ async function manejarEnvioSolicitud(e) {
         if (error) throw error;
 
         if (mensajeEstado) {
-            mensajeEstado.style.color = '#16a34a';
+            mensajeEstado.style.color = 'var(--color-success)';
             mensajeEstado.textContent = '¡Solicitud registrada con éxito! Un ejecutivo procesará tu apertura.';
         }
+
+        if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitSolicitud, 'done');
 
         setTimeout(() => {
             cerrarModal();
@@ -212,8 +220,9 @@ async function manejarEnvioSolicitud(e) {
     } catch (err) {
         console.error('Error al guardar la solicitud en la base de datos:', err);
         if (mensajeEstado) {
-            mensajeEstado.style.color = '#dc2626';
+            mensajeEstado.style.color = 'var(--color-danger)';
             mensajeEstado.textContent = 'Ocurrió un error al enviar la solicitud. Inténtalo de nuevo.';
         }
+        if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmitSolicitud, null);
     }
 }

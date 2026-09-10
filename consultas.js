@@ -10,25 +10,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('No se pudo inicializar Supabase. Revisa que config.example.js se cargue antes de consultas.js.');
     }
 
-    // 2. Cierre de sesión
-    const btnCerrarSesion = document.getElementById('btnCerrarSesion');
-    if (btnCerrarSesion) {
-        btnCerrarSesion.addEventListener('click', () => {
-            sessionStorage.clear();
-            localStorage.clear();
-            window.location.href = 'Login_personal.html';
-        });
-    }
-
-    // 3. Verificar sesión activa
-    const idUsuario = sessionStorage.getItem('id_usuario') || localStorage.getItem('id_usuario');
-    if (!idUsuario) {
-        alert('Debes iniciar sesión para acceder a tu banca en línea.');
-        window.location.href = 'Login_personal.html';
-        return;
-    }
-
     if (!supabaseClient) return;
+
+    const idUsuario = await resolverSesionCliente(supabaseClient);
+    if (!idUsuario) return;
 
     // Elementos del DOM
     const selectCuenta = document.getElementById('select-cuenta');
@@ -123,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function mostrarEstadoSinCuenta() {
         contenedorMovimientos.innerHTML = `
-            <tr><td colspan="5" style="text-align:center; color:#64748b; padding: 24px;">
+            <tr><td colspan="5" style="text-align:center; color:var(--color-text-muted); padding: 24px;">
                 Selecciona una cuenta para ver tus movimientos.
             </td></tr>`;
         totalIngresosEl.textContent = '--';
@@ -132,13 +117,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (tituloHistorial) tituloHistorial.textContent = 'Historial de Transacciones';
     }
 
+    function mostrarEsqueletoMovimientos() {
+        const anchos = ['70%', '45%', '85%', '55%'];
+        contenedorMovimientos.innerHTML = anchos.map(ancho => `
+            <tr><td colspan="5"><div class="skeleton-line" style="width:${ancho}"></div></td></tr>
+        `).join('');
+    }
+
     async function cargarMovimientos() {
         if (!cuentaSeleccionada) return;
 
-        contenedorMovimientos.innerHTML = `
-            <tr><td colspan="5" style="text-align:center; color:#64748b; padding: 24px;">
-                Cargando movimientos...
-            </td></tr>`;
+        mostrarEsqueletoMovimientos();
 
         const inicio = fechaSeleccionada;
         const fin = new Date(fechaSeleccionada.getFullYear(), fechaSeleccionada.getMonth() + 1, 1);
@@ -160,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (err) {
             console.error('Error al cargar transacciones:', err);
             contenedorMovimientos.innerHTML = `
-                <tr><td colspan="5" style="text-align:center; color:#ef4444; padding: 24px;">
+                <tr><td colspan="5" style="text-align:center; color:var(--color-danger); padding: 24px;">
                     Ocurrió un error al cargar tus movimientos.
                 </td></tr>`;
         }
@@ -176,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (transacciones.length === 0) {
             contenedorMovimientos.innerHTML = `
-                <tr><td colspan="5" style="text-align:center; color:#64748b; padding: 24px;">
+                <tr><td colspan="5" style="text-align:center; color:var(--color-text-muted); padding: 24px;">
                     No hay movimientos registrados en este periodo.
                 </td></tr>`;
             totalIngresosEl.textContent = `${simbolo} 0.00`;
@@ -240,7 +229,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
 
-        html2pdf().set(opciones).from(elemento).save();
+        if (window.UVGMotion) window.UVGMotion.setButtonState(btnExportarPDF, 'loading');
+
+        html2pdf().set(opciones).from(elemento).save()
+            .then(() => {
+                if (!window.UVGMotion) return;
+                window.UVGMotion.setButtonState(btnExportarPDF, 'done');
+                setTimeout(() => window.UVGMotion.setButtonState(btnExportarPDF, null), 1500);
+            })
+            .catch((err) => {
+                console.error('Error al exportar el PDF:', err);
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnExportarPDF, null);
+            });
     }
 
     function primerDiaDelMes(fecha) {

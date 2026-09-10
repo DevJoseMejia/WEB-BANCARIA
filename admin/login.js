@@ -14,7 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Si ya hay una sesión de staff activa, saltar directo al panel.
     supabaseClient.auth.getSession().then(({ data }) => {
-        if (data.session) window.location.href = 'panel.html';
+        const rol = data.session?.user?.app_metadata?.role;
+        if (data.session && ['Trabajador', 'Supervisor', 'Administrador'].includes(rol)) {
+            window.location.href = 'panel.html';
+        }
     });
 
     const form = document.getElementById('form-login-admin');
@@ -45,9 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const emailInterno = `${codigo}@${DOMINIO_STAFF}`;
 
-        btnSubmit.disabled = true;
-        const original = btnSubmit.innerHTML;
-        btnSubmit.innerText = "Verificando...";
+        if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmit, 'loading');
 
         try {
             const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -58,16 +59,24 @@ document.addEventListener('DOMContentLoaded', () => {
             if (error || !data.session) {
                 console.error("Error de login de staff:", error);
                 alert("Código o contraseña incorrectos.");
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmit, null);
                 return;
             }
 
+            const rol = data.user?.app_metadata?.role;
+            if (!['Trabajador', 'Supervisor', 'Administrador'].includes(rol)) {
+                await supabaseClient.auth.signOut();
+                alert("Este acceso no pertenece a un colaborador autorizado.");
+                if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmit, null);
+                return;
+            }
+
+            if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmit, 'done');
             window.location.href = 'panel.html';
         } catch (err) {
             console.error("Error crítico en login de staff:", err);
             alert("Error de comunicación con el servidor.");
-        } finally {
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = original;
+            if (window.UVGMotion) window.UVGMotion.setButtonState(btnSubmit, null);
         }
     });
 });

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banca en Línea - Consultas | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0B1D33">
+    <meta name="theme-color" content="#081222">
     <meta name="description" content="Consulta de movimientos e historial de transacciones - Banco UVG">
 
     <!-- Hoja de estilos compartida de la banca -->
@@ -55,8 +55,8 @@
             top: calc(100% + 6px);
             left: 0;
             z-index: 20;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
             border-radius: 8px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.12);
             min-width: 220px;
@@ -71,11 +71,11 @@
         .menu-meses-dropdown li {
             padding: 9px 16px;
             font-size: 0.88rem;
-            color: #1e293b;
+            color: var(--color-text-main);
             cursor: pointer;
         }
         .menu-meses-dropdown li:hover {
-            background-color: #f1f5f9;
+            background-color: var(--color-surface-2);
         }
     </style>
 </head>
@@ -162,6 +162,10 @@
                 <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
+                    <button type="button" class="btn-theme-toggle" data-theme-toggle title="Cambiar a modo oscuro" aria-pressed="false">
+                        <i class="ri-moon-line icon-light"></i>
+                        <i class="ri-sun-line icon-dark"></i>
+                    </button>
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
@@ -210,19 +214,19 @@
                 <div id="areaExportablePDF">
 
                     <!-- Resumen de Totales del Periodo -->
-                    <div class="stats-grid">
+                    <div class="stats-grid money-live-container">
                         <div class="stat-card">
                             <div class="stat-icon income"><i class="ri-arrow-down-circle-line"></i></div>
                             <div>
                                 <span>Total Ingresos</span>
-                                <h3 id="totalIngresos">Q 0.00</h3>
+                                <h3 id="totalIngresos" class="money-live">--</h3>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon expense"><i class="ri-arrow-up-circle-line"></i></div>
                             <div>
                                 <span>Total Egresos</span>
-                                <h3 id="totalEgresos">Q 0.00</h3>
+                                <h3 id="totalEgresos" class="money-live">--</h3>
                             </div>
                         </div>
                     </div>
@@ -235,7 +239,8 @@
                                 <span id="tituloHistorial">Historial de Transacciones</span>
                             </div>
                             <button id="btnExportarPDF" class="btn-secondary-sm">
-                                <i class="ri-download-2-line"></i> Exportar PDF
+                                <span class="btn-spinner"></span>
+                                <span class="btn-label-idle"><i class="ri-download-2-line"></i> Exportar PDF</span>
                             </button>
                         </div>
 
@@ -277,6 +282,9 @@
     <!-- Scripts de Supabase / Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
+    <script src="motion.js"></script>
+    <script src="sesion_comun.js"></script>
+    <script src="interfaz_cliente.js"></script>
     <script src="consultas.js"></script>
 </body>
 </html>

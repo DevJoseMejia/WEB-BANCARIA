@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banca en Línea - Tarjetas de Crédito | Banco UVG</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0B1D33">
+    <meta name="theme-color" content="#081222">
     <meta name="description" content="Solicitud de tarjetas de crédito - Banco UVG">
 
     <link rel="stylesheet" href="style_banca.css">
@@ -18,7 +18,7 @@
         .campo-ayuda {
             display: block;
             margin-top: 4px;
-            color: #64748b;
+            color: var(--color-text-muted);
             font-size: 0.8rem;
         }
     </style>
@@ -105,6 +105,10 @@
                     <span>Hola, <strong id="userName">Usuario</strong></span>
                 </div>
                 <div class="header-acciones">
+                    <button type="button" class="btn-theme-toggle" data-theme-toggle title="Cambiar a modo oscuro" aria-pressed="false">
+                        <i class="ri-moon-line icon-light"></i>
+                        <i class="ri-sun-line icon-dark"></i>
+                    </button>
                     <button class="btn-icono" title="Notificaciones">
                         <i class="ri-notification-3-line"></i>
                     </button>
@@ -123,7 +127,27 @@
                 </div>
 
                 <div class="grid-productos" id="contenedorTarjetasProductos">
-                    <p class="loading-text">Cargando tarjetas disponibles...</p>
+                    <div class="card-producto" style="pointer-events:none;">
+                        <div class="skeleton-line" style="width:52px;height:52px;border-radius:12px;margin-bottom:1rem;"></div>
+                        <div class="skeleton-line" style="width:70%;height:18px;margin-bottom:.5rem;"></div>
+                        <div class="skeleton-line" style="width:95%"></div>
+                        <div class="skeleton-line" style="width:85%"></div>
+                        <div class="skeleton-line" style="width:60%;height:38px;border-radius:8px;margin-top:1.25rem;"></div>
+                    </div>
+                    <div class="card-producto" style="pointer-events:none;">
+                        <div class="skeleton-line" style="width:52px;height:52px;border-radius:12px;margin-bottom:1rem;"></div>
+                        <div class="skeleton-line" style="width:70%;height:18px;margin-bottom:.5rem;"></div>
+                        <div class="skeleton-line" style="width:95%"></div>
+                        <div class="skeleton-line" style="width:85%"></div>
+                        <div class="skeleton-line" style="width:60%;height:38px;border-radius:8px;margin-top:1.25rem;"></div>
+                    </div>
+                    <div class="card-producto" style="pointer-events:none;">
+                        <div class="skeleton-line" style="width:52px;height:52px;border-radius:12px;margin-bottom:1rem;"></div>
+                        <div class="skeleton-line" style="width:70%;height:18px;margin-bottom:.5rem;"></div>
+                        <div class="skeleton-line" style="width:95%"></div>
+                        <div class="skeleton-line" style="width:85%"></div>
+                        <div class="skeleton-line" style="width:60%;height:38px;border-radius:8px;margin-top:1.25rem;"></div>
+                    </div>
                 </div>
 
                 <!-- MODAL DE FORMULARIO DE SOLICITUD -->
@@ -177,7 +201,7 @@
 
                             <div class="form-actions">
                                 <button type="button" class="btn-secundario" id="btnCancelarModal">Cancelar</button>
-                                <button type="submit" class="btn-filter-primary" id="btnEnviarSolicitud">Enviar Solicitud</button>
+                                <button type="submit" class="btn-filter-primary" id="btnEnviarSolicitud"><span class="btn-label-idle">Enviar Solicitud</span><span class="btn-spinner"></span></button>
                             </div>
                         </form>
                     </div>
@@ -200,7 +224,9 @@
     <!-- Scripts del Backend -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.example.js"></script>
+    <script src="motion.js"></script>
     <script src="sesion_comun.js"></script>
+    <script src="interfaz_cliente.js"></script>
     <script src="tarjetas.js"></script>
 
 </body>

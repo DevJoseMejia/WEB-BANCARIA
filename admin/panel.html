@@ -16,21 +16,130 @@
 </head>
 <body class="pagina-panel">
 
-    <header class="panel-header">
+  <div class="panel-layout" id="panelLayout">
+
+    <!-- BARRA LATERAL: cada entrada muestra una vista, no todo a la vez -->
+    <aside class="panel-sidebar">
         <div class="panel-brand">
             <i class="ri-shield-user-line"></i>
             <span>Portal de Colaboradores</span>
         </div>
+
+        <nav class="panel-nav">
+            <ul>
+                <!-- Las vistas de solo Administrador nacen ocultas; panel.js
+                     las destapa según el rol real del JWT. -->
+                <li data-nav="dashboard" hidden>
+                    <button type="button" class="panel-nav-btn" data-vista="seccionDashboardAdmin">
+                        <i class="ri-dashboard-3-line"></i>
+                        <span>Resumen general</span>
+                    </button>
+                </li>
+                <li data-nav="notificaciones">
+                    <button type="button" class="panel-nav-btn" data-vista="seccionNotificaciones">
+                        <i class="ri-notification-3-line"></i>
+                        <span>Solicitudes pendientes</span>
+                        <span class="nav-badge" id="navBadgePendientes" hidden>0</span>
+                    </button>
+                </li>
+                <li data-nav="crearCliente">
+                    <button type="button" class="panel-nav-btn" data-vista="seccionCrearCliente">
+                        <i class="ri-user-add-line"></i>
+                        <span>Registrar cliente</span>
+                    </button>
+                </li>
+                <li data-nav="depositos">
+                    <button type="button" class="panel-nav-btn" data-vista="seccionDepositos">
+                        <i class="ri-hand-coin-line"></i>
+                        <span>Depósitos</span>
+                    </button>
+                </li>
+                <li data-nav="crearStaff" hidden>
+                    <button type="button" class="panel-nav-btn" data-vista="seccionCrearStaff">
+                        <i class="ri-team-line"></i>
+                        <span>Alta de cajeros</span>
+                    </button>
+                </li>
+                <li data-nav="listaStaff" hidden>
+                    <button type="button" class="panel-nav-btn" data-vista="seccionListaStaff">
+                        <i class="ri-search-line"></i>
+                        <span>Cajeros registrados</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="panel-sidebar-footer">
+            <button id="btnCerrarSesion" class="btn-logout">
+                <i class="ri-logout-box-r-line"></i> <span>Cerrar sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <div class="panel-main">
+
+    <header class="panel-header">
+        <button type="button" id="btnTogglePanelSidebar" class="btn-toggle-panel"
+                aria-label="Mostrar u ocultar el menú lateral" aria-expanded="true">
+            <i class="ri-menu-line"></i>
+        </button>
         <div class="panel-user">
+            <button type="button" class="btn-theme-toggle" data-theme-toggle title="Cambiar a modo oscuro" aria-pressed="false">
+                <i class="ri-moon-line icon-light"></i>
+                <i class="ri-sun-line icon-dark"></i>
+            </button>
+            <button id="btnCampana" class="btn-campana" title="Solicitudes pendientes">
+                <i class="ri-notification-3-line"></i>
+                <span id="badgeCampana" class="badge-campana" hidden>0</span>
+            </button>
             <span id="txtCodigoEmpleado">Cargando...</span>
             <span class="badge-rol" id="badgeRol">-</span>
-            <button id="btnCerrarSesion" class="btn-logout">
-                <i class="ri-logout-box-r-line"></i> Cerrar sesión
-            </button>
         </div>
     </header>
 
     <main class="panel-content">
+
+        <!-- RESUMEN GENERAL / DASHBOARD (solo Administrador) -->
+        <section class="panel-section" id="seccionDashboardAdmin">
+            <h2><i class="ri-dashboard-3-line"></i> Resumen general</h2>
+            <p class="section-desc">Vista general del banco en este momento.</p>
+
+            <div class="kpi-row" id="kpiRow"></div>
+
+            <div class="charts-row">
+                <div class="chart-card">
+                    <h3 class="chart-title">Cuentas por tipo</h3>
+                    <div id="chartCuentasPorTipo" class="viz-root"></div>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Nuevos clientes por mes</h3>
+                    <div id="chartClientesPorMes" class="viz-root"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLICITUDES PENDIENTES / NOTIFICACIONES (todo el staff) -->
+        <section class="panel-section" id="seccionNotificaciones">
+            <h2>
+                <i class="ri-notification-3-line"></i> Solicitudes pendientes
+                <span class="badge-contador" id="badgeContadorPendientes">0</span>
+            </h2>
+            <p class="section-desc">Lo que los clientes enviaron desde la banca en línea y espera revisión. Se actualiza solo cada minuto.</p>
+
+            <div class="tabs-notif">
+                <button class="tab-notif-btn active" data-tipo="cuentas">
+                    Apertura de cuenta <span class="tab-notif-count" id="countTabCuentas">0</span>
+                </button>
+                <button class="tab-notif-btn" data-tipo="prestamos">
+                    Préstamos <span class="tab-notif-count" id="countTabPrestamos">0</span>
+                </button>
+                <button class="tab-notif-btn" data-tipo="productos">
+                    Tarjetas / Otros <span class="tab-notif-count" id="countTabProductos">0</span>
+                </button>
+            </div>
+
+            <div id="listaPendientes"><p class="section-desc">Cargando...</p></div>
+        </section>
 
         <!-- CREAR CLIENTE (Trabajador, Supervisor, Administrador) -->
         <section class="panel-section" id="seccionCrearCliente">
@@ -81,15 +190,51 @@
                 </div>
 
                 <button type="submit" class="btn-primary" id="btnCrearCliente" style="margin-top: 1.25rem; max-width: 260px;">
-                    <i class="ri-user-add-line"></i> <span>Registrar cliente</span>
+                    <span class="btn-spinner"></span>
+                    <i class="ri-user-add-line btn-label-idle"></i> <span class="btn-label-idle">Registrar cliente</span>
                 </button>
             </form>
 
             <div id="resultadoCliente"></div>
         </section>
 
+        <!-- DEPOSITOS EN EFECTIVO (Trabajador, Supervisor, Administrador) -->
+        <section class="panel-section" id="seccionDepositos">
+            <h2><i class="ri-hand-coin-line"></i> Depósitos en efectivo</h2>
+            <p class="section-desc">Acredita dinero a la cuenta de un cliente y genera el voucher de respaldo. Verifica siempre el nombre del titular antes de confirmar.</p>
+
+            <form id="form-deposito" onsubmit="return false;">
+                <div class="form-grid">
+                    <div>
+                        <label class="field-label" for="dep-cuenta">Número de cuenta</label>
+                        <input type="text" id="dep-cuenta" class="form-control" placeholder="Número de cuenta del cliente" maxlength="20" required>
+                    </div>
+                    <div>
+                        <label class="field-label" for="dep-monto">Monto a depositar (GTQ)</label>
+                        <div class="tel-group">
+                            <span class="tel-prefix">Q</span>
+                            <input type="number" id="dep-monto" class="form-control" min="0.01" step="0.01" max="100000" placeholder="500.00" required>
+                        </div>
+                    </div>
+                    <div class="full">
+                        <label class="field-label" for="dep-concepto">Concepto (opcional)</label>
+                        <input type="text" id="dep-concepto" class="form-control" maxlength="120" placeholder="Depósito en efectivo">
+                    </div>
+                </div>
+
+                <div id="previewCuentaDeposito" class="cuenta-preview" hidden></div>
+
+                <button type="submit" class="btn-primary" id="btnDeposito" style="margin-top: 1.25rem; max-width: 260px;" disabled>
+                    <span class="btn-spinner"></span>
+                    <i class="ri-hand-coin-line btn-label-idle"></i> <span class="btn-label-idle">Registrar depósito</span>
+                </button>
+            </form>
+
+            <div id="resultadoDeposito"></div>
+        </section>
+
         <!-- CREAR CAJEROS (solo Administrador) -->
-        <section class="panel-section" id="seccionCrearStaff" hidden>
+        <section class="panel-section" id="seccionCrearStaff">
             <h2><i class="ri-team-line"></i> Alta de cajeros</h2>
             <p class="section-desc">Genera credenciales para nuevo personal de forma automática. Guarda o imprime la tabla resultante: las contraseñas no se vuelven a mostrar.</p>
 
@@ -99,7 +244,8 @@
                     <input type="number" id="cantidad-cajeros" class="form-control" min="1" max="50" value="1" required>
                 </div>
                 <button type="submit" class="btn-secondary-outline" id="btnCrearStaff">
-                    <i class="ri-add-circle-line"></i> Generar credenciales
+                    <span class="btn-spinner"></span>
+                    <i class="ri-add-circle-line btn-label-idle"></i> <span class="btn-label-idle">Generar credenciales</span>
                 </button>
             </form>
 
@@ -107,7 +253,7 @@
         </section>
 
         <!-- LISTADO / BÚSQUEDA DE CAJEROS (solo Administrador) -->
-        <section class="panel-section" id="seccionListaStaff" hidden>
+        <section class="panel-section" id="seccionListaStaff">
             <h2><i class="ri-search-line"></i> Cajeros registrados</h2>
             <p class="section-desc">Muestra los últimos 20 cajeros dados de alta. Busca por código para encontrar cualquier otro.</p>
 
@@ -129,8 +275,91 @@
 
     </main>
 
+    <!-- MODAL: confirmar deposito antes de mover dinero real -->
+    <div class="modal-overlay" id="modalConfirmarDeposito">
+        <div class="modal-container">
+            <h3><i class="ri-error-warning-line"></i> Confirmar depósito</h3>
+            <p class="section-desc">Revisa los datos antes de continuar: esta operación acredita saldo real de inmediato.</p>
+
+            <div class="comprobante-detalles">
+                <div class="detalle-fila"><span>Cuenta destino:</span><strong id="confDepCuenta">—</strong></div>
+                <div class="detalle-fila"><span>Titular:</span><strong id="confDepTitular">—</strong></div>
+                <div class="detalle-fila"><span>Monto a depositar:</span><strong id="confDepMonto">—</strong></div>
+                <div class="detalle-fila"><span>Concepto:</span><strong id="confDepConcepto">—</strong></div>
+            </div>
+
+            <div class="comprobante-acciones">
+                <button type="button" class="btn-primary" id="btnConfirmarDeposito">
+                    <span class="btn-spinner"></span>
+                    <i class="ri-check-line btn-label-idle"></i> <span class="btn-label-idle">Sí, depositar</span>
+                </button>
+                <button type="button" class="btn-secondary-outline" id="btnCancelarDeposito">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: voucher del deposito ya aplicado -->
+    <div class="modal-overlay" id="modalVoucherDeposito">
+        <div class="modal-container comprobante-box">
+
+            <div id="areaVoucherDepositoPDF" class="comprobante-imprimible">
+                <div class="comprobante-header">
+                    <div class="logo-comprobante">
+                        <i class="ri-shield-user-line"></i>
+                        <span>Banco UVG</span>
+                    </div>
+                    <div class="badge-exito">
+                        <i class="ri-checkbox-circle-fill"></i> Depósito Aplicado
+                    </div>
+                </div>
+
+                <div class="factura-titulo">
+                    <h3>Voucher de Depósito en Efectivo</h3>
+                    <p>Documento generado por el Portal de Colaboradores</p>
+                </div>
+
+                <div class="comprobante-monto-box">
+                    <p>Monto Depositado</p>
+                    <h2 id="vchMonto">Q 0.00</h2>
+                </div>
+
+                <div class="comprobante-detalles">
+                    <div class="detalle-fila"><span>No. de Autorización:</span><strong id="vchAutorizacion">—</strong></div>
+                    <div class="detalle-fila"><span>Fecha y Hora:</span><strong id="vchFecha">—</strong></div>
+                    <div class="detalle-fila"><span>Cuenta Abonada:</span><strong id="vchCuenta">—</strong></div>
+                    <div class="detalle-fila"><span>Tipo de Cuenta:</span><strong id="vchTipoCuenta">—</strong></div>
+                    <div class="detalle-fila"><span>Titular:</span><strong id="vchTitular">—</strong></div>
+                    <div class="detalle-fila"><span>Concepto:</span><strong id="vchConcepto">—</strong></div>
+                    <div class="detalle-fila"><span>Saldo anterior:</span><strong id="vchSaldoAnterior">—</strong></div>
+                    <div class="detalle-fila"><span>Saldo nuevo:</span><strong id="vchSaldoNuevo">—</strong></div>
+                    <div class="detalle-fila"><span>Atendido por:</span><strong id="vchAtendidoPor">—</strong></div>
+                </div>
+
+                <div class="comprobante-footer-nota">
+                    <p>Este voucher es el respaldo oficial del depósito ante Banco UVG. Entrégalo o descárgalo para el cliente.</p>
+                </div>
+            </div>
+
+            <div class="comprobante-acciones">
+                <button id="btnDescargarVoucherDeposito" class="btn-primary">
+                    <i class="ri-download-2-line"></i> Descargar Voucher (PDF)
+                </button>
+                <button id="btnCerrarVoucherDeposito" class="btn-secondary-outline">
+                    Finalizar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    </div><!-- /panel-main -->
+
+    <div class="scrim-panel" id="scrimPanel" hidden></div>
+  </div><!-- /panel-layout -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="config.js"></script>
+    <script src="../motion.js"></script>
     <script src="panel.js"></script>
 </body>
 </html>
